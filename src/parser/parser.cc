@@ -35,3 +35,30 @@ bool Parser::parse() {
 
 	return true;
 }
+
+bool Parser::doBlock(AstNode* parent) {
+	Lexer::Token token = lexer.next();
+	if (token.type != Lexer::TokenType::LSBRACKET) {
+		fmt::print("[ncc] [{}] expected '{{' at start of block\n", token.line);
+		return false;
+	}
+
+	token = lexer.next();
+	while (token.type != Lexer::TokenType::RSBRACKET) {
+		currentToken = token;
+		switch (token.type) {
+		case Lexer::TokenType::RETURN: {
+			AstReturnNode* ret = AstReturnNode::create(this);
+			if (ret == nullptr)
+				return false;
+			parent->children.push_back(ret);
+		} break;
+		default:
+			break;
+		}
+
+		token = lexer.next();
+	}
+
+	return true;
+}

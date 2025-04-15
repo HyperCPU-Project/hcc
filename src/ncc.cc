@@ -6,9 +6,14 @@ NCC::NCC() : parser(lexer, nullptr), backend(nullptr) {
 	backend = new QprocBackend();
 	parser.backend = backend;
 
-	lexer.code = "void main() { return; }";
+	lexer.code = "void main() {  return; } void f() {return;}";
 
-	parser.parse();
+	if (!parser.parse())
+		return;
+
+	compile();
+
+	fmt::print("{}\n", assembly_output);
 }
 
 NCC::~NCC() {

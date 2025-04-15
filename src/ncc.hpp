@@ -5,14 +5,19 @@
 #include <pch.hpp>
 
 class NCC {
-private:
+public:
 	Lexer lexer;
 	Parser parser;
 	Backend* backend;
 
-public:
+	std::string assembly_output;
 	std::vector<std::string> sources;
+
+	// if name == "" then we are not in a function
+	FunctionMetadata currentFunction;
 
 	NCC();
 	~NCC();
+
+	void compile();
 };

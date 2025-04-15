@@ -5,6 +5,7 @@
 #include <pch.hpp>
 
 class AstRootNode;
+class AstNode;
 
 class Parser {
 public:
@@ -18,4 +19,5 @@ public:
 	~Parser();
 
 	bool parse();
+	bool doBlock(AstNode* parent);
 };
