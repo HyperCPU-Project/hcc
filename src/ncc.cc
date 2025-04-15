@@ -1,12 +1,18 @@
+#include <backend/qproc/qproc_backend.hpp>
 #include <ncc.hpp>
 #include <util.hpp>
 
-NCC::NCC() {
+NCC::NCC() : parser(lexer, nullptr), backend(nullptr) {
+	backend = new QprocBackend();
+	parser.backend = backend;
+
 	lexer.code = "void main() { return; }";
 
-	Lexer::Token token = lexer.next();
-	while (token.type != Lexer::TokenType::END) {
-		fmt::print("{}\n", (int)token.type);
-		token = lexer.next();
+	parser.parse();
+}
+
+NCC::~NCC() {
+	if (backend) {
+		delete backend;
 	}
 }
