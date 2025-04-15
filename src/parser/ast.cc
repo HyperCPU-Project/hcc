@@ -78,6 +78,7 @@ void AstFuncDef::assemble(NCC* ncc) {
 }
 
 void AstReturnNode::assemble(NCC* ncc) {
+	return_expression->assemble(ncc);
 	ncc->assembly_output += ncc->backend->emit_function_epilogue() + "\n";
 }
 
@@ -103,14 +104,11 @@ void AstBinaryOpNode::print() {
 
 void AstBinaryOpNode::assemble(NCC* ncc) {
 	int32_t LHS, RHS;
-	LHS = -1;
-	RHS = -1;
+	LHS = 0;
+	RHS = 1;
 
-	// First evaluate left operand
 	left->assemble(ncc);
-	// Then evaluate right operand
 	right->assemble(ncc);
-	// The actual assembly code will be added later
 
 #ifdef BACKEND_QPROC
 	if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
@@ -124,10 +122,10 @@ void AstBinaryOpNode::assemble(NCC* ncc) {
 	if (LHS != -1 && RHS != -1) {
 		switch (op) {
 		case Operation::ADD: {
-			ncc->backend->emit_add(0, RHS, LHS);
+			ncc->assembly_output += ncc->backend->emit_add(12, LHS, RHS);
 		} break;
 		case Operation::MUL: {
-			ncc->backend->emit_mul(0, RHS, LHS);
+			ncc->assembly_output += ncc->backend->emit_mul(12, LHS, RHS);
 		} break;
 		}
 	}
@@ -144,26 +142,26 @@ void AstNumberNode::print() {
 }
 
 void AstNumberNode::assemble(NCC* ncc) {
-	// Assembly code will be added later
-	ncc->backend->emit_mov_const(this->value);
+	fmt::print("ok\n");
+	ncc->assembly_output += ncc->backend->emit_mov_const(this->value);
 }
 
 AstReturnNode* AstReturnNode::create(Parser* parser) {
 	AstReturnNode* me = new AstReturnNode();
 
-	parser->lexer.next(); // consume 'return'
+	parser->currentToken = parser->lexer.next(); // consume 'return'
 	me->return_expression = parser->parseExpression();
 	if (!me->return_expression) {
 		delete me;
 		return nullptr;
 	}
 
-	Lexer::Token next = parser->lexer.next();
+	/*Lexer::Token next = parser->lexer.next();
 	if (next.type != Lexer::TokenType::SEMICOLON) {
-		fmt::print("[ncc] [{}] expected semicolon after return\n", next.line);
-		delete me;
-		return nullptr;
-	}
+		fmt::print("[ncc] [{}] expected semicolon after return {}\n", next.line, (int)next.type);
+		// delete me;
+		// return nullptr;
+	}*/
 
 	return me;
 }

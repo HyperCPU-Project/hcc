@@ -8,11 +8,13 @@ NCC::NCC() : parser(lexer, nullptr), backend(nullptr) {
 #endif
 	parser.backend = backend;
 
-	lexer.code = "int main() { return (1 + 1) + 2 * 2; }";
+	lexer.code = "int main() { return 2 + 2 * 2; }";
 
+	fmt::print("parsing\n");
 	if (!parser.parse())
 		return;
 
+	fmt::print("compiling\n");
 	compile();
 
 	fmt::print("{}\n", assembly_output);

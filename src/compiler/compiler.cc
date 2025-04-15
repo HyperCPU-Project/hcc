@@ -1,7 +1,5 @@
 #include <ncc.hpp>
 
 void NCC::compile() {
-	for (AstNode* node : parser.root_node->children) {
-		node->assemble(this);
-	}
+	parser.root_node->assemble(this);
 }

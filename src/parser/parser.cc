@@ -65,18 +65,18 @@ bool Parser::doBlock(AstNode* parent) {
 
 AstNode* Parser::parseNumber() {
 	if (currentToken.type != Lexer::TokenType::INTEGER) {
-		fmt::print("[ncc] [{}] expected number\n", currentToken.line);
+		fmt::print("[ncc] [{}] expected number {}\n", currentToken.line, (int)currentToken.type);
 		return nullptr;
 	}
 
 	AstNumberNode* node = AstNumberNode::create(this);
-	lexer.next(); // consume the number
+	currentToken = lexer.next(); // consume the number
 	return node;
 }
 
 AstNode* Parser::parseFactor() {
 	if (currentToken.type == Lexer::TokenType::LPAREN) {
-		lexer.next(); // consume '('
+		currentToken = lexer.next(); // consume '('
 		AstNode* expr = parseExpression();
 		if (!expr)
 			return nullptr;
@@ -86,7 +86,7 @@ AstNode* Parser::parseFactor() {
 			delete expr;
 			return nullptr;
 		}
-		lexer.next(); // consume ')'
+		currentToken = lexer.next(); // consume ')'
 		return expr;
 	}
 
@@ -99,7 +99,7 @@ AstNode* Parser::parseTerm() {
 		return nullptr;
 
 	while (currentToken.type == Lexer::TokenType::MUL) {
-		lexer.next(); // consume '*'
+		currentToken = lexer.next(); // consume '*'
 		AstNode* right = parseFactor();
 		if (!right) {
 			delete left;
@@ -117,12 +117,13 @@ AstNode* Parser::parseExpression() {
 		return nullptr;
 
 	while (currentToken.type == Lexer::TokenType::ADD) {
-		lexer.next(); // consume '+'
+		currentToken = lexer.next(); // consume '+'
 		AstNode* right = parseTerm();
 		if (!right) {
 			delete left;
 			return nullptr;
 		}
+		fmt::print("ok\n");
 		left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::ADD, left, right);
 	}
 
