@@ -64,14 +64,99 @@ AstFuncDef* AstFuncDef::create(Parser* parser) {
 }
 
 void AstFuncDef::assemble(NCC* ncc) {
+	ncc->currentFunction.name = this->name;
+	ncc->currentFunction.return_type = return_type;
+	ncc->currentFunction.variables.clear();
+
 	ncc->assembly_output += this->name + ":\n";
 	ncc->assembly_output += ncc->backend->emit_function_prologue() + "\n";
 
 	AstNode::assemble(ncc);
+
+	ncc->currentFunction.name = "";
+	ncc->currentFunction.variables.clear();
+}
+
+void AstReturnNode::assemble(NCC* ncc) {
+	ncc->assembly_output += ncc->backend->emit_function_epilogue() + "\n";
+}
+
+void AstReturnNode::print() {
+	fmt::printf("return;\n");
+}
+
+AstBinaryOpNode* AstBinaryOpNode::create([[maybe_unused]] Parser* parser, Operation op, AstNode* left, AstNode* right) {
+	AstBinaryOpNode* me = new AstBinaryOpNode();
+	me->op = op;
+	me->left = left;
+	me->right = right;
+	return me;
+}
+
+void AstBinaryOpNode::print() {
+	fmt::printf("(");
+	left->print();
+	fmt::printf(" %s ", op == Operation::ADD ? "+" : "*");
+	right->print();
+	fmt::printf(")");
+}
+
+void AstBinaryOpNode::assemble(NCC* ncc) {
+	int32_t LHS, RHS;
+	LHS = -1;
+	RHS = -1;
+
+	// First evaluate left operand
+	left->assemble(ncc);
+	// Then evaluate right operand
+	right->assemble(ncc);
+	// The actual assembly code will be added later
+
+#ifdef BACKEND_QPROC
+	if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
+		RHS = backend->previous_reg_indexes.top();
+		backend->previous_reg_indexes.pop();
+		LHS = backend->previous_reg_indexes.top();
+		backend->previous_reg_indexes.pop();
+	}
+#endif
+
+	if (LHS != -1 && RHS != -1) {
+		switch (op) {
+		case Operation::ADD: {
+			ncc->backend->emit_add(0, RHS, LHS);
+		} break;
+		case Operation::MUL: {
+			ncc->backend->emit_mul(0, RHS, LHS);
+		} break;
+		}
+	}
+}
+
+AstNumberNode* AstNumberNode::create(Parser* parser) {
+	AstNumberNode* me = new AstNumberNode();
+	me->value = std::get<int>(parser->currentToken.value);
+	return me;
+}
+
+void AstNumberNode::print() {
+	fmt::printf("%d", value);
+}
+
+void AstNumberNode::assemble(NCC* ncc) {
+	// Assembly code will be added later
+	ncc->backend->emit_mov_const(this->value);
 }
 
 AstReturnNode* AstReturnNode::create(Parser* parser) {
 	AstReturnNode* me = new AstReturnNode();
+
+	parser->lexer.next(); // consume 'return'
+	me->return_expression = parser->parseExpression();
+	if (!me->return_expression) {
+		delete me;
+		return nullptr;
+	}
 
 	Lexer::Token next = parser->lexer.next();
 	if (next.type != Lexer::TokenType::SEMICOLON) {
@@ -81,12 +166,4 @@ AstReturnNode* AstReturnNode::create(Parser* parser) {
 	}
 
 	return me;
-}
-
-void AstReturnNode::assemble(NCC* ncc) {
-	ncc->assembly_output += ncc->backend->emit_function_epilogue() + "\n";
-}
-
-void AstReturnNode::print() {
-	fmt::printf("return;\n");
 }

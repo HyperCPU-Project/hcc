@@ -183,6 +183,22 @@ Lexer::Token Lexer::next() {
 				token.type = TokenType::SEMICOLON;
 				pos++;
 				break;
+			case '+':
+				token.type = TokenType::ADD;
+				pos++;
+				break;
+			case '-':
+				token.type = TokenType::SUB;
+				pos++;
+				break;
+			case '*':
+				token.type = TokenType::MUL;
+				pos++;
+				break;
+			case '/':
+				token.type = TokenType::DIV;
+				pos++;
+				break;
 			}
 		}
 

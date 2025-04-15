@@ -30,6 +30,11 @@ public:
 
 	virtual std::string emit_function_prologue() = 0;
 	virtual std::string emit_function_epilogue() = 0;
+	virtual std::string emit_mov_const(int32_t constant) = 0;
+	virtual std::string emit_add(int32_t ROUT, int32_t RLHS, int32_t RRHS) = 0;
+	virtual std::string emit_mul(int32_t ROUT, int32_t RLHS, int32_t RRHS) = 0;
 
 	TypeMetadata* getTypeFromName(std::string name);
 };
+
+#include <backend/qproc/qproc_backend.hpp>

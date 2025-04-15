@@ -20,4 +20,9 @@ public:
 
 	bool parse();
 	bool doBlock(AstNode* parent);
+
+	AstNode* parseExpression();
+	AstNode* parseTerm();
+	AstNode* parseFactor();
+	AstNode* parseNumber();
 };

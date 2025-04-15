@@ -23,6 +23,10 @@ public:
 		SEMICOLON,
 		COMMA,
 		STRING,
+		ADD,
+		SUB,
+		MUL,
+		DIV,
 	} TokenType;
 
 	typedef struct Token {
