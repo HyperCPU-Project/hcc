@@ -103,29 +103,33 @@ void AstBinaryOpNode::print() {
 }
 
 void AstBinaryOpNode::assemble(NCC* ncc) {
-	int32_t LHS, RHS;
+	int32_t LHS, RHS, OUT;
 	LHS = 0;
 	RHS = 1;
+	OUT = 0;
 
 	left->assemble(ncc);
 	right->assemble(ncc);
 
-#ifdef BACKEND_QPROC
 	if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
 		RHS = backend->previous_reg_indexes.top();
 		backend->previous_reg_indexes.pop();
 		LHS = backend->previous_reg_indexes.top();
 		backend->previous_reg_indexes.pop();
 	}
-#endif
 
 	if (LHS != -1 && RHS != -1) {
+		if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
+			OUT = ++backend->reg_index;
+			backend->previous_reg_indexes.push(backend->reg_index);
+		}
+
 		switch (op) {
 		case Operation::ADD: {
-			ncc->assembly_output += ncc->backend->emit_add(12, LHS, RHS);
+			ncc->assembly_output += ncc->backend->emit_add(OUT, LHS, RHS);
 		} break;
 		case Operation::MUL: {
-			ncc->assembly_output += ncc->backend->emit_mul(12, LHS, RHS);
+			ncc->assembly_output += ncc->backend->emit_mul(OUT, LHS, RHS);
 		} break;
 		}
 	}

@@ -7,11 +7,11 @@ QprocBackend::QprocBackend() {
 }
 
 std::string QprocBackend::emit_function_prologue() {
-	return "push bp\nmov bp sp\n";
+	return "push bp\nmov bp sp";
 }
 
 std::string QprocBackend::emit_function_epilogue() {
-	return "mov bp sp\npop bp\npop ip\n";
+	return "mov bp sp\npop bp\npop ip";
 }
 
 std::string QprocBackend::emit_mov_const(int32_t constant) {
