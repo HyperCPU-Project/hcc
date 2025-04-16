@@ -26,10 +26,10 @@ jobs:
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug
           make -j$(nproc)
-          mv ncc ../ncc-x86_64
+          mv hcc ../hcc-x86_64
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ncc-artifact-x86_64
-          path: ncc-x86_64
+          name: hcc-artifact-x86_64
+          path: hcc-x86_64
