@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
-#include <fmt/base.h>
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include <format>
