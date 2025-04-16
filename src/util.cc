@@ -2,7 +2,7 @@
 #include <result.hpp>
 #include <util.hpp>
 
-char* argsShift(int* argc, char*** argv) {
+char* _argsShift(int* argc, char*** argv) {
 	assert(*argc > 0 && "argc <= 0");
 	--(*argc);
 	return *(*argv)++;
