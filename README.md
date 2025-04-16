@@ -1,3 +1,4 @@
+<img alt="hcc" src="assets/logo.png">
 # Hyper C Compiler: hcc
 Multi-backend K&R style C compiler
 
