@@ -2,6 +2,8 @@
 
 #include <pch.hpp>
 
+struct NoSuccess {};
+
 template <typename T, typename E> class Result {
 public:
 	// Tag types for constructor disambiguation
