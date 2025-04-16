@@ -1,83 +1,160 @@
 %{
-#include <pch.hpp>
+#include <iostream>
+#include <string>
+#include <vector>
 #include "ast.hpp"
 
 extern int yylex();
-extern int yyparse();
-extern FILE* yyin;
+extern int line_num;
 void yyerror(const char* s);
 
-AstFuncDef* root = nullptr;
+AstRootNode* root = nullptr;
 %}
 
 %union {
-    int intval;
-    char* id;
+    #include "ast.hpp"
+    int number;
+    std::string* string;
     AstNode* node;
-    std::vector<AstNode*>* nodeList;
+    AstExpr* expr;
+    AstStatement* stmt;
+    std::vector<AstStatementPtr>* stmt_list;
 }
 
-%token <intval> NUMBER
-%token <id> IDENTIFIER
-%token RETURN INT
-%token CHAR
+%token <number> NUMBER
+%token <string> IDENTIFIER
+%token TYPE_INT RETURN
+%token ASSIGN PLUS MINUS MULTIPLY DIVIDE
+%token LPAREN RPAREN LBRACE RBRACE SEMICOLON
 
-%type <node> expr stmt var_decl var_assign return_stmt
-%type <nodeList> stmt_list
+%type <node> program function_definition
+%type <expr> expression term factor
+%type <stmt> statement declaration assignment return_statement
+%type <stmt_list> statement_list
 
-%start program
+%left PLUS MINUS
+%left MULTIPLY DIVIDE
 
 %%
 
 program:
-    INT IDENTIFIER '(' INT IDENTIFIER ',' CHAR '*' '*' IDENTIFIER
- ')' '{' stmt_list '}' {
-        root = new AstFuncDef($2);
-        root->body = *$12;
-        delete $12;
+    function_definition {
+        root = new AstRootNode();
+        root->children.push_back(AstNodePtr($1));
     }
-;
+    ;
 
-stmt_list:
-    /* empty */ { $$ = new std::vector<AstNode*>(); }
-    | stmt_list stmt { $1->push_back($2); $$ = $1; }
-;
-
-stmt:
-    var_decl
-    | var_assign
-    | return_stmt
-;
-
-var_decl:
-    INT IDENTIFIER ';' {
-        $$ = new AstVarDeclare($2);
+function_definition:
+    TYPE_INT IDENTIFIER LPAREN RPAREN LBRACE statement_list RBRACE {
+        auto* func = new AstFuncDef();
+        func->name = *$2;
+        for (const auto& stmt : *$6) {
+            func->body.push_back(stmt);
+        }
+        delete $2;
+        delete $6;
+        $$ = func;
     }
-;
+    ;
 
-var_assign:
-    IDENTIFIER '=' expr ';' {
-        $$ = new AstVarAssign($1, $3);
+statement_list:
+    statement {
+        $$ = new std::vector<AstStatementPtr>();
+        $$->push_back(AstStatementPtr($1));
     }
-;
-
-return_stmt:
-    RETURN expr ';' {
-        $$ = new AstReturn($2);
+    | statement_list statement {
+        $1->push_back(AstStatementPtr($2));
+        $$ = $1;
     }
-;
+    ;
 
-expr:
-    expr '+' expr { $$ = new AstBinaryOp("+", $1, $3); }
-    | expr '-' expr { $$ = new AstBinaryOp("-", $1, $3); }
-    | expr '*' expr { $$ = new AstBinaryOp("*", $1, $3); }
-    | expr '/' expr { $$ = new AstBinaryOp("/", $1, $3); }
-    | '(' expr ')' { $$ = $2; }
-    | NUMBER { $$ = new AstNumber($1); }
-;
+statement:
+    declaration
+    | assignment
+    | return_statement
+    ;
+
+declaration:
+    TYPE_INT IDENTIFIER SEMICOLON {
+        auto* decl = new AstVarDeclare();
+        decl->name = *$2;
+        decl->type = "int";
+        delete $2;
+        $$ = decl;
+    }
+    ;
+
+assignment:
+    IDENTIFIER ASSIGN expression SEMICOLON {
+        auto* assign = new AstVarAssign();
+        assign->name = *$1;
+        assign->expr = AstExprPtr($3);
+        delete $1;
+        $$ = assign;
+    }
+    ;
+
+return_statement:
+    RETURN expression SEMICOLON {
+        auto* ret = new AstReturn();
+        ret->expr = AstExprPtr($2);
+        $$ = ret;
+    }
+    ;
+
+expression:
+    term
+    | expression PLUS term {
+        auto* op = new AstBinaryOp();
+        op->left = AstExprPtr($1);
+        op->right = AstExprPtr($3);
+        op->op = "add";
+        $$ = op;
+    }
+    | expression MINUS term {
+        auto* op = new AstBinaryOp();
+        op->left = AstExprPtr($1);
+        op->right = AstExprPtr($3);
+        op->op = "sub";
+        $$ = op;
+    }
+    ;
+
+term:
+    factor
+    | term MULTIPLY factor {
+        auto* op = new AstBinaryOp();
+        op->left = AstExprPtr($1);
+        op->right = AstExprPtr($3);
+        op->op = "mul";
+        $$ = op;
+    }
+    | term DIVIDE factor {
+        auto* op = new AstBinaryOp();
+        op->left = AstExprPtr($1);
+        op->right = AstExprPtr($3);
+        op->op = "div";
+        $$ = op;
+    }
+    ;
+
+factor:
+    NUMBER {
+        $$ = new AstNumber($1);
+    }
+    | IDENTIFIER {
+        auto* var = new AstVarRef();
+        var->name = *$1;
+        delete $1;
+        $$ = var;
+    }
+    | LPAREN expression RPAREN {
+        $$ = $2;
+    }
+    ;
 
 %%
 
 void yyerror(const char* s) {
-    fprintf(stderr, "Error: %s\n", s);
-}
+    std::cerr << "Error at line " << line_num << ": " << s << std::endl;
+} 

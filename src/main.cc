@@ -1,52 +1,29 @@
 #include "ast.hpp"
-#include <pch.hpp>
+#include <iostream>
 
-extern AstFuncDef* root;
+extern int yyparse();
 extern FILE* yyin;
-int yyparse();
-
-void print_ast(AstNode* node, int indent = 0) {
-	std::string pad(indent, ' ');
-
-	if (auto n = dynamic_cast<AstFuncDef*>(node)) {
-		std::cout << pad << "Function: " << n->name << "\n";
-		for (auto child : n->body)
-			print_ast(child, indent + 2);
-	} else if (auto n = dynamic_cast<AstVarDeclare*>(node)) {
-		std::cout << pad << "Declare: " << n->name << "\n";
-	} else if (auto n = dynamic_cast<AstVarAssign*>(node)) {
-		std::cout << pad << "Assign: " << n->name << " = \n";
-		print_ast(n->expr, indent + 2);
-	} else if (auto n = dynamic_cast<AstReturn*>(node)) {
-		std::cout << pad << "Return:\n";
-		print_ast(n->expr, indent + 2);
-	} else if (auto n = dynamic_cast<AstBinaryOp*>(node)) {
-		std::cout << pad << "BinaryOp: " << n->op << "\n";
-		print_ast(n->left, indent + 2);
-		print_ast(n->right, indent + 2);
-	} else if (auto n = dynamic_cast<AstNumber*>(node)) {
-		std::cout << pad << "Number: " << n->value << "\n";
-	}
-}
+extern AstRootNode* root;
 
 int main(int argc, char** argv) {
-	if (argc < 2) {
-		return 1;
+	if (argc > 1) {
+		yyin = fopen(argv[1], "r");
+		if (!yyin) {
+			std::cerr << "Could not open file: " << argv[1] << std::endl;
+			return 1;
+		}
 	}
 
-	FILE* file = fopen(argv[1], "r");
-	if (!file) {
-		perror("fopen");
-		return 1;
-	}
-
-	yyin = file;
 	yyparse();
 
 	if (root) {
-		print_ast(root);
+		root->print();
+		delete root;
 	}
 
-	fclose(file);
+	if (yyin != stdin) {
+		fclose(yyin);
+	}
+
 	return 0;
 }
