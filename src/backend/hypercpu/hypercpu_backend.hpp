@@ -13,4 +13,5 @@ public:
 	std::string emit_add(int32_t ROUT, int32_t RLHS, int32_t RRHS);
 	std::string emit_mul(int32_t ROUT, int32_t RLHS, int32_t RRHS);
 	*/
+	std::string emit_entrypoint();
 };

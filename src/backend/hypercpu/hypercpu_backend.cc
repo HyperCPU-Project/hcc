@@ -6,6 +6,15 @@ HyperCPUBackend::HyperCPUBackend() {
 	types["long"] = TypeMetadata("long", 8);
 }
 
+std::string HyperCPUBackend::emit_entrypoint() {
+	return R"(
+.attr(entry) ncc_start_main:
+  // TODO: Call to main
+  halt;
+
+)";
+}
+
 /*
 std::string HyperCPUBackend::emit_function_prologue() {
 	return "push bp\nmov bp sp\n";
