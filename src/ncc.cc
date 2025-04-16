@@ -4,7 +4,7 @@
 #include <ncc.hpp>
 #include <util.hpp>
 
-NCC::NCC() : parser(lexer, nullptr), backend(nullptr) {
+NCC::NCC() : parser(lexer, nullptr), backend(nullptr), printAst(false) {
 	output_filename = "a.out";
 }
 

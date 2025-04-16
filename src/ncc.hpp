@@ -12,6 +12,7 @@ public:
 	Lexer lexer;
 	Parser parser;
 	Backend* backend;
+	bool printAst;
 
 	std::string assembly_output;
 	std::vector<std::string> sources;

@@ -5,7 +5,9 @@
 static std::stack<Value> values;
 
 void AstNode::print() {
-	fmt::print("(non-inherited node)\n");
+	for (AstNode* node : children) {
+		node->print();
+	}
 }
 
 void AstNode::assemble([[maybe_unused]] NCC* ncc) {
@@ -21,11 +23,14 @@ AstNode::~AstNode() {
 }
 
 void AstRootNode::print() {
-	fmt::printf("(root node)");
+	fmt::printf("(root node)\n");
+	AstNode::print();
 }
 
 void AstFuncDef::print() {
-	fmt::printf("%s {}\n", name);
+	fmt::printf("%s {\n", name);
+	AstNode::print();
+	fmt::printf("}\n", name);
 }
 
 AstFuncDef* AstFuncDef::create(Parser* parser) {
@@ -94,6 +99,7 @@ void AstReturnNode::assemble(NCC* ncc) {
 
 void AstReturnNode::print() {
 	fmt::printf("return;\n");
+	AstNode::print();
 }
 
 AstBinaryOpNode* AstBinaryOpNode::create([[maybe_unused]] Parser* parser, Operation op, AstNode* left, AstNode* right) {
@@ -110,6 +116,7 @@ void AstBinaryOpNode::print() {
 	fmt::printf(" %s ", op == Operation::ADD ? "+" : "*");
 	right->print();
 	fmt::printf(")");
+	AstNode::print();
 }
 
 void AstBinaryOpNode::assemble(NCC* ncc) {
@@ -161,6 +168,7 @@ AstNumberNode* AstNumberNode::create(Parser* parser) {
 
 void AstNumberNode::print() {
 	fmt::printf("%d", value);
+	AstNode::print();
 }
 
 void AstNumberNode::assemble(NCC* ncc) {

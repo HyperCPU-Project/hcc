@@ -15,6 +15,7 @@ options:
   --help | -h      print this message
   -o               set output filename
   --backend        set a backend
+	--ast           print AST
 backends:
   qproc
   hypercpu (beta)
@@ -22,6 +23,8 @@ backends:
 			return 0;
 		} else if (arg == "-o") {
 			ncc.output_filename = argsShift();
+		} else if (arg == "--ast") {
+			ncc.printAst = true;
 		} else if (arg == "--backend") {
 			auto result = ncc.selectBackend(argsShift());
 			if (result.is_error()) {
