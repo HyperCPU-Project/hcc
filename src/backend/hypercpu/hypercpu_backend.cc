@@ -52,3 +52,7 @@ std::string HyperCPUBackend::emit_move(std::string rdest, std::string rsrc) {
 std::string HyperCPUBackend::emit_reserve_stack_space([[maybe_unused]] uint64_t bytes) {
 	return "";
 }
+
+std::string HyperCPUBackend::emit_comment(std::string comment) {
+	return fmt::format("// {}\n", comment);
+}

@@ -19,15 +19,19 @@ AstReturnNode* AstReturnNode::create(Parser* parser) {
 	return me;
 }
 
-void AstReturnNode::assemble(HCC* hcc) {
+bool AstReturnNode::assemble(HCC* hcc) {
 	return_expression->assemble(hcc);
 
 	Value& top = hcc->backend->values.top();
 	if (top.getRegisterName() != hcc->backend->abi.return_register && top.isRegister()) {
-		hcc->backend->emit_move(hcc->backend->abi.return_register, top.getRegisterName());
+		hcc->assembly_output += hcc->backend->emit_move(hcc->backend->abi.return_register, top.getRegisterName());
 	}
 
+	hcc->backend->values.pop();
+
 	hcc->assembly_output += hcc->backend->emit_function_epilogue() + "\n";
+
+	return true;
 }
 
 void AstReturnNode::print() {

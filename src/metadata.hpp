@@ -1,6 +1,8 @@
 #pragma once
 #include <pch.hpp>
 
+namespace hcc {
+class Value;
 typedef struct TypeMetadata {
 	std::string name;
 	uint32_t size;
@@ -17,8 +19,9 @@ typedef struct VariableMetadata {
 } VariableMetadata;
 
 typedef struct FunctionMetadata {
-	std::map<std::string, VariableMetadata> variables;
+	std::map<std::string, hcc::Value*> variables;
 	std::string name;
 	TypeMetadata return_type;
 	uint64_t stack_space;
 } FunctionMetadata;
+}; // namespace hcc

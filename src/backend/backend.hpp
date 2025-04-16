@@ -25,6 +25,7 @@ public:
 	virtual std::string emit_div(std::string ROUT, std::string RLHS, std::string RRHS) = 0;
 	virtual std::string emit_move(std::string rdest, std::string rsrc) = 0;
 	virtual std::string emit_reserve_stack_space(uint64_t bytes) = 0;
+	virtual std::string emit_comment(std::string comment) = 0;
 
 	virtual std::string emit_entrypoint() = 0;
 

@@ -21,13 +21,13 @@ public:
 
 	// if name == "" then we are not in a function
 	FunctionMetadata current_function;
-	std::vector<VariableMetadata*> current_uninitialized_variables;
+	std::vector<Value*> current_uninitialized_variables;
 
 	HCC();
 	~HCC();
 
 	Result<NoSuccess, std::string> selectBackend(std::string backend_name);
-	void compile();
+	bool compile();
 	Result<NoSuccess, std::string> parseAndCompile();
 };
 }; // namespace hcc

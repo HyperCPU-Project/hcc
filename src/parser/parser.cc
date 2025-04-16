@@ -63,8 +63,13 @@ bool hcc::Parser::doBlock(AstNode* parent) {
 				if (!node)
 					return false;
 				parent->children.push_back(node);
+			} else if (lexer.peek().type == Lexer::TokenType::EQUAL) {
+				AstAssignVarNode* node = AstAssignVarNode::create(this);
+				if (!node)
+					return false;
+				parent->children.push_back(node);
 			} else {
-				fmt::print("[hcc] [{}] found an identifier, expected only a variable declaration, but the type is unknown", token.line);
+				fmt::print("[hcc] [{}] identifier in the wrong location", token.line);
 				return false;
 			}
 		} break;

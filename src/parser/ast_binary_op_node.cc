@@ -14,7 +14,7 @@ AstBinaryOpNode* AstBinaryOpNode::create([[maybe_unused]] Parser* parser, Operat
 	return me;
 }
 
-void AstBinaryOpNode::assemble(HCC* hcc) {
+bool AstBinaryOpNode::assemble(HCC* hcc) {
 	Value LHS, RHS;
 
 	left->assemble(hcc);
@@ -41,6 +41,8 @@ void AstBinaryOpNode::assemble(HCC* hcc) {
 	}
 
 	hcc->backend->values.push(LHS);
+
+	return true;
 }
 
 void AstBinaryOpNode::print() {

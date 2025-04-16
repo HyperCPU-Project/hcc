@@ -20,6 +20,7 @@ public:
 	std::string emit_div(std::string ROUT, std::string RLHS, std::string RRHS);
 	std::string emit_move(std::string rdest, std::string rsrc);
 	std::string emit_reserve_stack_space(uint64_t bytes);
+	std::string emit_comment(std::string comment);
 
 	std::string emit_entrypoint();
 };

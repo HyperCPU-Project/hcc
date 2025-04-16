@@ -8,10 +8,13 @@ void hcc::AstNode::print() {
 	}
 }
 
-void hcc::AstNode::assemble([[maybe_unused]] HCC* hcc) {
+bool hcc::AstNode::assemble([[maybe_unused]] HCC* hcc) {
 	for (AstNode* node : children) {
-		node->assemble(hcc);
+		if (!node->assemble(hcc))
+			return false;
 	}
+
+	return true;
 }
 
 hcc::AstNode::~AstNode() {

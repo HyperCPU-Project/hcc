@@ -42,7 +42,8 @@ Result<NoSuccess, std::string> hcc::HCC::parseAndCompile() {
 		return Result<NoSuccess, std::string>::error("parser error");
 
 	fmt::print("[ncc] compiling\n");
-	compile();
+	if (!compile())
+		return Result<NoSuccess, std::string>::error("compiler error");
 
 	std::ofstream outfd;
 	outfd.open(output_filename);

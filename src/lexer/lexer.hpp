@@ -28,6 +28,7 @@ public:
 		SUB,
 		MUL,
 		DIV,
+		EQUAL,
 	} TokenType;
 
 	typedef struct Token {

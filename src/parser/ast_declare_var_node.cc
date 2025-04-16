@@ -19,24 +19,26 @@ AstDeclareVarNode* AstDeclareVarNode::create(Parser* parser) {
 		return nullptr;
 	}
 
-	me->name = std::get<std::string>(name_tok.value);
-	me->variable.declared_at = name_tok.line;
+	me->value = new Value();
+	me->value->var.declared_at = name_tok.line;
+	me->value->var.name = std::get<std::string>(name_tok.value);
 
 	return me;
 }
 
-void AstDeclareVarNode::assemble(HCC* hcc) {
-	variable.stack_align = hcc->current_function.stack_space + 4;
-	variable.type = type;
-	variable.name = name;
+bool AstDeclareVarNode::assemble(HCC* hcc) {
+	value->var.stack_align = hcc->current_function.stack_space + 4;
+	value->var.type = type;
 
 	hcc->assembly_output += hcc->backend->emit_reserve_stack_space(type.size);
 
-	hcc->current_function.variables[name] = variable;
-	hcc->current_uninitialized_variables.push_back(&hcc->current_function.variables[name]);
+	hcc->current_function.variables[value->var.name] = value;
+	hcc->current_uninitialized_variables.push_back(hcc->current_function.variables[value->var.name]);
+
+	return true;
 }
 
 void AstDeclareVarNode::print() {
-	fmt::print("{} {};\n", type.name, name);
+	fmt::print("{} {};\n", type.name, value->var.name);
 	AstNode::print();
 }

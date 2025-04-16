@@ -5,17 +5,17 @@
 using namespace hcc;
 
 Value::Value(std::string reg_name) {
-	this->stack_align = 0;
+	this->var = {};
 	this->reg_name = reg_name;
 }
 
-Value::Value(uint64_t stack_align) {
-	this->stack_align = stack_align;
+Value::Value(VariableMetadata var) {
+	this->var = var;
 	this->reg_name = "";
 }
 
 Value::Value() {
-	this->stack_align = 0;
+	this->var = {};
 	this->reg_name = "";
 }
 
@@ -48,5 +48,15 @@ void Value::mul(HCC* hcc, Value* other) {
 void Value::div(HCC* hcc, Value* other) {
 	if (isRegister()) {
 		hcc->assembly_output += hcc->backend->emit_div(reg_name, reg_name, other->reg_name);
+	}
+}
+
+void Value::eq(HCC* hcc, Value* other) {
+	fmt::print("assign\n");
+	Value otherLoaded;
+	if (other->isRegister()) {
+	}
+
+	if (isRegister()) {
 	}
 }

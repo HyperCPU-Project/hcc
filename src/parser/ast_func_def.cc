@@ -45,7 +45,7 @@ AstFuncDef* AstFuncDef::create(Parser* parser) {
 	return me;
 }
 
-void AstFuncDef::assemble(HCC* hcc) {
+bool AstFuncDef::assemble(HCC* hcc) {
 	hcc->current_function.name = this->name;
 	hcc->current_function.return_type = return_type;
 	hcc->current_function.variables.clear();
@@ -54,15 +54,22 @@ void AstFuncDef::assemble(HCC* hcc) {
 	hcc->assembly_output += this->name + ":\n";
 	hcc->assembly_output += hcc->backend->emit_function_prologue() + "\n";
 
-	AstNode::assemble(hcc);
+	if (!AstNode::assemble(hcc))
+		return false;
 
-	for (VariableMetadata* var : hcc->current_uninitialized_variables) {
-		fmt::print("[hcc] [{}] warning: uninitialized variable {}\n", var->declared_at, var->name);
+	for (Value* var : hcc->current_uninitialized_variables) {
+		fmt::print("[hcc] [{}] warning: uninitialized variable {}\n", var->var.declared_at, var->var.name);
+	}
+
+	for (auto [name, value] : hcc->current_function.variables) {
+		delete value;
 	}
 
 	hcc->current_function.name = "";
 	hcc->current_function.variables.clear();
 	hcc->current_uninitialized_variables.clear();
+
+	return true;
 }
 
 void AstFuncDef::print() {

@@ -199,6 +199,10 @@ hcc::Lexer::Token hcc::Lexer::next() {
 				token.type = TokenType::DIV;
 				pos++;
 				break;
+			case '=':
+				token.type = TokenType::EQUAL;
+				pos++;
+				break;
 			case '\n':
 				line++;
 				break;

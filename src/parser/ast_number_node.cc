@@ -16,6 +16,7 @@ void AstNumberNode::print() {
 	AstNode::print();
 }
 
-void AstNumberNode::assemble(HCC* hcc) {
+bool AstNumberNode::assemble(HCC* hcc) {
 	hcc->assembly_output += hcc->backend->emit_mov_const(this->value);
+	return true;
 }

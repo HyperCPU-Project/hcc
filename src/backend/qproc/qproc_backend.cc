@@ -65,6 +65,10 @@ std::string QprocBackend::emit_reserve_stack_space([[maybe_unused]] uint64_t byt
 	return fmt::format("movi r0 {}\nsub sp, r0\n", bytes);
 }
 
+std::string QprocBackend::emit_comment(std::string comment) {
+	return fmt::format("; {}\n", comment);
+}
+
 std::string QprocBackend::emit_entrypoint() {
 	return R"(b hcc_start_main
 hcc_start_main:

@@ -47,6 +47,10 @@ std::string Backend::emit_reserve_stack_space([[maybe_unused]] uint64_t bytes) {
 	return "";
 }
 
+std::string Backend::emit_comment([[maybe_unused]] std::string comment) {
+	return "";
+}
+
 std::string Backend::emit_entrypoint() {
 	return "";
 }

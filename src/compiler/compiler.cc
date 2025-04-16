@@ -1,9 +1,11 @@
 #include <backend/backend.hpp>
 #include <hcc.hpp>
 
-void hcc::HCC::compile() {
+bool hcc::HCC::compile() {
 	assembly_output += backend->emit_entrypoint();
 	if (printAst)
 		parser.root_node->print();
-	parser.root_node->assemble(this);
+	if (!parser.root_node->assemble(this))
+		return false;
+	return true;
 }
