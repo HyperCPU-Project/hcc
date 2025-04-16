@@ -1,3 +1,4 @@
+#include <backend/backend.hpp>
 #include <parser/ast.hpp>
 #include <parser/parser.hpp>
 
@@ -123,7 +124,6 @@ AstNode* Parser::parseExpression() {
 			delete left;
 			return nullptr;
 		}
-		fmt::print("ok\n");
 		left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::ADD, left, right);
 	}
 

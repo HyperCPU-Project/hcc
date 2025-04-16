@@ -1,4 +1,5 @@
 #pragma once
+#include <metadata.hpp>
 #include <ncc.hpp>
 #include <parser/parser.hpp>
 #include <pch.hpp>

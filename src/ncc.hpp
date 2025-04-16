@@ -1,9 +1,10 @@
 #pragma once
-#include <backend/backend.hpp>
 #include <lexer/lexer.hpp>
+#include <metadata.hpp>
 #include <parser/parser.hpp>
 #include <pch.hpp>
 
+class Backend;
 class NCC {
 public:
 	Lexer lexer;

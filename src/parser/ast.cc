@@ -1,4 +1,8 @@
+#include <backend/backend.hpp>
 #include <parser/ast.hpp>
+#include <value.hpp>
+
+static std::stack<Value> values;
 
 void AstNode::print() {
 	fmt::print("(non-inherited node)\n");
@@ -103,36 +107,38 @@ void AstBinaryOpNode::print() {
 }
 
 void AstBinaryOpNode::assemble(NCC* ncc) {
-	int32_t LHS, RHS, OUT;
-	LHS = 0;
-	RHS = 1;
-	OUT = 0;
+	Value LHS, RHS;
 
 	left->assemble(ncc);
 	right->assemble(ncc);
 
-	if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
+	/*if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
 		RHS = backend->previous_reg_indexes.top();
 		backend->previous_reg_indexes.pop();
 		LHS = backend->previous_reg_indexes.top();
 		backend->previous_reg_indexes.pop();
+	}*/
+
+	/*if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
+		OUT = ++backend->reg_index;
+		backend->previous_reg_indexes.push(backend->reg_index);
+	}*/
+
+	RHS = ncc->backend->values.top();
+	ncc->backend->values.pop();
+	LHS = ncc->backend->values.top();
+	ncc->backend->values.pop();
+
+	switch (op) {
+	case Operation::ADD: {
+		LHS.add(ncc, &RHS);
+	} break;
+	case Operation::MUL: {
+		LHS.mul(ncc, &RHS);
+	} break;
 	}
 
-	if (LHS != -1 && RHS != -1) {
-		if (QprocBackend* backend = dynamic_cast<QprocBackend*>(ncc->backend)) {
-			OUT = ++backend->reg_index;
-			backend->previous_reg_indexes.push(backend->reg_index);
-		}
-
-		switch (op) {
-		case Operation::ADD: {
-			ncc->assembly_output += ncc->backend->emit_add(OUT, LHS, RHS);
-		} break;
-		case Operation::MUL: {
-			ncc->assembly_output += ncc->backend->emit_mul(OUT, LHS, RHS);
-		} break;
-		}
-	}
+	ncc->backend->values.push(LHS);
 }
 
 AstNumberNode* AstNumberNode::create(Parser* parser) {
@@ -146,7 +152,6 @@ void AstNumberNode::print() {
 }
 
 void AstNumberNode::assemble(NCC* ncc) {
-	fmt::print("ok\n");
 	ncc->assembly_output += ncc->backend->emit_mov_const(this->value);
 }
 

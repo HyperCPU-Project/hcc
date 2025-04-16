@@ -1,11 +1,11 @@
 #pragma once
-#include <backend/backend.hpp>
 #include <lexer/lexer.hpp>
 #include <parser/ast.hpp>
 #include <pch.hpp>
 
 class AstRootNode;
 class AstNode;
+class Backend;
 
 class Parser {
 public:
