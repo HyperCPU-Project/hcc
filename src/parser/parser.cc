@@ -99,14 +99,26 @@ AstNode* Parser::parseTerm() {
 	if (!left)
 		return nullptr;
 
-	while (currentToken.type == Lexer::TokenType::MUL) {
-		currentToken = lexer.next(); // consume '*'
+	Lexer::Token op = currentToken;
+	while (op.type == Lexer::TokenType::MUL || op.type == Lexer::TokenType::DIV) {
+		currentToken = lexer.next(); // consume
 		AstNode* right = parseFactor();
 		if (!right) {
 			delete left;
 			return nullptr;
 		}
-		left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::MUL, left, right);
+
+		switch (op.type) {
+		case Lexer::TokenType::MUL:
+			left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::MUL, left, right);
+			break;
+		case Lexer::TokenType::DIV:
+			left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::DIV, left, right);
+			break;
+		default:
+			break;
+		}
+		op = currentToken;
 	}
 
 	return left;
@@ -117,14 +129,24 @@ AstNode* Parser::parseExpression() {
 	if (!left)
 		return nullptr;
 
-	while (currentToken.type == Lexer::TokenType::ADD) {
+	while (currentToken.type == Lexer::TokenType::ADD || currentToken.type == Lexer::TokenType::SUB) {
 		currentToken = lexer.next(); // consume '+'
 		AstNode* right = parseTerm();
 		if (!right) {
 			delete left;
 			return nullptr;
 		}
-		left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::ADD, left, right);
+
+		switch (currentToken.type) {
+		case Lexer::TokenType::ADD:
+			left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::ADD, left, right);
+			break;
+		case Lexer::TokenType::SUB:
+			left = AstBinaryOpNode::create(this, AstBinaryOpNode::Operation::SUB, left, right);
+			break;
+		default:
+			break;
+		}
 	}
 
 	return left;

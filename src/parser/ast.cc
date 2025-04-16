@@ -83,6 +83,12 @@ void AstFuncDef::assemble(NCC* ncc) {
 
 void AstReturnNode::assemble(NCC* ncc) {
 	return_expression->assemble(ncc);
+
+	Value& top = ncc->backend->values.top();
+	if (top.getRegisterName() != ncc->backend->abi.return_register && top.isRegister()) {
+		ncc->backend->emit_move(ncc->backend->abi.return_register, top.getRegisterName());
+	}
+
 	ncc->assembly_output += ncc->backend->emit_function_epilogue() + "\n";
 }
 
@@ -133,8 +139,14 @@ void AstBinaryOpNode::assemble(NCC* ncc) {
 	case Operation::ADD: {
 		LHS.add(ncc, &RHS);
 	} break;
+	case Operation::SUB: {
+		LHS.sub(ncc, &RHS);
+	} break;
 	case Operation::MUL: {
 		LHS.mul(ncc, &RHS);
+	} break;
+	case Operation::DIV: {
+		LHS.div(ncc, &RHS);
 	} break;
 	}
 

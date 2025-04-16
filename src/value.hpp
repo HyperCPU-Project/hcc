@@ -13,7 +13,10 @@ public:
 	Value();
 
 	bool isRegister();
+	std::string getRegisterName();
 
 	void add(NCC* ncc, Value* other);
+	void sub(NCC* ncc, Value* other);
 	void mul(NCC* ncc, Value* other);
+	void div(NCC* ncc, Value* other);
 };

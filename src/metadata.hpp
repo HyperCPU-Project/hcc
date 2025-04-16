@@ -18,4 +18,5 @@ typedef struct FunctionMetadata {
 	std::map<std::string, VariableMetadata> variables;
 	std::string name;
 	TypeMetadata return_type;
+	uint64_t stack_space;
 } FunctionMetadata;

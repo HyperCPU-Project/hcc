@@ -43,7 +43,7 @@ public:
 
 class AstBinaryOpNode : public AstNode {
 public:
-	enum class Operation { ADD, MUL };
+	enum class Operation { ADD, SUB, MUL, DIV };
 
 	Operation op;
 	AstNode* left;

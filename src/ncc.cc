@@ -8,7 +8,7 @@ NCC::NCC() : parser(lexer, nullptr), backend(nullptr) {
 #endif
 	parser.backend = backend;
 
-	lexer.code = "int main() { return (1 + 1) + 2 * 4; }";
+	lexer.code = "int main() { return 69 / 3; }";
 
 	fmt::print("[ncc] parsing\n");
 	if (!parser.parse())

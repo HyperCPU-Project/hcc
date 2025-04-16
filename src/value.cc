@@ -21,14 +21,30 @@ bool Value::isRegister() {
 	return (reg_name != "");
 }
 
+std::string Value::getRegisterName() {
+	return reg_name;
+}
+
 void Value::add(NCC* ncc, Value* other) {
 	if (isRegister()) {
 		ncc->assembly_output += ncc->backend->emit_add(reg_name, reg_name, other->reg_name);
 	}
 }
 
+void Value::sub(NCC* ncc, Value* other) {
+	if (isRegister()) {
+		ncc->assembly_output += ncc->backend->emit_sub(reg_name, reg_name, other->reg_name);
+	}
+}
+
 void Value::mul(NCC* ncc, Value* other) {
 	if (isRegister()) {
 		ncc->assembly_output += ncc->backend->emit_mul(reg_name, reg_name, other->reg_name);
+	}
+}
+
+void Value::div(NCC* ncc, Value* other) {
+	if (isRegister()) {
+		ncc->assembly_output += ncc->backend->emit_div(reg_name, reg_name, other->reg_name);
 	}
 }

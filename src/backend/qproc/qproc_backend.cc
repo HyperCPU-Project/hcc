@@ -3,6 +3,7 @@
 QprocBackend::QprocBackend() {
 	types["void"] = TypeMetadata("void", 0);
 	types["int"] = TypeMetadata("int", 4);
+	abi.return_register = "r0";
 	reg_index = 0;
 }
 
@@ -27,20 +28,35 @@ std::string QprocBackend::emit_mov_const(int32_t constant) {
 }
 
 std::string QprocBackend::emit_add(std::string ROUT, std::string RLHS, std::string RRHS) {
-	// return fmt::format("movi {} {}\nadd {} {}\n", ROUT, RLHS, ROUT, RRHS);
-	// return fmt::format("add {} {}\n", RLHS, RRHS);
 	if (ROUT != RLHS) {
 		return fmt::format("add {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
 	}
 	return fmt::format("add {} {}\n", RLHS, RRHS);
 }
 
+std::string QprocBackend::emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) {
+	if (ROUT != RLHS) {
+		return fmt::format("sub {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
+	}
+	return fmt::format("sub {} {}\n", RLHS, RRHS);
+}
+
 std::string QprocBackend::emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) {
-	// return fmt::format("movi {} {}\nmul {} {}\n", ROUT, RLHS, ROUT, RRHS);
 	if (ROUT != RLHS) {
 		return fmt::format("mul {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
 	}
 	return fmt::format("mul {} {}\n", RLHS, RRHS);
+}
+
+std::string QprocBackend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
+	if (ROUT != RLHS) {
+		return fmt::format("div {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
+	}
+	return fmt::format("div {} {}\n", RLHS, RRHS);
+}
+
+std::string QprocBackend::emit_move(std::string rdest, std::string rsrc) {
+	return fmt::format("mov {} {}\n", rdest, rsrc);
 }
 
 std::string QprocBackend::emit_entrypoint() {
