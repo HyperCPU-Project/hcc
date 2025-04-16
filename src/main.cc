@@ -1,50 +1,52 @@
-#include <hcc.hpp>
+#include "ast.hpp"
 #include <pch.hpp>
-#include <util.hpp>
 
-using namespace hcc;
+extern AstFuncDef* root;
+extern FILE* yyin;
+int yyparse();
+
+void print_ast(AstNode* node, int indent = 0) {
+	std::string pad(indent, ' ');
+
+	if (auto n = dynamic_cast<AstFuncDef*>(node)) {
+		std::cout << pad << "Function: " << n->name << "\n";
+		for (auto child : n->body)
+			print_ast(child, indent + 2);
+	} else if (auto n = dynamic_cast<AstVarDeclare*>(node)) {
+		std::cout << pad << "Declare: " << n->name << "\n";
+	} else if (auto n = dynamic_cast<AstVarAssign*>(node)) {
+		std::cout << pad << "Assign: " << n->name << " = \n";
+		print_ast(n->expr, indent + 2);
+	} else if (auto n = dynamic_cast<AstReturn*>(node)) {
+		std::cout << pad << "Return:\n";
+		print_ast(n->expr, indent + 2);
+	} else if (auto n = dynamic_cast<AstBinaryOp*>(node)) {
+		std::cout << pad << "BinaryOp: " << n->op << "\n";
+		print_ast(n->left, indent + 2);
+		print_ast(n->right, indent + 2);
+	} else if (auto n = dynamic_cast<AstNumber*>(node)) {
+		std::cout << pad << "Number: " << n->value << "\n";
+	}
+}
 
 int main(int argc, char** argv) {
-	hcc::HCC hcc;
-
-	argsShift();
-	for ([[maybe_unused]] int i = 0; argc; ++i) {
-		std::string arg = argsShift();
-
-		if (arg == "--help" || arg == "-h") {
-			fmt::print(R"(usage: hcc [OPTION]... [INPUT]
-options:
-  --help | -h      print this message
-  -o               set output filename
-  --backend        set a backend
-	--ast           print AST
-backends:
-  qproc
-  hypercpu (beta)
-)");
-			return 0;
-		} else if (arg == "-o") {
-			hcc.output_filename = argsShift();
-		} else if (arg == "--ast") {
-			hcc.printAst = true;
-		} else if (arg == "--backend") {
-			auto result = hcc.selectBackend(argsShift());
-			if (result.is_error()) {
-				fmt::print("[hcc] failed to select a backend: {}\n", result.get_error().value());
-				return 1;
-			}
-		} else {
-			hcc.sources.push_back(arg);
-		}
+	if (argc < 2) {
+		return 1;
 	}
 
-	{
-		auto result = hcc.parseAndCompile();
-		if (result.is_error()) {
-			fmt::print("[hcc] error: {}\n", result.get_error().value());
-			return 1;
-		}
+	FILE* file = fopen(argv[1], "r");
+	if (!file) {
+		perror("fopen");
+		return 1;
 	}
 
+	yyin = file;
+	yyparse();
+
+	if (root) {
+		print_ast(root);
+	}
+
+	fclose(file);
 	return 0;
 }
