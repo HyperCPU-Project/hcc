@@ -2,7 +2,7 @@
 
 hcc::Lexer::Lexer(std::string code) : code(code) {
 	pos = 0;
-	line = 0;
+	line = 1;
 }
 
 inline constexpr bool hcc::Lexer::is_letter(char c) {
