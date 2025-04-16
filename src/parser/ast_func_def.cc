@@ -6,12 +6,6 @@
 
 using namespace hcc;
 
-void AstFuncDef::print() {
-	fmt::printf("%s {\n", name);
-	AstNode::print();
-	fmt::printf("}\n", name);
-}
-
 AstFuncDef* AstFuncDef::create(Parser* parser) {
 	AstFuncDef* me = new AstFuncDef();
 
@@ -52,15 +46,27 @@ AstFuncDef* AstFuncDef::create(Parser* parser) {
 }
 
 void AstFuncDef::assemble(HCC* hcc) {
-	hcc->currentFunction.name = this->name;
-	hcc->currentFunction.return_type = return_type;
-	hcc->currentFunction.variables.clear();
+	hcc->current_function.name = this->name;
+	hcc->current_function.return_type = return_type;
+	hcc->current_function.variables.clear();
+	hcc->current_uninitialized_variables.clear();
 
 	hcc->assembly_output += this->name + ":\n";
 	hcc->assembly_output += hcc->backend->emit_function_prologue() + "\n";
 
 	AstNode::assemble(hcc);
 
-	hcc->currentFunction.name = "";
-	hcc->currentFunction.variables.clear();
+	for (VariableMetadata* var : hcc->current_uninitialized_variables) {
+		fmt::print("[hcc] [{}] warning: uninitialized variable {}\n", var->declared_at, var->name);
+	}
+
+	hcc->current_function.name = "";
+	hcc->current_function.variables.clear();
+	hcc->current_uninitialized_variables.clear();
+}
+
+void AstFuncDef::print() {
+	fmt::printf("%s %s {\n", return_type.name, name);
+	AstNode::print();
+	fmt::printf("}\n", name);
 }

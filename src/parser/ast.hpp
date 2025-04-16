@@ -4,10 +4,11 @@
 #include <parser/parser.hpp>
 #include <pch.hpp>
 
+namespace hcc {
+
 class Parser;
 class HCC;
 
-namespace hcc {
 class AstNode {
 public:
 	std::vector<AstNode*> children;
@@ -60,6 +61,17 @@ public:
 	int value;
 
 	static AstNumberNode* create(Parser* parser);
+	void assemble(HCC* hcc);
+	void print();
+};
+
+class AstDeclareVarNode : public AstNode {
+public:
+	TypeMetadata type;
+	std::string name;
+	VariableMetadata variable;
+
+	static AstDeclareVarNode* create(Parser* parser);
 	void assemble(HCC* hcc);
 	void print();
 };

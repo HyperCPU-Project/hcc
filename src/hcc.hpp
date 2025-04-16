@@ -20,7 +20,8 @@ public:
 	std::string output_filename;
 
 	// if name == "" then we are not in a function
-	FunctionMetadata currentFunction;
+	FunctionMetadata current_function;
+	std::vector<VariableMetadata*> current_uninitialized_variables;
 
 	HCC();
 	~HCC();

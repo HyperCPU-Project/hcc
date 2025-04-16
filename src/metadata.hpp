@@ -12,6 +12,8 @@ typedef struct VariableMetadata {
 	TypeMetadata type;
 	uint32_t stack_align;
 	std::string name;
+
+	uint32_t declared_at;
 } VariableMetadata;
 
 typedef struct FunctionMetadata {

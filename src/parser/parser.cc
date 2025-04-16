@@ -52,14 +52,28 @@ bool hcc::Parser::doBlock(AstNode* parent) {
 		switch (token.type) {
 		case Lexer::TokenType::RETURN: {
 			AstReturnNode* ret = AstReturnNode::create(this);
-			if (ret == nullptr)
+			if (!ret)
 				return false;
 			parent->children.push_back(ret);
 		} break;
-		default:
+		case Lexer::TokenType::IDENTIFIER: {
+			std::string value = std::get<std::string>(token.value);
+			if (backend->getTypeFromName(value)) {
+				AstDeclareVarNode* node = AstDeclareVarNode::create(this);
+				if (!node)
+					return false;
+				parent->children.push_back(node);
+			} else {
+				fmt::print("[hcc] [{}] found an identifier, expected only a variable declaration, but the type is unknown", token.line);
+				return false;
+			}
+		} break;
+		case Lexer::TokenType::SEMICOLON:
 			break;
+		default:
+			fmt::print("[hcc] [{}] unexpected token and unhandled type", token.line);
+			return false;
 		}
-
 		token = lexer.next();
 	}
 
