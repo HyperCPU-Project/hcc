@@ -29,6 +29,6 @@ void Value::add(NCC* ncc, Value* other) {
 
 void Value::mul(NCC* ncc, Value* other) {
 	if (isRegister()) {
-		ncc->assembly_output += ncc->backend->emit_add(reg_name, reg_name, other->reg_name);
+		ncc->assembly_output += ncc->backend->emit_mul(reg_name, reg_name, other->reg_name);
 	}
 }

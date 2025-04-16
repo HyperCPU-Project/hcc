@@ -42,3 +42,13 @@ std::string QprocBackend::emit_mul(std::string ROUT, std::string RLHS, std::stri
 	}
 	return fmt::format("mul {} {}\n", RLHS, RRHS);
 }
+
+std::string QprocBackend::emit_entrypoint() {
+	return R"(b ncc_start_main
+ncc_start_main:
+call main
+qdb
+hlt
+
+)";
+}

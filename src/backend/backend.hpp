@@ -19,6 +19,8 @@ public:
 	virtual std::string emit_add(std::string ROUT, std::string RLHS, std::string RRHS) = 0;
 	virtual std::string emit_mul(std::string, std::string RLHS, std::string RRHS) = 0;
 
+	virtual std::string emit_entrypoint() = 0;
+
 	TypeMetadata* getTypeFromName(std::string name);
 };
 

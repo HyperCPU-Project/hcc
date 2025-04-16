@@ -29,6 +29,10 @@ std::string Backend::emit_add([[maybe_unused]] std::string ROUT, [[maybe_unused]
 	return "";
 }
 
+std::string Backend::emit_entrypoint() {
+	return "";
+}
+
 TypeMetadata* Backend::getTypeFromName(std::string name) {
 	if (!types.contains(name)) {
 		return nullptr;
