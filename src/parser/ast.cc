@@ -125,18 +125,6 @@ void hcc::AstBinaryOpNode::assemble(HCC* hcc) {
 	left->assemble(hcc);
 	right->assemble(hcc);
 
-	/*if (QprocBackend* backend = dynamic_cast<QprocBackend*>(hcc->backend)) {
-		RHS = backend->previous_reg_indexes.top();
-		backend->previous_reg_indexes.pop();
-		LHS = backend->previous_reg_indexes.top();
-		backend->previous_reg_indexes.pop();
-	}*/
-
-	/*if (QprocBackend* backend = dynamic_cast<QprocBackend*>(hcc->backend)) {
-		OUT = ++backend->reg_index;
-		backend->previous_reg_indexes.push(backend->reg_index);
-	}*/
-
 	RHS = hcc->backend->values.top();
 	hcc->backend->values.pop();
 	LHS = hcc->backend->values.top();
