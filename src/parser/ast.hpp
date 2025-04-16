@@ -1,18 +1,19 @@
 #pragma once
+#include <hcc.hpp>
 #include <metadata.hpp>
-#include <ncc.hpp>
 #include <parser/parser.hpp>
 #include <pch.hpp>
 
 class Parser;
-class NCC;
+class HCC;
 
+namespace hcc {
 class AstNode {
 public:
 	std::vector<AstNode*> children;
 
 	virtual void print() = 0;
-	virtual void assemble(NCC* ncc);
+	virtual void assemble(HCC* hcc);
 
 	virtual ~AstNode() = 0;
 };
@@ -28,7 +29,7 @@ public:
 	TypeMetadata return_type;
 
 	static AstFuncDef* create(Parser* parser);
-	void assemble(NCC* ncc);
+	void assemble(HCC* hcc);
 	void print();
 };
 
@@ -37,7 +38,7 @@ public:
 	AstNode* return_expression;
 
 	static AstReturnNode* create(Parser* parser);
-	void assemble(NCC* ncc);
+	void assemble(HCC* hcc);
 	void print();
 };
 
@@ -50,7 +51,7 @@ public:
 	AstNode* right;
 
 	static AstBinaryOpNode* create(Parser* parser, Operation op, AstNode* left, AstNode* right);
-	void assemble(NCC* ncc);
+	void assemble(HCC* hcc);
 	void print();
 };
 
@@ -59,6 +60,7 @@ public:
 	int value;
 
 	static AstNumberNode* create(Parser* parser);
-	void assemble(NCC* ncc);
+	void assemble(HCC* hcc);
 	void print();
 };
+} // namespace hcc

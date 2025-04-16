@@ -1,23 +1,23 @@
 #include <lexer/lexer.hpp>
 
-Lexer::Lexer(std::string code) : code(code) {
+hcc::Lexer::Lexer(std::string code) : code(code) {
 	pos = 0;
 	line = 0;
 }
 
-inline constexpr bool Lexer::is_letter(char c) {
+inline constexpr bool hcc::Lexer::is_letter(char c) {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 }
 
-inline constexpr bool Lexer::is_identifier_letter(char c) {
+inline constexpr bool hcc::Lexer::is_identifier_letter(char c) {
 	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || is_digit(c));
 }
 
-inline constexpr bool Lexer::is_digit(char c) {
+inline constexpr bool hcc::Lexer::is_digit(char c) {
 	return (c >= '0' && c <= '9');
 }
 
-Lexer::Token Lexer::integer() {
+hcc::Lexer::Token hcc::Lexer::integer() {
 	Token tok;
 	bool is_hex;
 
@@ -88,7 +88,7 @@ Lexer::Token Lexer::integer() {
 	return tok;
 }
 
-Lexer::Token Lexer::identifier() {
+hcc::Lexer::Token hcc::Lexer::identifier() {
 	Token tok;
 
 	tok.type = TokenType::IDENTIFIER;
@@ -110,7 +110,7 @@ Lexer::Token Lexer::identifier() {
 	return tok;
 }
 
-Lexer::Token Lexer::string() {
+hcc::Lexer::Token hcc::Lexer::string() {
 	Token tok;
 	bool definition;
 
@@ -142,7 +142,7 @@ Lexer::Token Lexer::string() {
 	return tok;
 }
 
-Lexer::Token Lexer::next() {
+hcc::Lexer::Token hcc::Lexer::next() {
 	while (pos < code.length()) {
 		Token token{0, TokenType::NONE, line};
 		char& c = code.at(pos);
@@ -211,7 +211,7 @@ Lexer::Token Lexer::next() {
 	return Token{0, TokenType::END, line};
 }
 
-Lexer::Token Lexer::peek(uint32_t count_forward) {
+hcc::Lexer::Token hcc::Lexer::peek(uint32_t count_forward) {
 	uint64_t old_pos = pos;
 
 	Token token{0, TokenType::END, line};

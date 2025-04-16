@@ -2,23 +2,25 @@
 #include <parser/ast.hpp>
 #include <parser/parser.hpp>
 
-Parser::Parser(Lexer& lexer, Backend* backend) : backend(backend), lexer(lexer), root_node(nullptr) {
+using namespace hcc;
+
+hcc::Parser::Parser(Lexer& lexer, Backend* backend) : backend(backend), lexer(lexer), root_node(nullptr) {
 	root_node = new AstRootNode();
 }
 
-Parser::~Parser() {
+hcc::Parser::~Parser() {
 	if (root_node)
 		delete root_node;
 }
 
-bool Parser::parse() {
+bool hcc::Parser::parse() {
 	Lexer::Token token = lexer.next();
 	while (token.type != Lexer::TokenType::END) {
 		currentToken = token;
 		switch (token.type) {
 		case Lexer::TokenType::IDENTIFIER: {
 			if (!backend->getTypeFromName(std::get<std::string>(token.value))) {
-				fmt::print("[ncc] [{}] invalid type\n", token.line);
+				fmt::print("[hcc] [{}] invalid type\n", token.line);
 				return false;
 			}
 
@@ -37,10 +39,10 @@ bool Parser::parse() {
 	return true;
 }
 
-bool Parser::doBlock(AstNode* parent) {
+bool hcc::Parser::doBlock(AstNode* parent) {
 	Lexer::Token token = lexer.next();
 	if (token.type != Lexer::TokenType::LSBRACKET) {
-		fmt::print("[ncc] [{}] expected '{{' at start of block\n", token.line);
+		fmt::print("[hcc] [{}] expected '{{' at start of block\n", token.line);
 		return false;
 	}
 
@@ -64,9 +66,9 @@ bool Parser::doBlock(AstNode* parent) {
 	return true;
 }
 
-AstNode* Parser::parseNumber() {
+AstNode* hcc::Parser::parseNumber() {
 	if (currentToken.type != Lexer::TokenType::INTEGER) {
-		fmt::print("[ncc] [{}] expected number {}\n", currentToken.line, (int)currentToken.type);
+		fmt::print("[hcc] [{}] expected number {}\n", currentToken.line, (int)currentToken.type);
 		return nullptr;
 	}
 
@@ -75,7 +77,7 @@ AstNode* Parser::parseNumber() {
 	return node;
 }
 
-AstNode* Parser::parseFactor() {
+AstNode* hcc::Parser::parseFactor() {
 	if (currentToken.type == Lexer::TokenType::LPAREN) {
 		currentToken = lexer.next(); // consume '('
 		AstNode* expr = parseExpression();
@@ -83,7 +85,7 @@ AstNode* Parser::parseFactor() {
 			return nullptr;
 
 		if (currentToken.type != Lexer::TokenType::RPAREN) {
-			fmt::print("[ncc] [{}] expected ')'\n", currentToken.line);
+			fmt::print("[hcc] [{}] expected ')'\n", currentToken.line);
 			delete expr;
 			return nullptr;
 		}
@@ -94,7 +96,7 @@ AstNode* Parser::parseFactor() {
 	return parseNumber();
 }
 
-AstNode* Parser::parseTerm() {
+AstNode* hcc::Parser::parseTerm() {
 	AstNode* left = parseFactor();
 	if (!left)
 		return nullptr;
@@ -124,7 +126,7 @@ AstNode* Parser::parseTerm() {
 	return left;
 }
 
-AstNode* Parser::parseExpression() {
+AstNode* hcc::Parser::parseExpression() {
 	AstNode* left = parseTerm();
 	if (!left)
 		return nullptr;

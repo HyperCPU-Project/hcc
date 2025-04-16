@@ -1,20 +1,20 @@
 #include <backend/backend.hpp>
 #include <backend/hypercpu/hypercpu_backend.hpp>
 #include <backend/qproc/qproc_backend.hpp>
-#include <ncc.hpp>
+#include <hcc.hpp>
 #include <util.hpp>
 
-NCC::NCC() : parser(lexer, nullptr), backend(nullptr), printAst(false) {
+hcc::HCC::HCC() : parser(lexer, nullptr), backend(nullptr), printAst(false) {
 	output_filename = "a.out";
 }
 
-NCC::~NCC() {
+hcc::HCC::~HCC() {
 	if (backend) {
 		delete backend;
 	}
 }
 
-Result<NoSuccess, std::string> NCC::parseAndCompile() {
+Result<NoSuccess, std::string> hcc::HCC::parseAndCompile() {
 	if (sources.empty()) {
 		return Result<NoSuccess, std::string>::error("No sources provided");
 	}
@@ -54,7 +54,7 @@ Result<NoSuccess, std::string> NCC::parseAndCompile() {
 	return Result<NoSuccess, std::string>::success({});
 }
 
-Result<NoSuccess, std::string> NCC::selectBackend(std::string backend_name) {
+Result<NoSuccess, std::string> hcc::HCC::selectBackend(std::string backend_name) {
 	if (backend != nullptr) {
 		return Result<NoSuccess, std::string>::error("Backend already selected");
 	}

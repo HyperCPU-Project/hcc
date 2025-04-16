@@ -4,6 +4,7 @@
 #include <pch.hpp>
 #include <value.hpp>
 
+namespace hcc {
 class Backend {
 protected:
 	std::map<std::string, TypeMetadata> types;
@@ -28,5 +29,6 @@ public:
 
 	TypeMetadata* getTypeFromName(std::string name);
 };
+} // namespace hcc
 
 #include <backend/qproc/qproc_backend.hpp>

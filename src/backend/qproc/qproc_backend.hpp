@@ -2,6 +2,7 @@
 #define BACKEND_QPROC
 #include <backend/backend.hpp>
 
+namespace hcc {
 class QprocBackend : public Backend {
 public:
 	uint8_t reg_index;
@@ -21,3 +22,4 @@ public:
 
 	std::string emit_entrypoint();
 };
+} // namespace hcc

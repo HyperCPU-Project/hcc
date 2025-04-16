@@ -1,6 +1,7 @@
 #pragma once
 #include <pch.hpp>
 
+namespace hcc {
 class Lexer {
 private:
 	uint64_t pos;
@@ -49,3 +50,4 @@ private:
 	Token integer();
 	Token string();
 };
+} // namespace hcc

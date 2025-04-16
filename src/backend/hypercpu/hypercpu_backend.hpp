@@ -2,6 +2,7 @@
 #define BACKEND_HYPERCPU
 #include <backend/backend.hpp>
 
+namespace hcc {
 class HyperCPUBackend : public Backend {
 public:
 	HyperCPUBackend();
@@ -17,3 +18,4 @@ public:
 
 	std::string emit_entrypoint();
 };
+} // namespace hcc

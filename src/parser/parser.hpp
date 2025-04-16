@@ -3,6 +3,7 @@
 #include <parser/ast.hpp>
 #include <pch.hpp>
 
+namespace hcc {
 class AstRootNode;
 class AstNode;
 class Backend;
@@ -26,3 +27,4 @@ public:
 	AstNode* parseFactor();
 	AstNode* parseNumber();
 };
+} // namespace hcc

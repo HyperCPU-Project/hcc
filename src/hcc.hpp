@@ -5,9 +5,10 @@
 #include <pch.hpp>
 #include <result.hpp>
 
+namespace hcc {
 class Backend;
 
-class NCC {
+class HCC {
 public:
 	Lexer lexer;
 	Parser parser;
@@ -21,10 +22,11 @@ public:
 	// if name == "" then we are not in a function
 	FunctionMetadata currentFunction;
 
-	NCC();
-	~NCC();
+	HCC();
+	~HCC();
 
 	Result<NoSuccess, std::string> selectBackend(std::string backend_name);
 	void compile();
 	Result<NoSuccess, std::string> parseAndCompile();
 };
+}; // namespace hcc

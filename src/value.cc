@@ -1,6 +1,8 @@
 #include <backend/backend.hpp>
-#include <ncc.hpp>
+#include <hcc.hpp>
 #include <value.hpp>
+
+using namespace hcc;
 
 Value::Value(std::string reg_name) {
 	this->stack_align = 0;
@@ -25,26 +27,26 @@ std::string Value::getRegisterName() {
 	return reg_name;
 }
 
-void Value::add(NCC* ncc, Value* other) {
+void Value::add(HCC* hcc, Value* other) {
 	if (isRegister()) {
-		ncc->assembly_output += ncc->backend->emit_add(reg_name, reg_name, other->reg_name);
+		hcc->assembly_output += hcc->backend->emit_add(reg_name, reg_name, other->reg_name);
 	}
 }
 
-void Value::sub(NCC* ncc, Value* other) {
+void Value::sub(HCC* hcc, Value* other) {
 	if (isRegister()) {
-		ncc->assembly_output += ncc->backend->emit_sub(reg_name, reg_name, other->reg_name);
+		hcc->assembly_output += hcc->backend->emit_sub(reg_name, reg_name, other->reg_name);
 	}
 }
 
-void Value::mul(NCC* ncc, Value* other) {
+void Value::mul(HCC* hcc, Value* other) {
 	if (isRegister()) {
-		ncc->assembly_output += ncc->backend->emit_mul(reg_name, reg_name, other->reg_name);
+		hcc->assembly_output += hcc->backend->emit_mul(reg_name, reg_name, other->reg_name);
 	}
 }
 
-void Value::div(NCC* ncc, Value* other) {
+void Value::div(HCC* hcc, Value* other) {
 	if (isRegister()) {
-		ncc->assembly_output += ncc->backend->emit_div(reg_name, reg_name, other->reg_name);
+		hcc->assembly_output += hcc->backend->emit_div(reg_name, reg_name, other->reg_name);
 	}
 }

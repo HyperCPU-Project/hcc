@@ -1,7 +1,9 @@
 #pragma once
 #include <pch.hpp>
 
-class NCC;
+namespace hcc {
+class HCC;
+
 class Value {
 private:
 	std::string reg_name;
@@ -15,8 +17,9 @@ public:
 	bool isRegister();
 	std::string getRegisterName();
 
-	void add(NCC* ncc, Value* other);
-	void sub(NCC* ncc, Value* other);
-	void mul(NCC* ncc, Value* other);
-	void div(NCC* ncc, Value* other);
+	void add(HCC* hcc, Value* other);
+	void sub(HCC* hcc, Value* other);
+	void mul(HCC* hcc, Value* other);
+	void div(HCC* hcc, Value* other);
 };
+} // namespace hcc
