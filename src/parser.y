@@ -19,6 +19,7 @@ AstRootNode* root = nullptr;
 	AstExpr* expr;
 	AstStatement* stmt;
 	std::vector<AstStatementPtr>* stmt_list;
+	std::vector<AstNode*>* func_list;
 }
 
 %token <number> NUMBER
@@ -27,7 +28,8 @@ AstRootNode* root = nullptr;
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON
 
-%type <node> program function_definition
+%type <node> program function_definition 
+%type <func_list> function_definitions
 %type <expr> expression term factor
 %type <stmt> statement declaration assignment return_statement
 %type <stmt_list> statement_list
@@ -38,14 +40,29 @@ AstRootNode* root = nullptr;
 %%
 
 program:
-	function_definition {
+	function_definitions {
 		root = new AstRootNode();
-		root->children.push_back(AstNodePtr($1));
+		for (const auto& func : *$1) {
+			root->children.push_back(AstNodePtr(func));
+		}
+	}
+	;
+
+function_definitions:
+	function_definition function_definitions {
+		auto* fn = new std::vector<AstNode*>();
+		fn->push_back($1);
+		fn->insert(fn->end(), $2->begin(), $2->end());
+		delete $2;
+		$$ = fn;
+	}
+	| {
+		$$ = new std::vector<AstNode*>();
 	}
 	;
 
 function_definition:
-	TYPE_INT IDENTIFIER LPAREN RPAREN LBRACE statement_list RBRACE {
+	IDENTIFIER IDENTIFIER LPAREN RPAREN LBRACE statement_list RBRACE {
 		auto* func = new AstFuncDef();
 		func->name = *$2;
 		for (const auto& stmt : *$6) {

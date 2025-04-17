@@ -11,7 +11,6 @@ int line_num = 1;
 
 [ \t]           ; // Ignore whitespace
 [\n]            { line_num++; }
-"int"           { return TYPE_INT; }
 "return"        { return RETURN; }
 [0-9]+          { yylval.number = std::stoi(yytext); return NUMBER; }
 [a-zA-Z_][a-zA-Z0-9_]* { yylval.string = new std::string(yytext); return IDENTIFIER; }
