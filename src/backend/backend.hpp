@@ -9,6 +9,8 @@ protected:
 	uint64_t reg_index;
 
 public:
+	ABIMetadata abi;
+
 	std::map<std::string, TypeMetadata> types;
 
 	Backend();

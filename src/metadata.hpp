@@ -5,6 +5,10 @@
 namespace hcc {
 class Value;
 
+typedef struct ABIMetadata {
+	std::string return_register;
+} ABIMetadata;
+
 typedef struct TypeMetadata {
 	std::string name;
 	uint8_t size; // in bytes

@@ -7,6 +7,7 @@ QprocBackend::QprocBackend() {
 	types["void"] = TypeMetadata{"void", 0};
 	types["int"] = TypeMetadata{"int", 4};
 	types["long"] = TypeMetadata{"long", 4}; // size of 4 is intentional here
+	abi.return_register = "r0";
 }
 
 uint64_t QprocBackend::increment_reg_index() {

@@ -22,9 +22,8 @@ bool AstReturn::compile(HCC* hcc) {
 	Value* ret = hcc->values.top();
 	hcc->values.pop();
 
-	// TODO: Fix this ABI independent shi
-	if (ret->reg_name != "r0") {
-		hcc->backend->emit_move(hcc->getOutFd(), "r0", ret->reg_name);
+	if (ret->reg_name != hcc->backend->abi.return_register) {
+		hcc->backend->emit_move(hcc->getOutFd(), hcc->backend->abi.return_register, ret->reg_name);
 	}
 
 	return true;
