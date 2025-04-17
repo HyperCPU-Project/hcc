@@ -24,7 +24,7 @@ AstRootNode* root = nullptr;
 
 %token <number> NUMBER
 %token <string> IDENTIFIER
-%token TYPE_INT RETURN
+%token RETURN
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON
 
@@ -92,10 +92,10 @@ statement:
 	;
 
 declaration:
-	TYPE_INT IDENTIFIER SEMICOLON {
+	IDENTIFIER IDENTIFIER SEMICOLON {
 		auto* decl = new AstVarDeclare();
 		decl->name = *$2;
-		decl->type = "int";
+		decl->type = *$1;
 		delete $2;
 		$$ = decl;
 	}
@@ -117,10 +117,10 @@ return_statement:
 		ret->expr = AstExprPtr($2);
 		$$ = ret;
 	}
-		| RETURN SEMICOLON {
+	| RETURN SEMICOLON {
 		auto* ret = new AstReturn();
 		$$ = ret;
-		}
+	}
 	;
 
 expression:
