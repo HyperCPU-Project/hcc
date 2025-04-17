@@ -17,6 +17,8 @@ public:
 
 	Backend* backend;
 
+	FunctionMetadata current_function;
+
 	HCC();
 
 	Result<NoSuccess, std::string> parseAndCompile();

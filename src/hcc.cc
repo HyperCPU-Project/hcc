@@ -33,16 +33,17 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 	buffer = yy_scan_string(code.c_str());
 	yyparse();
 
+	if (!root) {
+		return Result<NoSuccess, std::string>::error("root == nullptr");
+	}
+
 	if (print_ast) {
 		root->print();
 	}
 
 	root->compile(this);
 
-	if (root) {
-		root->print();
-		delete root;
-	}
+	delete root;
 
 	return Result<NoSuccess, std::string>::success({});
 }
