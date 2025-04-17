@@ -1,36 +1,37 @@
 #pragma once
-#include <backend/abi.h>
+
 #include <metadata.hpp>
 #include <pch.hpp>
-#include <value.hpp>
 
 namespace hcc {
 class Backend {
 protected:
-	std::map<std::string, TypeMetadata> types;
+	uint64_t reg_index;
 
 public:
-	std::stack<Value> values;
-	AbiMetadata abi;
+	ABIMetadata abi;
+
+	std::map<std::string, TypeMetadata> types;
 
 	Backend();
-	virtual ~Backend();
+	virtual ~Backend() = 0;
 
-	virtual std::string emit_function_prologue() = 0;
-	virtual std::string emit_function_epilogue() = 0;
-	virtual std::string emit_mov_const(int32_t constant) = 0;
-	virtual std::string emit_add(std::string ROUT, std::string RLHS, std::string RRHS) = 0;
-	virtual std::string emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) = 0;
-	virtual std::string emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) = 0;
-	virtual std::string emit_div(std::string ROUT, std::string RLHS, std::string RRHS) = 0;
-	virtual std::string emit_move(std::string rdest, std::string rsrc) = 0;
-	virtual std::string emit_reserve_stack_space(uint64_t bytes) = 0;
-	virtual std::string emit_comment(std::string comment) = 0;
+	uint64_t increment_reg_index();
 
-	virtual std::string emit_entrypoint() = 0;
+	virtual void emit_function_prologue(FILE* out, std::string name);
+	virtual void emit_function_epilogue(FILE* out);
 
-	TypeMetadata* getTypeFromName(std::string name);
+	virtual std::string emit_mov_const(FILE* out, uint64_t value, std::string reg_name = "");
+
+	virtual void emit_add(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS);
+	virtual void emit_sub(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS);
+	virtual void emit_mul(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS);
+	virtual void emit_div(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS);
+
+	virtual void emit_move(FILE* out, std::string rdest, std::string rsrc);
+
+	virtual void emit_reserve_stack_space(FILE* out, uint64_t size);
+
+	virtual TypeMetadata* get_type_from_name(std::string name);
 };
 } // namespace hcc
-
-#include <backend/qproc/qproc_backend.hpp>

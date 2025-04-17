@@ -3,78 +3,76 @@
 using namespace hcc;
 
 QprocBackend::QprocBackend() {
-	types["void"] = TypeMetadata("void", 0);
-	types["int"] = TypeMetadata("int", 4);
-	abi.return_register = "r0";
 	reg_index = 0;
+	types["void"] = TypeMetadata{"void", 0};
+	types["int"] = TypeMetadata{"int", 4};
+	types["long"] = TypeMetadata{"long", 4}; // size of 4 is intentional here
+	abi.return_register = "r0";
 }
 
-std::string QprocBackend::emit_function_prologue() {
-	return "push bp\nmov bp sp";
-}
-
-std::string QprocBackend::emit_function_epilogue() {
-	return "mov sp bp\npop bp\npop ip";
-}
-
-std::string QprocBackend::emit_mov_const(int32_t constant) {
-	std::string code = fmt::format("movi r{} {}\n", reg_index, constant);
-	Value value(fmt::format("r{}", reg_index));
-	values.push(value);
-	previous_reg_indexes.push(reg_index);
-	reg_index++;
+uint64_t QprocBackend::increment_reg_index() {
+	uint64_t res = ++reg_index;
 	if (reg_index > 12) {
 		reg_index = 0;
 	}
-	return code;
+	return res;
 }
 
-std::string QprocBackend::emit_add(std::string ROUT, std::string RLHS, std::string RRHS) {
-	if (ROUT != RLHS) {
-		return fmt::format("add {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
+void QprocBackend::emit_function_prologue(FILE* out, std::string name) {
+	fmt::fprintf(out, "%s:\n", name);
+	fmt::fprintf(out, "push bp\nmov bp sp\n");
+}
+
+void QprocBackend::emit_function_epilogue(FILE* out) {
+	fmt::fprintf(out, "mov sp bp\npop bp\npop ip\n");
+}
+
+std::string QprocBackend::emit_mov_const(FILE* out, uint64_t value, std::string reg_name) {
+	if (reg_name == "") {
+		reg_name = fmt::format("r{}", increment_reg_index());
 	}
-	return fmt::format("add {} {}\n", RLHS, RRHS);
+
+	fmt::fprintf(out, "movi %s %ld\n", reg_name, value);
+
+	return reg_name;
 }
 
-std::string QprocBackend::emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) {
+void QprocBackend::emit_add(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 	if (ROUT != RLHS) {
-		return fmt::format("sub {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
+		fmt::fprintf(out, "add %s %s\nmov %s %s\n", RLHS, RRHS, ROUT, RLHS);
+		return;
 	}
-	return fmt::format("sub {} {}\n", RLHS, RRHS);
+	fmt::fprintf(out, "add %s %s\n", RLHS, RRHS);
 }
 
-std::string QprocBackend::emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) {
+void QprocBackend::emit_sub(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 	if (ROUT != RLHS) {
-		return fmt::format("mul {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
+		fmt::fprintf(out, "sub %s %s\nmov %s %s\n", RLHS, RRHS, ROUT, RLHS);
+		return;
 	}
-	return fmt::format("mul {} {}\n", RLHS, RRHS);
+	fmt::fprintf(out, "sub %s %s\n", RLHS, RRHS);
 }
 
-std::string QprocBackend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
+void QprocBackend::emit_mul(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 	if (ROUT != RLHS) {
-		return fmt::format("div {} {}\nmov {} {}\n", RLHS, RRHS, ROUT, RLHS);
+		fmt::fprintf(out, "mul %s %s\nmov %s %s\n", RLHS, RRHS, ROUT, RLHS);
+		return;
 	}
-	return fmt::format("div {} {}\n", RLHS, RRHS);
+	fmt::fprintf(out, "mul %s %s\n", RLHS, RRHS);
 }
 
-std::string QprocBackend::emit_move(std::string rdest, std::string rsrc) {
-	return fmt::format("mov {} {}\n", rdest, rsrc);
+void QprocBackend::emit_div(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
+	if (ROUT != RLHS) {
+		fmt::fprintf(out, "div %s %s\nmov %s %s\n", RLHS, RRHS, ROUT, RLHS);
+		return;
+	}
+	fmt::fprintf(out, "div %s %s\n", RLHS, RRHS);
 }
 
-std::string QprocBackend::emit_reserve_stack_space([[maybe_unused]] uint64_t bytes) {
-	return fmt::format("movi r0 {}\nsub sp, r0\n", bytes);
+void QprocBackend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
+	fmt::fprintf(out, "mov %s %s\n", rdest, rsrc);
 }
 
-std::string QprocBackend::emit_comment(std::string comment) {
-	return fmt::format("; {}\n", comment);
-}
-
-std::string QprocBackend::emit_entrypoint() {
-	return R"(b hcc_start_main
-hcc_start_main:
-call main
-qdb
-hlt
-
-)";
+void QprocBackend::emit_reserve_stack_space(FILE* out, uint64_t size) {
+	fmt::fprintf(out, "movi r0 %ld\nsub sp, r0\n", size);
 }

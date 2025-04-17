@@ -2,8 +2,11 @@
 #include <result.hpp>
 #include <util.hpp>
 
-char* _argsShift(int* argc, char*** argv) {
-	assert(*argc > 0 && "argc <= 0");
+std::string _argsShift(int* argc, char*** argv) {
+	if (*argc <= 0) {
+		return "";
+	}
+
 	--(*argc);
 	return *(*argv)++;
 }

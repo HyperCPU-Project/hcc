@@ -2,61 +2,48 @@
 
 using namespace hcc;
 
-TypeMetadata::TypeMetadata(std::string name, uint32_t size) : name(name), size(size) {
-}
-
 Backend::Backend() {
+	reg_index = 0;
 }
 
 Backend::~Backend() {
 }
 
-std::string Backend::emit_function_prologue() {
+uint64_t Backend::increment_reg_index() {
+	return 0;
+}
+
+void Backend::emit_function_prologue(FILE* out, std::string name) {
+}
+
+void Backend::emit_function_epilogue(FILE* out) {
+}
+
+std::string Backend::emit_mov_const(FILE* out, uint64_t value, std::string reg_name) {
 	return "";
 }
 
-std::string Backend::emit_function_epilogue() {
-	return "";
+void Backend::emit_add(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-std::string Backend::emit_mov_const([[maybe_unused]] int32_t constant) {
-	return "";
+void Backend::emit_sub(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-std::string Backend::emit_add([[maybe_unused]] std::string ROUT, [[maybe_unused]] std::string RLHS, [[maybe_unused]] std::string RRHS) {
-	return "";
+void Backend::emit_mul(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-std::string Backend::emit_sub([[maybe_unused]] std::string ROUT, [[maybe_unused]] std::string RLHS, [[maybe_unused]] std::string RRHS) {
-	return "";
+void Backend::emit_div(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-std::string Backend::emit_mul([[maybe_unused]] std::string ROUT, [[maybe_unused]] std::string RLHS, [[maybe_unused]] std::string RRHS) {
-	return "";
+void Backend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
 }
 
-std::string Backend::emit_div([[maybe_unused]] std::string ROUT, [[maybe_unused]] std::string RLHS, [[maybe_unused]] std::string RRHS) {
-	return "";
+void Backend::emit_reserve_stack_space(FILE* out, uint64_t size) {
 }
 
-std::string Backend::emit_move([[maybe_unused]] std::string rdest, [[maybe_unused]] std::string rsrc) {
-	return "";
-}
-
-std::string Backend::emit_reserve_stack_space([[maybe_unused]] uint64_t bytes) {
-	return "";
-}
-
-std::string Backend::emit_comment([[maybe_unused]] std::string comment) {
-	return "";
-}
-
-std::string Backend::emit_entrypoint() {
-	return "";
-}
-
-TypeMetadata* Backend::getTypeFromName(std::string name) {
+TypeMetadata* Backend::get_type_from_name(std::string name) {
 	if (!types.contains(name)) {
+		fmt::print("[hcc] unknown type {}\n", name);
 		return nullptr;
 	}
 

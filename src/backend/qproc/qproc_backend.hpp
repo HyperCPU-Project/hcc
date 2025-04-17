@@ -1,27 +1,26 @@
 #pragma once
-#define BACKEND_QPROC
+
 #include <backend/backend.hpp>
 
 namespace hcc {
 class QprocBackend : public Backend {
 public:
-	uint8_t reg_index;
-	std::stack<uint8_t> previous_reg_indexes;
-
-public:
 	QprocBackend();
 
-	std::string emit_function_prologue();
-	std::string emit_function_epilogue();
-	std::string emit_mov_const(int32_t constant);
-	std::string emit_add(std::string ROUT, std::string RLHS, std::string RRHS);
-	std::string emit_sub(std::string ROUT, std::string RLHS, std::string RRHS);
-	std::string emit_mul(std::string ROUT, std::string RLHS, std::string RRHS);
-	std::string emit_div(std::string ROUT, std::string RLHS, std::string RRHS);
-	std::string emit_move(std::string rdest, std::string rsrc);
-	std::string emit_reserve_stack_space(uint64_t bytes);
-	std::string emit_comment(std::string comment);
+	uint64_t increment_reg_index();
 
-	std::string emit_entrypoint();
+	void emit_function_prologue(FILE* out, std::string name) override;
+	void emit_function_epilogue(FILE* out) override;
+
+	std::string emit_mov_const(FILE* out, uint64_t value, std::string reg_name = "") override;
+
+	void emit_add(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) override;
+	void emit_sub(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) override;
+	void emit_mul(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) override;
+	void emit_div(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) override;
+
+	void emit_move(FILE* out, std::string rdest, std::string rsrc) override;
+
+	void emit_reserve_stack_space(FILE* out, uint64_t size);
 };
 } // namespace hcc

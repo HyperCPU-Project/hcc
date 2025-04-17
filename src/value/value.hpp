@@ -1,28 +1,31 @@
 #pragma once
+
 #include <metadata.hpp>
-#include <pch.hpp>
 
 namespace hcc {
 class HCC;
 
 class Value {
-private:
+public:
 	std::string reg_name;
 
-public:
-	VariableMetadata var;
+	uint64_t var_stack_align;
+	std::string var_name;
+	TypeMetadata var_type;
 
-	Value(std::string reg_name);
-	Value(VariableMetadata var);
 	Value();
+	~Value();
 
 	bool isRegister();
-	std::string getRegisterName();
+
+	static Value* createAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
+	static Value* createAsStackVar(HCC* hcc, TypeMetadata type, std::string name = "");
+
+	Value doCondLod(HCC* hcc);
 
 	void add(HCC* hcc, Value* other);
 	void sub(HCC* hcc, Value* other);
 	void mul(HCC* hcc, Value* other);
 	void div(HCC* hcc, Value* other);
-	void eq(HCC* hcc, Value* other);
 };
 } // namespace hcc

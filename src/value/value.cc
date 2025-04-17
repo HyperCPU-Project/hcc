@@ -1,0 +1,71 @@
+#include <hcc.hpp>
+#include <value/value.hpp>
+
+using namespace hcc;
+
+Value::Value() {
+	reg_name = "";
+}
+
+Value::~Value() {
+}
+
+bool Value::isRegister() {
+	return (reg_name != "");
+}
+
+Value* Value::createAsRegister(HCC* hcc, uint64_t _value, std::string reg_name) {
+	Value* value = new Value();
+	value->reg_name = hcc->backend->emit_mov_const(hcc->getOutFd(), _value, reg_name);
+	return value;
+}
+
+Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type, std::string name) {
+	Value* value = new Value();
+
+	value->var_stack_align = hcc->current_function.align + type.size;
+	value->var_type = type;
+
+	hcc->backend->emit_reserve_stack_space(hcc->getOutFd(), type.size);
+	hcc->current_function.variables[name] = value;
+
+	hcc->current_function.align += type.size;
+
+	return value;
+}
+
+Value Value::doCondLod(HCC* hcc) {
+	if (isRegister())
+		return *this;
+	Value value;
+	value.reg_name = fmt::format("r{}", hcc->backend->increment_reg_index());
+	return Value();
+}
+
+void Value::add(HCC* hcc, Value* other) {
+	Value LHS = doCondLod(hcc);
+	Value RHS = other->doCondLod(hcc);
+
+	hcc->backend->emit_add(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+}
+
+void Value::sub(HCC* hcc, Value* other) {
+	Value LHS = doCondLod(hcc);
+	Value RHS = other->doCondLod(hcc);
+
+	hcc->backend->emit_sub(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+}
+
+void Value::mul(HCC* hcc, Value* other) {
+	Value LHS = doCondLod(hcc);
+	Value RHS = other->doCondLod(hcc);
+
+	hcc->backend->emit_mul(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+}
+
+void Value::div(HCC* hcc, Value* other) {
+	Value LHS = doCondLod(hcc);
+	Value RHS = other->doCondLod(hcc);
+
+	hcc->backend->emit_div(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+}

@@ -1,33 +1,34 @@
 #pragma once
-#include <lexer/lexer.hpp>
-#include <metadata.hpp>
-#include <parser/parser.hpp>
+#include <backend/backend.hpp>
 #include <pch.hpp>
 #include <result.hpp>
+#include <yy.hpp>
 
 namespace hcc {
-class Backend;
+class Value;
 
 class HCC {
+private:
+	YY_BUFFER_STATE buffer;
+	FILE* outfd;
+
 public:
-	Lexer lexer;
-	Parser parser;
-	Backend* backend;
-	bool printAst;
-
-	std::string assembly_output;
 	std::vector<std::string> sources;
-	std::string output_filename;
+	bool print_ast;
 
-	// if name == "" then we are not in a function
+	Backend* backend;
+
 	FunctionMetadata current_function;
-	std::vector<Value*> current_uninitialized_variables;
+	std::stack<Value*> values;
 
 	HCC();
-	~HCC();
 
-	Result<NoSuccess, std::string> selectBackend(std::string backend_name);
-	bool compile();
 	Result<NoSuccess, std::string> parseAndCompile();
+
+	void openOutput(std::string filename);
+	Result<NoSuccess, std::string> selectBackend(std::string name);
+
+	FILE* getOutFd();
 };
-}; // namespace hcc
+
+} // namespace hcc

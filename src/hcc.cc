@@ -1,32 +1,27 @@
-#include <backend/backend.hpp>
-#include <backend/hypercpu/hypercpu_backend.hpp>
 #include <backend/qproc/qproc_backend.hpp>
 #include <hcc.hpp>
 #include <util.hpp>
 
-hcc::HCC::HCC() : parser(lexer, nullptr), backend(nullptr), printAst(false) {
-	output_filename = "a.out";
+using namespace hcc;
+
+HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr) {
 }
 
-hcc::HCC::~HCC() {
-	if (backend) {
-		delete backend;
-	}
-}
-
-Result<NoSuccess, std::string> hcc::HCC::parseAndCompile() {
+Result<NoSuccess, std::string> HCC::parseAndCompile() {
 	if (sources.empty()) {
-		return Result<NoSuccess, std::string>::error("No sources provided");
+		return Result<NoSuccess, std::string>::error("no sources provided");
+	}
+
+	if (!outfd) {
+		return Result<NoSuccess, std::string>::error("outfd == nullptr");
 	}
 
 	if (!backend) {
-		return Result<NoSuccess, std::string>::error("No backend selected");
+		return Result<NoSuccess, std::string>::error("no backend selected");
 	}
 
-	std::string code;
-	assembly_output = "";
-
-	for (std::string& source : sources) {
+	std::string code = "";
+	for (std::string source : sources) {
 		auto result = readFile(source);
 		if (result.is_error()) {
 			fmt::print("[ncc] failed to read {}: {}\n", source, result.get_error().value());
@@ -35,40 +30,45 @@ Result<NoSuccess, std::string> hcc::HCC::parseAndCompile() {
 		code += result.get_success().value() + "\n";
 	}
 
-	lexer.code = code;
+	buffer = yy_scan_string(code.c_str());
+	yyparse();
 
-	fmt::print("[ncc] parsing\n");
-	if (!parser.parse())
-		return Result<NoSuccess, std::string>::error("parser error");
+	if (!root) {
+		return Result<NoSuccess, std::string>::error("root == nullptr");
+	}
 
-	fmt::print("[ncc] compiling\n");
-	if (!compile())
-		return Result<NoSuccess, std::string>::error("compiler error");
+	if (print_ast) {
+		root->print();
+	}
 
-	std::ofstream outfd;
-	outfd.open(output_filename);
-	outfd << assembly_output;
-	outfd.close();
+	root->compile(this);
 
-	fmt::print("[ncc] assembly written to {}\n", output_filename);
+	delete root;
 
 	return Result<NoSuccess, std::string>::success({});
 }
 
-Result<NoSuccess, std::string> hcc::HCC::selectBackend(std::string backend_name) {
-	if (backend != nullptr) {
-		return Result<NoSuccess, std::string>::error("Backend already selected");
-	}
+void HCC::openOutput(std::string filename) {
+	if (outfd)
+		fclose(outfd);
+	outfd = fopen(filename.c_str(), "w");
+}
 
-	if (backend_name == "qproc") {
+Result<NoSuccess, std::string> HCC::selectBackend(std::string name) {
+	if (backend)
+		delete backend;
+
+	if (name == "qproc") {
 		backend = new QprocBackend();
-		parser.backend = backend;
-		return Result<NoSuccess, std::string>::success({});
-	} else if (backend_name == "hypercpu") {
-		backend = new HyperCPUBackend();
-		parser.backend = backend;
-		return Result<NoSuccess, std::string>::success({});
+	} else if (name == "hypercpu") {
+		// TODO
+	} else {
+		return Result<NoSuccess, std::string>::error("no such backend");
 	}
 
-	return Result<NoSuccess, std::string>::error("Unknown backend");
+	return Result<NoSuccess, std::string>::success({});
+}
+
+FILE* HCC::getOutFd() {
+	return outfd;
 }

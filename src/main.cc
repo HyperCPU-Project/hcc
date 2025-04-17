@@ -1,11 +1,15 @@
+#include <ast/ast.hpp>
 #include <hcc.hpp>
 #include <pch.hpp>
 #include <util.hpp>
+#include <yy.hpp>
 
 using namespace hcc;
 
 int main(int argc, char** argv) {
-	hcc::HCC hcc;
+	HCC hcc;
+
+	hcc.openOutput("a.s");
 
 	argsShift();
 	for ([[maybe_unused]] int i = 0; argc; ++i) {
@@ -17,16 +21,16 @@ options:
   --help | -h      print this message
   -o               set output filename
   --backend        set a backend
-	--ast           print AST
+  --ast            print AST
 backends:
   qproc
   hypercpu (beta)
 )");
 			return 0;
 		} else if (arg == "-o") {
-			hcc.output_filename = argsShift();
+			hcc.openOutput(argsShift());
 		} else if (arg == "--ast") {
-			hcc.printAst = true;
+			hcc.print_ast = true;
 		} else if (arg == "--backend") {
 			auto result = hcc.selectBackend(argsShift());
 			if (result.is_error()) {
@@ -42,7 +46,6 @@ backends:
 		auto result = hcc.parseAndCompile();
 		if (result.is_error()) {
 			fmt::print("[hcc] error: {}\n", result.get_error().value());
-			return 1;
 		}
 	}
 

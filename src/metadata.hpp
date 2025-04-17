@@ -1,27 +1,22 @@
 #pragma once
+
 #include <pch.hpp>
 
 namespace hcc {
 class Value;
+
+typedef struct ABIMetadata {
+	std::string return_register;
+} ABIMetadata;
+
 typedef struct TypeMetadata {
 	std::string name;
-	uint32_t size;
-
-	TypeMetadata(std::string name = "", uint32_t size = 0);
+	uint8_t size; // in bytes
 } TypeMetadata;
 
-typedef struct VariableMetadata {
-	TypeMetadata type;
-	uint32_t stack_align;
-	std::string name;
-
-	uint32_t declared_at;
-} VariableMetadata;
-
 typedef struct FunctionMetadata {
-	std::map<std::string, hcc::Value*> variables;
 	std::string name;
-	TypeMetadata return_type;
-	uint64_t stack_space;
+	uint64_t align;
+	std::map<std::string, Value*> variables;
 } FunctionMetadata;
-}; // namespace hcc
+} // namespace hcc
