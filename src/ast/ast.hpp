@@ -8,20 +8,17 @@ class AstNode;
 class AstExpr;
 class AstStatement;
 
-using AstExprPtr = std::shared_ptr<AstExpr>;
-using AstStatementPtr = std::shared_ptr<AstStatement>;
-
 // Base AST node class
 class AstNode {
 public:
-	virtual ~AstNode() = default;
+	virtual ~AstNode() = 0;
 	virtual void print(int indent = 0) const = 0;
+
+	std::vector<AstNode*> children;
 
 protected:
 	void printIndent(int indent) const;
 };
-
-using AstNodePtr = std::shared_ptr<AstNode>;
 
 class AstExpr : public AstNode {
 public:
@@ -35,14 +32,12 @@ public:
 
 class AstRootNode : public AstNode {
 public:
-	std::vector<AstNodePtr> children;
 	void print(int indent = 0) const override;
 };
 
 class AstFuncDef : public AstNode {
 public:
 	std::string name;
-	std::vector<AstStatementPtr> body;
 	void print(int indent = 0) const override;
 };
 
@@ -56,8 +51,9 @@ public:
 class AstVarAssign : public AstStatement {
 public:
 	std::string name;
-	AstExprPtr expr;
+	AstExpr* expr;
 	void print(int indent = 0) const override;
+	~AstVarAssign();
 };
 
 class AstNumber : public AstExpr {
@@ -70,16 +66,21 @@ public:
 
 class AstBinaryOp : public AstExpr {
 public:
-	AstExprPtr left;
-	AstExprPtr right;
+	AstExpr* left;
+	AstExpr* right;
 	std::string op;
+
 	void print(int indent = 0) const override;
+
+	~AstBinaryOp();
 };
 
 class AstReturn : public AstStatement {
 public:
-	AstExprPtr expr;
+	AstExpr* expr;
 	void print(int indent = 0) const override;
+
+	~AstReturn();
 };
 
 class AstVarRef : public AstExpr {

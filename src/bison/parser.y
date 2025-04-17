@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "ast.hpp"
+#include <ast/ast.hpp>
 
 extern int yylex();
 extern int line_num;
@@ -12,13 +12,13 @@ AstRootNode* root = nullptr;
 %}
 
 %union {
-#include "ast.hpp"
+#include <ast/ast.hpp>
 	int number;
-	std::string* string;
+	std::string *string;
 	AstNode* node;
 	AstExpr* expr;
 	AstStatement* stmt;
-	std::vector<AstStatementPtr>* stmt_list;
+	std::vector<AstStatement*>* stmt_list;
 	std::vector<AstNode*>* func_list;
 }
 
@@ -43,8 +43,9 @@ program:
 	function_definitions {
 		root = new AstRootNode();
 		for (const auto& func : *$1) {
-			root->children.push_back(AstNodePtr(func));
+			root->children.push_back(func);
 		}
+		delete $1;
 	}
 	;
 
@@ -66,21 +67,22 @@ function_definition:
 		auto* func = new AstFuncDef();
 		func->name = *$2;
 		for (const auto& stmt : *$6) {
-			func->body.push_back(stmt);
+			func->children.push_back(stmt);
 		}
 		delete $2;
 		delete $6;
+		delete $1;
 		$$ = func;
 	}
 	;
 
 statement_list:
 	statement {
-		$$ = new std::vector<AstStatementPtr>();
-		$$->push_back(AstStatementPtr($1));
+		$$ = new std::vector<AstStatement*>();
+		$$->push_back($1);
 	}
 	| statement_list statement {
-		$1->push_back(AstStatementPtr($2));
+		$1->push_back($2);
 		$$ = $1;
 	}
 	;
@@ -97,6 +99,7 @@ declaration:
 		decl->name = *$2;
 		decl->type = *$1;
 		delete $2;
+		delete $1;
 		$$ = decl;
 	}
 	;
@@ -105,7 +108,7 @@ assignment:
 	IDENTIFIER ASSIGN expression SEMICOLON {
 		auto* assign = new AstVarAssign();
 		assign->name = *$1;
-		assign->expr = AstExprPtr($3);
+		assign->expr = $3;
 		delete $1;
 		$$ = assign;
 	}
@@ -114,7 +117,7 @@ assignment:
 return_statement:
 	RETURN expression SEMICOLON {
 		auto* ret = new AstReturn();
-		ret->expr = AstExprPtr($2);
+		ret->expr = $2;
 		$$ = ret;
 	}
 	| RETURN SEMICOLON {
@@ -127,15 +130,15 @@ expression:
 	term
 	| expression PLUS term {
 		auto* op = new AstBinaryOp();
-		op->left = AstExprPtr($1);
-		op->right = AstExprPtr($3);
+		op->left = $1;
+		op->right = $3;
 		op->op = "add";
 		$$ = op;
 	}
 	| expression MINUS term {
 		auto* op = new AstBinaryOp();
-		op->left = AstExprPtr($1);
-		op->right = AstExprPtr($3);
+		op->left = $1;
+		op->right = $3;
 		op->op = "sub";
 		$$ = op;
 	}
@@ -145,15 +148,15 @@ term:
 	factor
 	| term MULTIPLY factor {
 		auto* op = new AstBinaryOp();
-		op->left = AstExprPtr($1);
-		op->right = AstExprPtr($3);
+		op->left = $1;
+		op->right = $3;
 		op->op = "mul";
 		$$ = op;
 	}
 	| term DIVIDE factor {
 		auto* op = new AstBinaryOp();
-		op->left = AstExprPtr($1);
-		op->right = AstExprPtr($3);
+		op->left = $1;
+		op->right = $3;
 		op->op = "div";
 		$$ = op;
 	}

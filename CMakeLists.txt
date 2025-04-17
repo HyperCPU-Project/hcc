@@ -3,9 +3,8 @@ project(hcc)
 
 include("cmake/configuration.cmake")
 
-bison_target(Parser src/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp
-             DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp)
-flex_target(Lexer src/lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp)
+bison_target(Parser src/bison/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp)
+flex_target(Lexer src/bison/lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp)
 add_flex_bison_dependency(Lexer Parser)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cc")

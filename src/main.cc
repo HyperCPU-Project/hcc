@@ -1,5 +1,5 @@
-#include "ast.hpp"
-#include <iostream>
+#include <ast/ast.hpp>
+#include <pch.hpp>
 
 extern int yyparse();
 extern FILE* yyin;
