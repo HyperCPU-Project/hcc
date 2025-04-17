@@ -5,6 +5,7 @@
 #include <yy.hpp>
 
 namespace hcc {
+class Value;
 
 class HCC {
 private:
@@ -18,6 +19,7 @@ public:
 	Backend* backend;
 
 	FunctionMetadata current_function;
+	std::stack<Value*> values;
 
 	HCC();
 

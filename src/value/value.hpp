@@ -6,20 +6,26 @@ namespace hcc {
 class HCC;
 
 class Value {
-private:
+public:
 	std::string reg_name;
 
 	uint64_t var_stack_align;
 	std::string var_name;
 	TypeMetadata var_type;
 
-public:
 	Value();
 	~Value();
 
 	bool isRegister();
 
-	static Value* createAsRegister(HCC* hcc, uint32_t value, std::string reg_name = "");
+	static Value* createAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
 	static Value* createAsStackVar(HCC* hcc, TypeMetadata type);
+
+	Value doCondLod(HCC* hcc);
+
+	void add(HCC* hcc, Value* other);
+	void sub(HCC* hcc, Value* other);
+	void mul(HCC* hcc, Value* other);
+	void div(HCC* hcc, Value* other);
 };
 } // namespace hcc

@@ -58,6 +58,7 @@ public:
 	explicit AstNumber(int val) : value(val) {
 	}
 	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
 };
 
 class AstBinaryOp : public AstExpr {
@@ -67,6 +68,7 @@ public:
 	std::string op;
 
 	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
 
 	~AstBinaryOp();
 };
@@ -75,6 +77,7 @@ class AstReturn : public AstStatement {
 public:
 	AstExpr* expr;
 	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
 
 	~AstReturn();
 };
