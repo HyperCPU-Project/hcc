@@ -1,14 +1,7 @@
-#ifndef AST_HPP
-#define AST_HPP
-
+#pragma once
 #include <pch.hpp>
 
-// Forward declarations
-class AstNode;
-class AstExpr;
-class AstStatement;
-
-// Base AST node class
+namespace hcc {
 class AstNode {
 public:
 	virtual ~AstNode() = 0;
@@ -88,5 +81,4 @@ public:
 	std::string name;
 	void print(int indent = 0) const override;
 };
-
-#endif
+} // namespace hcc

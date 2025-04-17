@@ -1,5 +1,7 @@
 #include <ast/ast.hpp>
 
+using namespace hcc;
+
 void AstNumber::print(int indent) const {
 	printIndent(indent);
 	std::cout << "AstNumber" << std::endl;

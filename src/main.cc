@@ -1,6 +1,8 @@
 #include <ast/ast.hpp>
 #include <pch.hpp>
 
+using namespace hcc;
+
 extern int yyparse();
 extern FILE* yyin;
 extern AstRootNode* root;

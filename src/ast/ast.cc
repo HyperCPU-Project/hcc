@@ -1,8 +1,9 @@
 #include "ast.hpp"
 #include <iostream>
 
+using namespace hcc;
+
 AstNode::~AstNode() {
-	printf("destroy\n");
 	for (AstNode* node : children) {
 		delete node;
 	}

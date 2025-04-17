@@ -1,5 +1,7 @@
 #include <ast/ast.hpp>
 
+using namespace hcc;
+
 void AstRootNode::print(int indent) const {
 	printIndent(indent);
 	std::cout << "AstRootNode" << std::endl;

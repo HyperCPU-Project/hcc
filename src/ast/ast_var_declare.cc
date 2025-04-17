@@ -1,5 +1,7 @@
 #include <ast/ast.hpp>
 
+using namespace hcc;
+
 void AstVarDeclare::print(int indent) const {
 	printIndent(indent);
 	std::cout << "AstVarDeclare" << std::endl;

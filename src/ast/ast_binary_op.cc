@@ -1,5 +1,7 @@
 #include <ast/ast.hpp>
 
+using namespace hcc;
+
 void AstBinaryOp::print(int indent) const {
 	printIndent(indent);
 	std::cout << "AstBinaryOp" << std::endl;

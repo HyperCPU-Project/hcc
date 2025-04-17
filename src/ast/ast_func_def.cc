@@ -1,5 +1,7 @@
 #include <ast/ast.hpp>
 
+using namespace hcc;
+
 void AstFuncDef::print(int indent) const {
 	printIndent(indent);
 	std::cout << "AstFuncDef" << std::endl;
