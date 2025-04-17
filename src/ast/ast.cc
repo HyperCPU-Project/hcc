@@ -1,5 +1,6 @@
 #include "ast.hpp"
-#include <iostream>
+#include <hcc.hpp>
+#include <pch.hpp>
 
 using namespace hcc;
 
@@ -7,6 +8,14 @@ AstNode::~AstNode() {
 	for (AstNode* node : children) {
 		delete node;
 	}
+}
+
+bool AstNode::compile(HCC* hcc) {
+	for (AstNode* node : children) {
+		if (!node->compile(hcc))
+			return false;
+	}
+	return true;
 }
 
 void AstNode::printIndent(int indent) const {

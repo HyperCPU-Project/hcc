@@ -1,4 +1,5 @@
 #include <ast/ast.hpp>
+#include <hcc.hpp>
 
 using namespace hcc;
 
@@ -10,4 +11,12 @@ void AstFuncDef::print(int indent) const {
 	for (const auto& stmt : children) {
 		stmt->print(indent + 1);
 	}
+}
+
+bool AstFuncDef::compile(HCC* hcc) {
+	hcc->backend->emit_function_prologue(hcc->getOutFd(), name);
+	if (!AstNode::compile(hcc))
+		return false;
+	hcc->backend->emit_function_epilogue(hcc->getOutFd());
+	return true;
 }

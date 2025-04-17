@@ -2,10 +2,12 @@
 #include <pch.hpp>
 
 namespace hcc {
+class HCC;
 class AstNode {
 public:
 	virtual ~AstNode() = 0;
 	virtual void print(int indent = 0) const = 0;
+	virtual bool compile(HCC* hcc);
 
 	std::vector<AstNode*> children;
 
@@ -32,6 +34,7 @@ class AstFuncDef : public AstNode {
 public:
 	std::string name;
 	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
 };
 
 class AstVarDeclare : public AstStatement {

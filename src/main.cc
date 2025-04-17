@@ -32,13 +32,11 @@ backends:
 		} else if (arg == "--ast") {
 			hcc.print_ast = true;
 		} else if (arg == "--backend") {
-			/*
 			auto result = hcc.selectBackend(argsShift());
 			if (result.is_error()) {
 				fmt::print("[hcc] failed to select a backend: {}\n", result.get_error().value());
 				return 1;
 			}
-				*/
 		} else {
 			hcc.sources.push_back(arg);
 		}
