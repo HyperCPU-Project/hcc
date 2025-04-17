@@ -20,5 +20,7 @@ public:
 	void emit_div(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) override;
 
 	void emit_move(FILE* out, std::string rdest, std::string rsrc) override;
+
+	void emit_reserve_stack_space(FILE* out, uint64_t size);
 };
 } // namespace hcc

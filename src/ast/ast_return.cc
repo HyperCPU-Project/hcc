@@ -17,14 +17,17 @@ AstReturn::~AstReturn() {
 }
 
 bool AstReturn::compile(HCC* hcc) {
-	if (!expr->compile(hcc))
-		return false;
-	Value* ret = hcc->values.top();
-	hcc->values.pop();
+	if (expr) {
+		if (!expr->compile(hcc))
+			return false;
+		Value* ret = hcc->values.top();
+		hcc->values.pop();
 
-	if (ret->reg_name != hcc->backend->abi.return_register) {
-		hcc->backend->emit_move(hcc->getOutFd(), hcc->backend->abi.return_register, ret->reg_name);
+		if (ret->reg_name != hcc->backend->abi.return_register) {
+			hcc->backend->emit_move(hcc->getOutFd(), hcc->backend->abi.return_register, ret->reg_name);
+		}
 	}
+	hcc->backend->emit_function_epilogue(hcc->getOutFd());
 
 	return true;
 }

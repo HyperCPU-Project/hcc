@@ -17,6 +17,5 @@ bool AstFuncDef::compile(HCC* hcc) {
 	hcc->backend->emit_function_prologue(hcc->getOutFd(), name);
 	if (!AstNode::compile(hcc))
 		return false;
-	hcc->backend->emit_function_epilogue(hcc->getOutFd());
 	return true;
 }

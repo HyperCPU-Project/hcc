@@ -72,3 +72,7 @@ void QprocBackend::emit_div(FILE* out, std::string ROUT, std::string RLHS, std::
 void QprocBackend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
 	fmt::fprintf(out, "mov %s %s\n", rdest, rsrc);
 }
+
+void QprocBackend::emit_reserve_stack_space(FILE* out, uint64_t size) {
+	fmt::fprintf(out, "movi r0 %ld\nsub sp, r0\n", size);
+}

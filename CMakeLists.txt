@@ -13,5 +13,4 @@ add_executable(hcc ${SOURCES} ${BISON_Parser_OUTPUTS} ${FLEX_Lexer_OUTPUTS})
 
 target_precompile_headers(hcc PRIVATE src/pch.hpp)
 target_include_directories(hcc PRIVATE src ${CMAKE_CURRENT_BINARY_DIR})
-
 target_link_libraries(hcc fmt::fmt)

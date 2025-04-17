@@ -42,6 +42,7 @@ public:
 	std::string name;
 	std::string type;
 	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
 };
 
 class AstVarAssign : public AstStatement {
@@ -86,5 +87,6 @@ class AstVarRef : public AstExpr {
 public:
 	std::string name;
 	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
 };
 } // namespace hcc

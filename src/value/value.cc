@@ -20,10 +20,25 @@ Value* Value::createAsRegister(HCC* hcc, uint64_t _value, std::string reg_name) 
 	return value;
 }
 
+Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type, std::string name) {
+	Value* value = new Value();
+
+	value->var_stack_align = hcc->current_function.align + type.size;
+	value->var_type = type;
+
+	hcc->backend->emit_reserve_stack_space(hcc->getOutFd(), type.size);
+	hcc->current_function.variables[name] = value;
+
+	hcc->current_function.align += type.size;
+
+	return value;
+}
+
 Value Value::doCondLod(HCC* hcc) {
 	if (isRegister())
 		return *this;
-	// TODO
+	Value value;
+	value.reg_name = fmt::format("r{}", hcc->backend->increment_reg_index());
 	return Value();
 }
 

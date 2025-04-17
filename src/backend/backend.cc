@@ -37,3 +37,15 @@ void Backend::emit_div(FILE* out, std::string ROUT, std::string RLHS, std::strin
 
 void Backend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
 }
+
+void Backend::emit_reserve_stack_space(FILE* out, uint64_t size) {
+}
+
+TypeMetadata* Backend::get_type_from_name(std::string name) {
+	if (!types.contains(name)) {
+		fmt::print("[hcc] unknown type {}\n", name);
+		return nullptr;
+	}
+
+	return &types[name];
+}
