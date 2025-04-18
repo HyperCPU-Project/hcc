@@ -52,8 +52,10 @@ void Value::add(HCC* hcc, Value* other) {
 		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
 	}
 
-	delete LHS;
-	delete RHS;
+	if (LHS != this)
+		delete LHS;
+	if (RHS != other)
+		delete RHS;
 }
 
 void Value::sub(HCC* hcc, Value* other) {
@@ -66,8 +68,10 @@ void Value::sub(HCC* hcc, Value* other) {
 		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
 	}
 
-	delete LHS;
-	delete RHS;
+	if (LHS != this)
+		delete LHS;
+	if (RHS != other)
+		delete RHS;
 }
 
 void Value::mul(HCC* hcc, Value* other) {
@@ -80,8 +84,10 @@ void Value::mul(HCC* hcc, Value* other) {
 		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
 	}
 
-	delete LHS;
-	delete RHS;
+	if (LHS != this)
+		delete LHS;
+	if (RHS != other)
+		delete RHS;
 }
 
 void Value::div(HCC* hcc, Value* other) {
@@ -94,8 +100,10 @@ void Value::div(HCC* hcc, Value* other) {
 		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
 	}
 
-	delete LHS;
-	delete RHS;
+	if (LHS != this)
+		delete LHS;
+	if (RHS != other)
+		delete RHS;
 }
 
 void Value::setto(HCC* hcc, Value* other) {
@@ -112,14 +120,17 @@ void Value::setto(HCC* hcc, Value* other) {
 
 		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
 
-		delete LHS;
-		delete RHS;
+		if (LHS != this)
+			delete LHS;
+		if (RHS != other)
+			delete RHS;
 	} else if (isRegister() && !other->isRegister()) {
 		fmt::print("4\n");
 		Value* RHS = other->doCondLod(hcc);
 
 		hcc->backend->emit_move(hcc->getOutFd(), this->reg_name, RHS->reg_name);
 
-		delete RHS;
+		if (RHS != other)
+			delete RHS;
 	}
 }
