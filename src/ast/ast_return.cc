@@ -30,5 +30,7 @@ bool AstReturn::compile(HCC* hcc) {
 	}
 	hcc->backend->emit_function_epilogue(hcc->getOutFd());
 
+	fprintf(hcc->getOutFd(), "\n");
+
 	return true;
 }

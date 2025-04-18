@@ -22,5 +22,7 @@ bool AstVarDeclare::compile(HCC* hcc) {
 
 	hcc->current_function.variables[name] = std::move(value);
 
+	fprintf(hcc->getOutFd(), "\n");
+
 	return true;
 }

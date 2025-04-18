@@ -16,6 +16,9 @@ void AstFuncDef::print(int indent) const {
 
 bool AstFuncDef::compile(HCC* hcc) {
 	hcc->backend->emit_function_prologue(hcc->getOutFd(), name);
+
+	fprintf(hcc->getOutFd(), "\n");
+
 	if (!AstNode::compile(hcc))
 		return false;
 

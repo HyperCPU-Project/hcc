@@ -19,5 +19,7 @@ bool AstVarRef::compile(HCC* hcc) {
 
 	hcc->values.push(std::move(out));
 
+	fprintf(hcc->getOutFd(), "\n");
+
 	return true;
 }

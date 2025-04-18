@@ -34,5 +34,7 @@ bool AstVarAssign::compile(HCC* hcc) {
 
 	expr_var->setto(hcc, expr_value.get());
 
+	fprintf(hcc->getOutFd(), "\n");
+
 	return true;
 }
