@@ -21,7 +21,7 @@ Value* Value::createAsRegister(HCC* hcc, uint64_t _value, std::string reg_name) 
 	return value;
 }
 
-Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type, std::string name) {
+Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type) {
 	Value* value = new Value();
 
 	value->var_stack_align = hcc->current_function.align + type.size;
