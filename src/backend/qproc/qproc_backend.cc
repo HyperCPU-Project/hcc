@@ -86,3 +86,16 @@ std::string QprocBackend::emit_load_from_stack(FILE* out, uint64_t align) {
 	fmt::fprintf(out, "lod %s dword r0\n", reg);
 	return reg;
 }
+
+void QprocBackend::emit_store_from_stack(FILE* out, uint64_t align, std::string rsrc) {
+	bool is_used_reg = (rsrc == "r0" || rsrc == "r1");
+
+	if (is_used_reg)
+		fmt::fprintf(out, "push %s\n", rsrc);
+	fmt::fprintf(out, "movi r0 bp\n");
+	fmt::fprintf(out, "movi r1 %d\n", align);
+	fmt::fprintf(out, "sub r0 r1\n");
+	if (is_used_reg)
+		fmt::fprintf(out, "pop %s\n", rsrc);
+	fmt::fprintf(out, "str dword r0 %s\n", rsrc);
+}

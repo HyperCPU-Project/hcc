@@ -45,6 +45,9 @@ std::string Backend::emit_load_from_stack(FILE* out, uint64_t align) {
 	return "";
 }
 
+void Backend::emit_store_from_stack(FILE* out, uint64_t align, std::string rsrc) {
+}
+
 TypeMetadata* Backend::get_type_from_name(std::string name) {
 	if (!types.contains(name)) {
 		fmt::print("[hcc] unknown type {}\n", name);

@@ -23,9 +23,14 @@ public:
 
 	Value* doCondLod(HCC* hcc);
 
+private:
+	void doCondStr(HCC* hcc);
+
+public:
 	void add(HCC* hcc, Value* other);
 	void sub(HCC* hcc, Value* other);
 	void mul(HCC* hcc, Value* other);
 	void div(HCC* hcc, Value* other);
+	void setto(HCC* hcc, Value* other);
 };
 } // namespace hcc

@@ -48,6 +48,10 @@ void Value::add(HCC* hcc, Value* other) {
 
 	hcc->backend->emit_add(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
 
+	if (!isRegister()) {
+		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
+	}
+
 	delete LHS;
 	delete RHS;
 }
@@ -57,6 +61,10 @@ void Value::sub(HCC* hcc, Value* other) {
 	Value* RHS = other->doCondLod(hcc);
 
 	hcc->backend->emit_sub(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
+
+	if (!isRegister()) {
+		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
+	}
 
 	delete LHS;
 	delete RHS;
@@ -68,6 +76,10 @@ void Value::mul(HCC* hcc, Value* other) {
 
 	hcc->backend->emit_mul(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
 
+	if (!isRegister()) {
+		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
+	}
+
 	delete LHS;
 	delete RHS;
 }
@@ -78,6 +90,36 @@ void Value::div(HCC* hcc, Value* other) {
 
 	hcc->backend->emit_div(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
 
+	if (!isRegister()) {
+		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
+	}
+
 	delete LHS;
 	delete RHS;
+}
+
+void Value::setto(HCC* hcc, Value* other) {
+	if (!isRegister() && other->isRegister()) {
+		fmt::print("1\n");
+		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, other->reg_name);
+	} else if (isRegister() && other->isRegister()) {
+		fmt::print("2\n");
+		hcc->backend->emit_move(hcc->getOutFd(), this->reg_name, other->reg_name);
+	} else if (!isRegister() && !other->isRegister()) {
+		fmt::print("3\n");
+		Value* LHS = doCondLod(hcc);
+		Value* RHS = other->doCondLod(hcc);
+
+		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, LHS->reg_name);
+
+		delete LHS;
+		delete RHS;
+	} else if (isRegister() && !other->isRegister()) {
+		fmt::print("4\n");
+		Value* RHS = other->doCondLod(hcc);
+
+		hcc->backend->emit_move(hcc->getOutFd(), this->reg_name, RHS->reg_name);
+
+		delete RHS;
+	}
 }
