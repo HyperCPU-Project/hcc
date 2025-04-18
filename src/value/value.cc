@@ -108,13 +108,10 @@ void Value::div(HCC* hcc, Value* other) {
 
 void Value::setto(HCC* hcc, Value* other) {
 	if (!isRegister() && other->isRegister()) {
-		fmt::print("1\n");
 		hcc->backend->emit_store_from_stack(hcc->getOutFd(), var_stack_align, other->reg_name);
 	} else if (isRegister() && other->isRegister()) {
-		fmt::print("2\n");
 		hcc->backend->emit_move(hcc->getOutFd(), this->reg_name, other->reg_name);
 	} else if (!isRegister() && !other->isRegister()) {
-		fmt::print("3\n");
 		Value* LHS = doCondLod(hcc);
 		Value* RHS = other->doCondLod(hcc);
 
@@ -125,7 +122,6 @@ void Value::setto(HCC* hcc, Value* other) {
 		if (RHS != other)
 			delete RHS;
 	} else if (isRegister() && !other->isRegister()) {
-		fmt::print("4\n");
 		Value* RHS = other->doCondLod(hcc);
 
 		hcc->backend->emit_move(hcc->getOutFd(), this->reg_name, RHS->reg_name);
