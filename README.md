@@ -43,10 +43,14 @@ It's _kinda_ large (2 Mb or 1.9MiB) because C++, but whatever.
 Here's the arguments you can provide to it:
 
 - ```--help``` or ```-h```
+
 Prints a help message containing the usage of HCC
 - ```-o <filename>```
+
 Sets an output filename for the generated assembly
 - ```--backend <qproc/hypercpu>```
+
 Sets a compilation backend (target)
 - ```--ast```
+
 Prints an abstract syntax tree when the parsing is done
