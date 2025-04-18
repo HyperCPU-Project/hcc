@@ -8,7 +8,7 @@ Multi-backend K&R style C compiler
 
 HCC is a C compiler, made for HyperCPU and qproc, it's very extensible and it's easy to create backends for it
 
-HCC uses bison, flex, fmt, altough it may not be very optimizted in case of codegen, it's a good choice to develop software for above referenced processors
+HCC uses bison, flex, fmt, altough it may not be very optimized in case of codegen, it's a good choice to develop software for above referenced processors
 
 Here's how HCC generated assembly can look like:
 - Input
