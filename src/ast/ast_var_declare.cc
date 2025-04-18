@@ -18,7 +18,9 @@ bool AstVarDeclare::compile(HCC* hcc) {
 	if (!var_type)
 		return false;
 
-	Value* value = Value::createAsStackVar(hcc, *var_type);
+	std::unique_ptr<Value> value(Value::createAsStackVar(hcc, *var_type));
+
+	hcc->current_function.variables[name] = std::move(value);
 
 	return true;
 }

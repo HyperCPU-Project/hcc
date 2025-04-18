@@ -20,7 +20,8 @@ bool AstReturn::compile(HCC* hcc) {
 	if (expr) {
 		if (!expr->compile(hcc))
 			return false;
-		Value* ret = hcc->values.top();
+		auto ret = std::move(hcc->values.top());
+
 		hcc->values.pop();
 
 		if (ret->reg_name != hcc->backend->abi.return_register) {

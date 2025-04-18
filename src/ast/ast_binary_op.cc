@@ -28,22 +28,22 @@ bool AstBinaryOp::compile(HCC* hcc) {
 	if (!right->compile(hcc))
 		return false;
 
-	Value* RHS = hcc->values.top();
+	auto RHS = std::move(hcc->values.top());
 	hcc->values.pop();
-	Value* LHS = hcc->values.top();
+	auto LHS = std::move(hcc->values.top());
 	hcc->values.pop();
 
 	if (op == "add") {
-		LHS->add(hcc, RHS);
+		LHS->add(hcc, RHS.get());
 	} else if (op == "sub") {
-		LHS->sub(hcc, RHS);
+		LHS->sub(hcc, RHS.get());
 	} else if (op == "mul") {
-		LHS->mul(hcc, RHS);
+		LHS->mul(hcc, RHS.get());
 	} else if (op == "div") {
-		LHS->div(hcc, RHS);
+		LHS->div(hcc, RHS.get());
 	}
 
-	hcc->values.push(LHS);
+	hcc->values.push(std::move(LHS));
 
 	return true;
 }

@@ -1,10 +1,19 @@
 #include <backend/qproc/qproc_backend.hpp>
 #include <hcc.hpp>
 #include <util.hpp>
+#include <value/value.hpp>
 
 using namespace hcc;
 
-HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr) {
+HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
+	current_function.align = 0;
+}
+
+HCC::~HCC() {
+	if (outfd)
+		fclose(outfd);
+	if (backend)
+		delete backend;
 }
 
 Result<NoSuccess, std::string> HCC::parseAndCompile() {

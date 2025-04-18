@@ -12,7 +12,7 @@ void AstNumber::print(int indent) const {
 }
 
 bool AstNumber::compile(HCC* hcc) {
-	Value* v = Value::createAsRegister(hcc, value);
-	hcc->values.push(v);
+	std::unique_ptr<Value> v(Value::createAsRegister(hcc, value));
+	hcc->values.push(std::move(v));
 	return true;
 }

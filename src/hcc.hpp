@@ -19,9 +19,10 @@ public:
 	Backend* backend;
 
 	FunctionMetadata current_function;
-	std::stack<Value*> values;
+	std::stack<std::unique_ptr<Value>> values;
 
 	HCC();
+	~HCC();
 
 	Result<NoSuccess, std::string> parseAndCompile();
 

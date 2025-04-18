@@ -32,6 +32,8 @@ public:
 
 	virtual void emit_reserve_stack_space(FILE* out, uint64_t size);
 
+	virtual std::string emit_load_from_stack(FILE* out, uint64_t align);
+
 	virtual TypeMetadata* get_type_from_name(std::string name);
 };
 } // namespace hcc

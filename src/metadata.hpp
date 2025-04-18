@@ -17,6 +17,6 @@ typedef struct TypeMetadata {
 typedef struct FunctionMetadata {
 	std::string name;
 	uint64_t align;
-	std::map<std::string, Value*> variables;
+	std::map<std::string, std::unique_ptr<Value>> variables;
 } FunctionMetadata;
 } // namespace hcc

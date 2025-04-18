@@ -41,6 +41,10 @@ void Backend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
 void Backend::emit_reserve_stack_space(FILE* out, uint64_t size) {
 }
 
+std::string Backend::emit_load_from_stack(FILE* out, uint64_t align) {
+	return "";
+}
+
 TypeMetadata* Backend::get_type_from_name(std::string name) {
 	if (!types.contains(name)) {
 		fmt::print("[hcc] unknown type {}\n", name);

@@ -1,5 +1,6 @@
 #include <ast/ast.hpp>
 #include <hcc.hpp>
+#include <value/value.hpp>
 
 using namespace hcc;
 
@@ -17,5 +18,6 @@ bool AstFuncDef::compile(HCC* hcc) {
 	hcc->backend->emit_function_prologue(hcc->getOutFd(), name);
 	if (!AstNode::compile(hcc))
 		return false;
+
 	return true;
 }

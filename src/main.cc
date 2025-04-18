@@ -2,6 +2,7 @@
 #include <hcc.hpp>
 #include <pch.hpp>
 #include <util.hpp>
+#include <value/value.hpp>
 #include <yy.hpp>
 
 using namespace hcc;

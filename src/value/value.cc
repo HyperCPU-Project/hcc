@@ -1,4 +1,5 @@
 #include <hcc.hpp>
+#include <memory>
 #include <value/value.hpp>
 
 using namespace hcc;
@@ -27,45 +28,56 @@ Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type, std::string name) {
 	value->var_type = type;
 
 	hcc->backend->emit_reserve_stack_space(hcc->getOutFd(), type.size);
-	hcc->current_function.variables[name] = value;
 
 	hcc->current_function.align += type.size;
 
 	return value;
 }
 
-Value Value::doCondLod(HCC* hcc) {
+Value* Value::doCondLod(HCC* hcc) {
 	if (isRegister())
-		return *this;
-	Value value;
-	value.reg_name = fmt::format("r{}", hcc->backend->increment_reg_index());
-	return Value();
+		return this;
+	auto value = new Value();
+	value->reg_name = hcc->backend->emit_load_from_stack(hcc->getOutFd(), this->var_stack_align);
+	return value;
 }
 
 void Value::add(HCC* hcc, Value* other) {
-	Value LHS = doCondLod(hcc);
-	Value RHS = other->doCondLod(hcc);
+	Value* LHS = doCondLod(hcc);
+	Value* RHS = other->doCondLod(hcc);
 
-	hcc->backend->emit_add(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+	hcc->backend->emit_add(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
+
+	delete LHS;
+	delete RHS;
 }
 
 void Value::sub(HCC* hcc, Value* other) {
-	Value LHS = doCondLod(hcc);
-	Value RHS = other->doCondLod(hcc);
+	Value* LHS = doCondLod(hcc);
+	Value* RHS = other->doCondLod(hcc);
 
-	hcc->backend->emit_sub(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+	hcc->backend->emit_sub(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
+
+	delete LHS;
+	delete RHS;
 }
 
 void Value::mul(HCC* hcc, Value* other) {
-	Value LHS = doCondLod(hcc);
-	Value RHS = other->doCondLod(hcc);
+	Value* LHS = doCondLod(hcc);
+	Value* RHS = other->doCondLod(hcc);
 
-	hcc->backend->emit_mul(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+	hcc->backend->emit_mul(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
+
+	delete LHS;
+	delete RHS;
 }
 
 void Value::div(HCC* hcc, Value* other) {
-	Value LHS = doCondLod(hcc);
-	Value RHS = other->doCondLod(hcc);
+	Value* LHS = doCondLod(hcc);
+	Value* RHS = other->doCondLod(hcc);
 
-	hcc->backend->emit_div(hcc->getOutFd(), LHS.reg_name, LHS.reg_name, RHS.reg_name);
+	hcc->backend->emit_div(hcc->getOutFd(), LHS->reg_name, LHS->reg_name, RHS->reg_name);
+
+	delete LHS;
+	delete RHS;
 }

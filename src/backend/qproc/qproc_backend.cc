@@ -1,4 +1,5 @@
 #include <backend/qproc/qproc_backend.hpp>
+#include <string>
 
 using namespace hcc;
 
@@ -75,4 +76,13 @@ void QprocBackend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
 
 void QprocBackend::emit_reserve_stack_space(FILE* out, uint64_t size) {
 	fmt::fprintf(out, "movi r0 %ld\nsub sp, r0\n", size);
+}
+
+std::string QprocBackend::emit_load_from_stack(FILE* out, uint64_t align) {
+	std::string reg = "r" + std::to_string(increment_reg_index());
+	fmt::fprintf(out, "movi r0 bp\n");
+	fmt::fprintf(out, "movi r1 %d\n", align);
+	fmt::fprintf(out, "sub r0 r1\n");
+	fmt::fprintf(out, "lod %s dword r0\n", reg);
+	return reg;
 }
