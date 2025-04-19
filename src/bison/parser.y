@@ -215,5 +215,5 @@ factor:
 %%
 
 void yyerror(const char* s) {
-	std::cerr << "Error at line " << line_num << ": " << s << std::endl;
+	std::cerr << "[hcc] error at line " << line_num << ": " << s << std::endl;
 }
