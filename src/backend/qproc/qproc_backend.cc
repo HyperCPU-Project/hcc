@@ -99,3 +99,15 @@ void QprocBackend::emit_store_from_stack(FILE* out, uint64_t align, std::string 
 		fmt::fprintf(out, "pop %s\n", rsrc);
 	fmt::fprintf(out, "str dword r0 %s\n", rsrc);
 }
+
+std::string QprocBackend::emit_loadaddr_from_stack(FILE* out, uint64_t align) {
+	std::string reg = std::to_string(increment_reg_index());
+	if (reg == "r0")
+		reg = std::to_string(increment_reg_index());
+	reg = "r" + reg;
+
+	fmt::fprintf(out, "mov %s bp\n", reg);
+	fmt::fprintf(out, "movi r0 %d\n", align);
+	fmt::fprintf(out, "sub %s r0\n", reg);
+	return reg;
+}

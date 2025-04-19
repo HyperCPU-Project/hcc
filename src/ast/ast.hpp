@@ -87,4 +87,11 @@ public:
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
 };
+
+class AstAddrof : public AstNode {
+public:
+	std::string name;
+	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
+};
 } // namespace hcc

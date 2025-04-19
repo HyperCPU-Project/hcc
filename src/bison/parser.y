@@ -32,10 +32,9 @@ hcc::AstRootNode* root = nullptr;
 %token <string> STRING_LITERAL
 %token RETURN ASM
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE
-%token LPAREN RPAREN LBRACE RBRACE SEMICOLON
+%token LPAREN RPAREN LBRACE RBRACE SEMICOLON AMPERSAND
 
 %type <node> program function_definition
-%type <func_list> function_definitions
 %type <node> expression term factor
 %type <node> statement declaration assignment return_statement
 %type <stmt_list> statement_list
@@ -55,19 +54,6 @@ program:
 			root->children.push_back(func);
 		}
 		delete $1;
-	}
-	;
-
-function_definitions:
-	function_definition function_definitions {
-		auto* fn = new std::vector<hcc::AstNode*>();
-		fn->push_back($1);
-		fn->insert(fn->end(), $2->begin(), $2->end());
-		delete $2;
-		$$ = fn;
-	}
-	| {
-		$$ = new std::vector<hcc::AstNode*>();
 	}
 	;
 
@@ -212,6 +198,12 @@ factor:
 		var->name = *$1;
 		delete $1;
 		$$ = var;
+	}
+	| AMPERSAND IDENTIFIER {
+		auto* ast = new hcc::AstAddrof();
+		ast->name = *$2;
+		delete $2;
+		$$ = ast;
 	}
 	| LPAREN expression RPAREN {
 		$$ = $2;

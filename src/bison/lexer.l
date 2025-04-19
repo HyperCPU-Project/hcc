@@ -9,14 +9,14 @@ int line_num = 1;
 
 %%
 
-[ \t]           ; 
+[ \t]           ;
 [\n]            { line_num++; }
 "return"        { return RETURN; }
 "asm"        { return ASM; }
 [0-9]+          { yylval.number = std::stoi(yytext); return NUMBER; }
-[a-zA-Z_][a-zA-Z0-9_]* { 
-	yylval.string = new std::string(yytext); 
-	return IDENTIFIER; 
+[a-zA-Z_][a-zA-Z0-9_]* {
+	yylval.string = new std::string(yytext);
+	return IDENTIFIER;
 }
 \"([^\\\"\n]|\\.)*\" {
 	yylval.string = new std::string(yytext + 1, yytext + yyleng - 1);
@@ -32,7 +32,8 @@ int line_num = 1;
 "{"             { return LBRACE; }
 "}"             { return RBRACE; }
 ";"             { return SEMICOLON; }
-.               { printf("Unknown token: %s\n", yytext); }
+"&"             { return AMPERSAND; }
+.               { printf("[hcc] unknown token: %s\n", yytext); }
 
 %%
 

@@ -34,6 +34,7 @@ public:
 
 	virtual std::string emit_load_from_stack(FILE* out, uint64_t align);
 	virtual void emit_store_from_stack(FILE* out, uint64_t align, std::string rsrc);
+	virtual std::string emit_loadaddr_from_stack(FILE* out, uint64_t align);
 
 	virtual TypeMetadata* get_type_from_name(std::string name);
 };
