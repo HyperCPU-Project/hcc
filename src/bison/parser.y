@@ -20,11 +20,11 @@ hcc::AstRootNode* root = nullptr;
 	std::string *string;
 	hcc::AstNode* node;
 	hcc::AstExpr* expr;
-	hcc::AstStatement* stmt;
+	hcc::AstNode* stmt;
 
 	std::vector<hcc::AstNode*>* top_stmt_list;
 
-	std::vector<hcc::AstStatement*>* stmt_list;
+	std::vector<hcc::AstNode*>* stmt_list;
 	std::vector<hcc::AstNode*>* func_list;
 }
 
@@ -35,10 +35,10 @@ hcc::AstRootNode* root = nullptr;
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON
 
-%type <node> program function_definition 
+%type <node> program function_definition
 %type <func_list> function_definitions
 %type <expr> expression term factor
-%type <stmt> statement declaration assignment return_statement
+%type <node> statement declaration assignment return_statement
 %type <stmt_list> statement_list
 %type <node> topstatement
 %type <top_stmt_list> topstatements
@@ -113,7 +113,7 @@ topstatement:
 
 statement_list:
 	statement {
-		$$ = new std::vector<hcc::AstStatement*>();
+		$$ = new std::vector<hcc::AstNode*>();
 		$$->push_back($1);
 	}
 	| statement_list statement {
@@ -217,4 +217,4 @@ factor:
 
 void yyerror(const char* s) {
 	std::cerr << "Error at line " << line_num << ": " << s << std::endl;
-} 
+}
