@@ -82,6 +82,12 @@ function_definition:
 		delete $6;
 		delete $1;
 		$$ = func;
+	} | IDENTIFIER IDENTIFIER LPAREN RPAREN LBRACE RBRACE {
+		auto* func = new hcc::AstFuncDef();
+		func->name = *$2;
+		delete $2;
+		delete $1;
+		$$ = func;
 	}
 	;
 
