@@ -9,11 +9,19 @@ int line_num = 1;
 
 %%
 
-[ \t]           ; // Ignore whitespace
+[ \t]           ; 
 [\n]            { line_num++; }
 "return"        { return RETURN; }
+"asm"        { return ASM; }
 [0-9]+          { yylval.number = std::stoi(yytext); return NUMBER; }
-[a-zA-Z_][a-zA-Z0-9_]* { yylval.string = new std::string(yytext); return IDENTIFIER; }
+[a-zA-Z_][a-zA-Z0-9_]* { 
+	yylval.string = new std::string(yytext); 
+	return IDENTIFIER; 
+}
+\"([^\\\"\n]|\\.)*\" {
+	yylval.string = new std::string(yytext + 1, yytext + yyleng - 1);
+  return STRING_LITERAL;
+}
 "="             { return ASSIGN; }
 "+"             { return PLUS; }
 "-"             { return MINUS; }
@@ -30,4 +38,4 @@ int line_num = 1;
 
 int yywrap() {
     return 1;
-} 
+}

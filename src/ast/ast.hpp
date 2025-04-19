@@ -90,4 +90,11 @@ public:
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
 };
+
+class AstAsm : public AstStatement {
+public:
+	std::string code;
+	void print(int indent = 0) const override;
+	bool compile(HCC* hcc) override;
+};
 } // namespace hcc

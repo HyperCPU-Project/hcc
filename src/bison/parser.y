@@ -21,13 +21,17 @@ hcc::AstRootNode* root = nullptr;
 	hcc::AstNode* node;
 	hcc::AstExpr* expr;
 	hcc::AstStatement* stmt;
+
+	std::vector<hcc::AstNode*>* top_stmt_list;
+
 	std::vector<hcc::AstStatement*>* stmt_list;
 	std::vector<hcc::AstNode*>* func_list;
 }
 
 %token <number> NUMBER
 %token <string> IDENTIFIER
-%token RETURN
+%token <string> STRING_LITERAL
+%token RETURN ASM
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE
 %token LPAREN RPAREN LBRACE RBRACE SEMICOLON
 
@@ -36,6 +40,9 @@ hcc::AstRootNode* root = nullptr;
 %type <expr> expression term factor
 %type <stmt> statement declaration assignment return_statement
 %type <stmt_list> statement_list
+%type <node> topstatement
+%type <top_stmt_list> topstatements
+%type <node> asm_statement
 
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
@@ -43,7 +50,7 @@ hcc::AstRootNode* root = nullptr;
 %%
 
 program:
-	function_definitions {
+	topstatements {
 		root = new hcc::AstRootNode();
 		for (const auto& func : *$1) {
 			root->children.push_back(func);
@@ -79,6 +86,31 @@ function_definition:
 	}
 	;
 
+asm_statement:
+	ASM STRING_LITERAL SEMICOLON {
+		auto def = new hcc::AstAsm();
+		def->code = *$2;
+		delete $2;
+		$$ = def;
+	}
+	;
+
+topstatements:
+	topstatement {
+		$$ = new std::vector<hcc::AstNode*>();
+		$$->push_back($1);
+	}
+	| topstatements topstatement {
+		$1->push_back($2);
+		$$ = $1;
+	}
+	;
+
+topstatement:
+	function_definition
+	| asm_statement
+	;
+
 statement_list:
 	statement {
 		$$ = new std::vector<hcc::AstStatement*>();
@@ -94,6 +126,7 @@ statement:
 	declaration
 	| assignment
 	| return_statement
+	| asm_statement
 	;
 
 declaration:
