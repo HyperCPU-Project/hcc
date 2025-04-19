@@ -87,10 +87,10 @@ function_definition:
 	;
 
 asm_statement:
-	ASM STRING_LITERAL SEMICOLON {
+	ASM LPAREN STRING_LITERAL RPAREN SEMICOLON {
 		auto def = new hcc::AstAsm();
-		def->code = *$2;
-		delete $2;
+		def->code = *$3;
+		delete $3;
 		$$ = def;
 	}
 	;
