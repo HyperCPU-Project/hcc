@@ -19,7 +19,6 @@ hcc::AstRootNode* root = nullptr;
 	int number;
 	std::string *string;
 	hcc::AstNode* node;
-	hcc::AstNode* expr;
 	hcc::AstNode* stmt;
 
 	std::vector<hcc::AstNode*>* top_stmt_list;
@@ -37,7 +36,7 @@ hcc::AstRootNode* root = nullptr;
 
 %type <node> program function_definition
 %type <func_list> function_definitions
-%type <expr> expression term factor
+%type <node> expression term factor
 %type <node> statement declaration assignment return_statement
 %type <stmt_list> statement_list
 %type <node> topstatement
