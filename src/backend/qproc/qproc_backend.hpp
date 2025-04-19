@@ -21,10 +21,10 @@ public:
 
 	void emit_move(FILE* out, std::string rdest, std::string rsrc) override;
 
-	void emit_reserve_stack_space(FILE* out, uint64_t size);
-	void emit_store_from_stack(FILE* out, uint64_t align, std::string rsrc);
+	void emit_reserve_stack_space(FILE* out, uint64_t size) override;
+	void emit_store_from_stack(FILE* out, uint64_t align, std::string rsrc) override;
 
-	std::string emit_load_from_stack(FILE* out, uint64_t align);
-	std::string emit_loadaddr_from_stack(FILE* out, uint64_t align);
+	std::string emit_load_from_stack(FILE* out, uint64_t align) override;
+	std::string emit_loadaddr_from_stack(FILE* out, uint64_t align) override;
 };
 } // namespace hcc
