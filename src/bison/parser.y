@@ -19,7 +19,7 @@ hcc::AstRootNode* root = nullptr;
 	int number;
 	std::string *string;
 	hcc::AstNode* node;
-	hcc::AstExpr* expr;
+	hcc::AstNode* expr;
 	hcc::AstNode* stmt;
 
 	std::vector<hcc::AstNode*>* top_stmt_list;

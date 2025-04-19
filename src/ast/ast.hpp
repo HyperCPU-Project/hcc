@@ -15,16 +15,6 @@ protected:
 	void printIndent(int indent) const;
 };
 
-class AstExpr : public AstNode {
-public:
-	virtual ~AstExpr() = default;
-};
-
-class AstStatement : public AstNode {
-public:
-	virtual ~AstStatement() = default;
-};
-
 class AstRootNode : public AstNode {
 public:
 	void print(int indent = 0) const override;
@@ -37,7 +27,7 @@ public:
 	bool compile(HCC* hcc) override;
 };
 
-class AstVarDeclare : public AstStatement {
+class AstVarDeclare : public AstNode {
 public:
 	std::string name;
 	std::string type;
@@ -45,16 +35,16 @@ public:
 	bool compile(HCC* hcc) override;
 };
 
-class AstVarAssign : public AstStatement {
+class AstVarAssign : public AstNode {
 public:
 	std::string name;
-	AstExpr* expr;
+	AstNode* expr;
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
 	~AstVarAssign();
 };
 
-class AstNumber : public AstExpr {
+class AstNumber : public AstNode {
 public:
 	int value;
 	explicit AstNumber(int val) : value(val) {
@@ -63,10 +53,10 @@ public:
 	bool compile(HCC* hcc) override;
 };
 
-class AstBinaryOp : public AstExpr {
+class AstBinaryOp : public AstNode {
 public:
-	AstExpr* left;
-	AstExpr* right;
+	AstNode* left;
+	AstNode* right;
 	std::string op;
 
 	void print(int indent = 0) const override;
@@ -75,23 +65,23 @@ public:
 	~AstBinaryOp();
 };
 
-class AstReturn : public AstStatement {
+class AstReturn : public AstNode {
 public:
-	AstExpr* expr;
+	AstNode* expr;
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
 
 	~AstReturn();
 };
 
-class AstVarRef : public AstExpr {
+class AstVarRef : public AstNode {
 public:
 	std::string name;
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
 };
 
-class AstAsm : public AstStatement {
+class AstAsm : public AstNode {
 public:
 	std::string code;
 	void print(int indent = 0) const override;
