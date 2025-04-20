@@ -49,3 +49,11 @@ Here's the arguments you can provide to it:
 
 ## CMake Build Options
 - HCC_NO_TESTS — If set to 1, it will not build tests
+
+## System requirements?
+HCC has been tested on these systems:
+- Android 10 (armv7, Clang 20.1.2)
+- Android (aarch64, Clang 20.1.2)
+- Arch Linux (x86_64, gcc 14.2.1 && clang 19.1.7)
+
+(To be fair, every linux system that has bison, flex, and fmt installed will work)
