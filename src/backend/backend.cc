@@ -11,6 +11,9 @@ Backend::Backend() {
 Backend::~Backend() {
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 uint64_t Backend::increment_reg_index() {
 	return 0;
 }
@@ -70,3 +73,5 @@ TypeMetadata* Backend::get_type_from_name(std::string name) {
 
 	return &types[name];
 }
+
+#pragma GCC diagnostic pop
