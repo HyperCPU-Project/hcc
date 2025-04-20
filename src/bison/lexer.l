@@ -33,6 +33,7 @@ int line_num = 1;
 "}"             { return RBRACE; }
 ";"             { return SEMICOLON; }
 "&"             { return AMPERSAND; }
+","             { return COMMA; }
 .               { printf("[hcc] unknown token: %s\n", yytext); }
 
 %%

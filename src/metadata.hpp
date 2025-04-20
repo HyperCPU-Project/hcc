@@ -7,6 +7,7 @@ class Value;
 
 typedef struct ABIMetadata {
 	std::string return_register;
+	std::vector<std::string> args_registers;
 } ABIMetadata;
 
 typedef struct TypeMetadata {

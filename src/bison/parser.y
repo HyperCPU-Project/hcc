@@ -14,6 +14,12 @@ std::string hcc_parse_error = "";
 
 %code requires {
 #include <ast/ast.hpp>
+#include <metadata.hpp>
+
+struct ParserArgData {
+std::string name;
+std::string type;
+};
 }
 
 %union {
@@ -26,6 +32,10 @@ std::string hcc_parse_error = "";
 
 	std::vector<hcc::AstNode*>* stmt_list;
 	std::vector<hcc::AstNode*>* func_list;
+
+	std::map<std::string, std::string>* arg_list;
+
+	ParserArgData *arg;
 }
 
 %token <number> NUMBER
@@ -33,7 +43,7 @@ std::string hcc_parse_error = "";
 %token <string> STRING_LITERAL
 %token RETURN ASM
 %token ASSIGN PLUS MINUS MULTIPLY DIVIDE
-%token LPAREN RPAREN LBRACE RBRACE SEMICOLON AMPERSAND
+%token LPAREN RPAREN LBRACE RBRACE SEMICOLON AMPERSAND COMMA
 
 %type <node> program function_definition
 %type <node> expression term factor
@@ -42,6 +52,8 @@ std::string hcc_parse_error = "";
 %type <node> topstatement
 %type <top_stmt_list> topstatements
 %type <node> asm_statement
+%type <arg_list> arg_list
+%type <arg> arg
 
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
@@ -59,12 +71,14 @@ program:
 	;
 
 function_definition:
-	IDENTIFIER IDENTIFIER LPAREN RPAREN LBRACE statement_list RBRACE {
+	IDENTIFIER IDENTIFIER LPAREN arg_list LBRACE statement_list RBRACE {
 		auto* func = new hcc::AstFuncDef();
 		func->name = *$2;
+		func->args = *$4;
 		for (const auto& stmt : *$6) {
 			func->children.push_back(stmt);
 		}
+		delete $4;
 		delete $2;
 		delete $6;
 		delete $1;
@@ -77,6 +91,34 @@ function_definition:
 		$$ = func;
 	}
 	;
+
+arg_list:
+  arg {
+    $$ = new std::map<std::string, std::string>();
+    (*$$)[$1->name] = $1->type;
+    delete $1;
+  } | arg_list arg {
+    (*$$)[$2->name] = $2->type;
+    $$ = $1;
+    delete $2;
+  }
+  ;
+
+arg:
+  IDENTIFIER IDENTIFIER COMMA {
+    $$ = new ParserArgData();
+    $$->name = *$2;
+    $$->type = *$1;
+    delete $1;
+    delete $2;
+  }
+  | IDENTIFIER IDENTIFIER RPAREN {
+    $$ = new ParserArgData();
+    $$->name = *$2;
+    $$->type = *$1;
+    delete $1;
+    delete $2;
+  }
 
 asm_statement:
 	ASM LPAREN STRING_LITERAL RPAREN SEMICOLON {
@@ -91,8 +133,7 @@ topstatements:
 	topstatement {
 		$$ = new std::vector<hcc::AstNode*>();
 		$$->push_back($1);
-	}
-	| topstatements topstatement {
+	} | topstatements topstatement {
 		$1->push_back($2);
 		$$ = $1;
 	}

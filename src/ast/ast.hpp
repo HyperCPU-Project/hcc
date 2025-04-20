@@ -23,6 +23,8 @@ public:
 class AstFuncDef : public AstNode {
 public:
 	std::string name;
+	std::map<std::string, std::string> args;
+
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
 };
