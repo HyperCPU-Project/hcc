@@ -22,17 +22,32 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libfmt-dev build-essential cmake
 
-      - name: Build
+      - name: Build static
         run: |
           mkdir build
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-static"
           make -j$(nproc)
           ./hcctest
+          mv hcc ../hcc-static-x86_64
+          rm * -rf
+
+      - name: Build dynamic
+        run: |
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Debug
+          make -j$(nproc)
+          ./hcctest
           mv hcc ../hcc-x86_64
 
-      - name: Upload artifact
+      - name: Upload artifact (static)
         uses: actions/upload-artifact@v4
         with:
-          name: hcc-artifact-x86_64
+          name: hcc-static-x86_64
+          path: hcc-static-x86_64
+
+      - name: Upload artifact (dynamic)
+        uses: actions/upload-artifact@v4
+        with:
+          name: hcc-x86_64
           path: hcc-x86_64
