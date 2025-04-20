@@ -50,6 +50,7 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 
 	buffer = yy_scan_string(code.c_str());
 	yyparse();
+	yy_delete_buffer(buffer);
 
 	if (!root) {
 		return Result<NoSuccess, std::string>::error(fmt::format("root == nullptr (parse error: {})", hcc_parse_error));
@@ -60,7 +61,6 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 	}
 
 	if (!root->compile(this)) {
-		yy_delete_buffer(buffer);
 		return Result<NoSuccess, std::string>::error("compile error: " + hcc_compile_error);
 	}
 
@@ -68,7 +68,6 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 
 	if (root)
 		delete root;
-	yy_delete_buffer(buffer);
 
 	return Result<NoSuccess, std::string>::success({});
 }

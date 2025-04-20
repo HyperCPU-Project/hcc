@@ -33,9 +33,14 @@ public:
 
 	virtual void emit_reserve_stack_space(uint64_t size);
 
-	virtual std::string emit_load_from_stack(uint64_t align);
+	virtual std::string emit_load_from_stack(uint64_t align, std::string load_reg = "");
 	virtual void emit_store_from_stack(uint64_t align, std::string rsrc);
-	virtual std::string emit_loadaddr_from_stack(uint64_t align);
+	virtual std::string emit_loadaddr_from_stack(uint64_t align, std::string load_reg = "");
+
+	virtual void emit_call(std::string name);
+
+	virtual void emit_push(std::string reg);
+	virtual void emit_pop(std::string reg);
 
 	virtual TypeMetadata* get_type_from_name(std::string name);
 };

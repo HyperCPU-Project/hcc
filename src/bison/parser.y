@@ -34,6 +34,7 @@ std::string type;
 	std::vector<hcc::AstNode*>* func_list;
 
 	std::map<std::string, std::string>* arg_list;
+	std::vector<hcc::AstNode*>* call_arg_list;
 
 	ParserArgData *arg;
 }
@@ -54,6 +55,9 @@ std::string type;
 %type <node> asm_statement
 %type <arg_list> arg_list
 %type <arg> arg
+%type <call_arg_list> call_arg_list
+%type <node> call_arg
+%type <node> fncall
 
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
@@ -161,6 +165,7 @@ statement:
 	| assignment
 	| return_statement
 	| asm_statement
+	| fncall SEMICOLON
 	;
 
 declaration:
@@ -173,6 +178,35 @@ declaration:
 		$$ = decl;
 	}
 	;
+
+fncall:
+  IDENTIFIER LPAREN call_arg_list {
+    auto node = new hcc::AstFuncCall();
+    node->name = *$1;
+    node->args = *$3;
+    delete $3;
+    delete $1;
+    $$ = node;
+  }
+
+call_arg_list:
+  call_arg {
+    $$ = new std::vector<hcc::AstNode*>();
+    $$->push_back($1);
+  } | call_arg_list call_arg {
+    $1->push_back($2);
+    $$ = $1;
+  } | RPAREN {
+    $$ = new std::vector<hcc::AstNode*>();
+  }
+
+call_arg:
+  expression COMMA {
+    $$ = $1;
+  }
+  | expression RPAREN {
+    $$ = $1;
+  }
 
 assignment:
 	IDENTIFIER ASSIGN expression SEMICOLON {
@@ -251,6 +285,7 @@ factor:
 	| LPAREN expression RPAREN {
 		$$ = $2;
 	}
+	| fncall
 	;
 
 %%

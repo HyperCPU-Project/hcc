@@ -43,15 +43,23 @@ void Backend::emit_move(std::string rdest, std::string rsrc) {
 void Backend::emit_reserve_stack_space(uint64_t size) {
 }
 
-std::string Backend::emit_load_from_stack(uint64_t align) {
+std::string Backend::emit_load_from_stack(uint64_t align, std::string load_reg) {
 	return "";
 }
 
 void Backend::emit_store_from_stack(uint64_t align, std::string rsrc) {
 }
 
-std::string Backend::emit_loadaddr_from_stack(uint64_t align) {
+std::string Backend::emit_loadaddr_from_stack(uint64_t align, std::string load_reg) {
 	return "";
+}
+
+void Backend::emit_call(std::string name) {
+}
+
+void Backend::emit_push(std::string reg) {
+}
+void Backend::emit_pop(std::string reg) {
 }
 
 TypeMetadata* Backend::get_type_from_name(std::string name) {

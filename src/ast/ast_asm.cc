@@ -10,6 +10,6 @@ void AstAsm::print(int indent) const {
 }
 
 bool AstAsm::compile(HCC* hcc) {
-	hcc->backend->output = code + "\n\n";
+	hcc->backend->output += "; inline assembly\n" + code + "\n\n";
 	return true;
 }

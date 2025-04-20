@@ -21,7 +21,7 @@ public:
 	static Value* createAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
 	static Value* createAsStackVar(HCC* hcc, TypeMetadata type);
 
-	Value* doCondLod(HCC* hcc);
+	Value* doCondLod(HCC* hcc, std::string load_reg = "");
 
 private:
 	void doCondStr(HCC* hcc);

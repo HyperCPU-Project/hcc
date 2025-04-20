@@ -34,11 +34,11 @@ Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type) {
 	return value;
 }
 
-Value* Value::doCondLod(HCC* hcc) {
+Value* Value::doCondLod(HCC* hcc, std::string load_reg) {
 	if (isRegister())
 		return this;
 	auto value = new Value();
-	value->reg_name = hcc->backend->emit_load_from_stack(this->var_stack_align);
+	value->reg_name = hcc->backend->emit_load_from_stack(this->var_stack_align, load_reg);
 	return value;
 }
 

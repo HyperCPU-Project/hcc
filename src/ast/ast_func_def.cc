@@ -35,16 +35,15 @@ bool AstFuncDef::compile(HCC* hcc) {
 			return false;
 
 		auto var = std::unique_ptr<Value>(Value::createAsStackVar(hcc, *type_md));
-		auto reg_var = Value();
+		Value reg_var;
 		reg_var.reg_name = hcc->backend->abi.args_registers[i];
 
 		var->setto(hcc, &reg_var);
 
 		hcc->current_function.variables[arg_name] = std::move(var);
+
 		i++;
 	}
-
-	hcc->backend->output += "\n";
 
 	if (!AstNode::compile(hcc))
 		return false;

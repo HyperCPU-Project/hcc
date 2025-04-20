@@ -20,7 +20,5 @@ bool AstAddrof::compile(HCC* hcc) {
 
 	hcc->values.push(std::move(out));
 
-	hcc->backend->output += "\n";
-
 	return true;
 }

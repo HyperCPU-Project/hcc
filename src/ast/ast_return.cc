@@ -30,7 +30,5 @@ bool AstReturn::compile(HCC* hcc) {
 	}
 	hcc->backend->emit_function_epilogue();
 
-	hcc->backend->output += "\n";
-
 	return true;
 }

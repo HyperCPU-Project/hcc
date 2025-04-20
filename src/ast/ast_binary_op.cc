@@ -45,7 +45,5 @@ bool AstBinaryOp::compile(HCC* hcc) {
 
 	hcc->values.push(std::move(LHS));
 
-	hcc->backend->output += "\n";
-
 	return true;
 }
