@@ -98,6 +98,11 @@ void QprocBackend::emit_store_from_stack(uint64_t align, std::string rsrc) {
 	output += fmt::sprintf("mov r0 bp\n");
 	output += fmt::sprintf("movi r1 %d\n", align);
 	output += fmt::sprintf("sub r0 r1\n");
+	if (rsrc == "r0") {
+		emit_move("r1", rsrc);
+		is_used_reg = true;
+		rsrc = "r1";
+	}
 	if (is_used_reg)
 		output += fmt::sprintf("pop %s\n", rsrc);
 	output += fmt::sprintf("str dword r0 %s\n", rsrc);
