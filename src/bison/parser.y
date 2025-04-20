@@ -83,12 +83,6 @@ function_definition:
 		delete $6;
 		delete $1;
 		$$ = func;
-	} | IDENTIFIER IDENTIFIER LPAREN RPAREN LBRACE RBRACE {
-		auto* func = new hcc::AstFuncDef();
-		func->name = *$2;
-		delete $2;
-		delete $1;
-		$$ = func;
 	}
 	;
 
@@ -97,10 +91,14 @@ arg_list:
     $$ = new std::map<std::string, std::string>();
     (*$$)[$1->name] = $1->type;
     delete $1;
-  } | arg_list arg {
+  }
+  | arg_list arg {
     (*$$)[$2->name] = $2->type;
     $$ = $1;
     delete $2;
+  }
+  | RPAREN {
+    $$ = new std::map<std::string, std::string>();
   }
   ;
 
@@ -152,6 +150,9 @@ statement_list:
 	| statement_list statement {
 		$1->push_back($2);
 		$$ = $1;
+	}
+	| {
+		$$ = new std::vector<hcc::AstNode*>();
 	}
 	;
 
