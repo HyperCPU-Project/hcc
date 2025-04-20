@@ -1,7 +1,11 @@
 #include <backend/qproc/qproc_backend.hpp>
+#include <fmt/printf.h>
 #include <hcc.hpp>
 #include <util.hpp>
 #include <value/value.hpp>
+#include <yy.hpp>
+
+std::string hcc_compile_error = "";
 
 using namespace hcc;
 
@@ -17,6 +21,11 @@ HCC::~HCC() {
 }
 
 Result<NoSuccess, std::string> HCC::parseAndCompile() {
+	hcc_parse_error.clear();
+	hcc_compile_error.clear();
+	line_num = 1;
+	root = nullptr;
+
 	if (sources.empty()) {
 		return Result<NoSuccess, std::string>::error("no sources provided");
 	}
@@ -43,16 +52,23 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 	yyparse();
 
 	if (!root) {
-		return Result<NoSuccess, std::string>::error("root == nullptr");
+		return Result<NoSuccess, std::string>::error(fmt::format("root == nullptr (parse error: {})", hcc_parse_error));
 	}
 
 	if (print_ast) {
 		root->print();
 	}
 
-	root->compile(this);
+	if (!root->compile(this)) {
+		yy_delete_buffer(buffer);
+		return Result<NoSuccess, std::string>::error("compile error: " + hcc_compile_error);
+	}
 
-	delete root;
+	fmt::fprintf(outfd, "%s", backend->output);
+
+	if (root)
+		delete root;
+	yy_delete_buffer(buffer);
 
 	return Result<NoSuccess, std::string>::success({});
 }

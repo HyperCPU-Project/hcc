@@ -9,6 +9,7 @@ extern int line_num;
 void yyerror(const char* s);
 
 hcc::AstRootNode* root = nullptr;
+std::string hcc_parse_error = "";
 %}
 
 %code requires {
@@ -213,5 +214,5 @@ factor:
 %%
 
 void yyerror(const char* s) {
-	std::cerr << "[hcc] error at line " << line_num << ": " << s << std::endl;
+	hcc_parse_error = fmt::format("error at line {}: {}", line_num, s);
 }

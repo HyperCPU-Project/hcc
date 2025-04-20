@@ -1,4 +1,6 @@
 #include <backend/backend.hpp>
+#include <fmt/printf.h>
+#include <hcc.hpp>
 
 using namespace hcc;
 
@@ -13,48 +15,48 @@ uint64_t Backend::increment_reg_index() {
 	return 0;
 }
 
-void Backend::emit_function_prologue(FILE* out, std::string name) {
+void Backend::emit_function_prologue(std::string name) {
 }
 
-void Backend::emit_function_epilogue(FILE* out) {
+void Backend::emit_function_epilogue() {
 }
 
-std::string Backend::emit_mov_const(FILE* out, uint64_t value, std::string reg_name) {
+std::string Backend::emit_mov_const(uint64_t value, std::string reg_name) {
 	return "";
 }
 
-void Backend::emit_add(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emit_add(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_sub(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_mul(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_div(FILE* out, std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_move(FILE* out, std::string rdest, std::string rsrc) {
+void Backend::emit_move(std::string rdest, std::string rsrc) {
 }
 
-void Backend::emit_reserve_stack_space(FILE* out, uint64_t size) {
+void Backend::emit_reserve_stack_space(uint64_t size) {
 }
 
-std::string Backend::emit_load_from_stack(FILE* out, uint64_t align) {
+std::string Backend::emit_load_from_stack(uint64_t align) {
 	return "";
 }
 
-void Backend::emit_store_from_stack(FILE* out, uint64_t align, std::string rsrc) {
+void Backend::emit_store_from_stack(uint64_t align, std::string rsrc) {
 }
 
-std::string Backend::emit_loadaddr_from_stack(FILE* out, uint64_t align) {
+std::string Backend::emit_loadaddr_from_stack(uint64_t align) {
 	return "";
 }
 
 TypeMetadata* Backend::get_type_from_name(std::string name) {
 	if (!types.contains(name)) {
-		fmt::print("[hcc] unknown type {}\n", name);
+		hcc_compile_error = fmt::sprintf("unknown type %s", name);
 		return nullptr;
 	}
 

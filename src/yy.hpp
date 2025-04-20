@@ -11,3 +11,6 @@ int yyparse();
 extern FILE* yyin;
 
 extern hcc::AstRootNode* root;
+extern std::string hcc_parse_error;
+
+extern int line_num;

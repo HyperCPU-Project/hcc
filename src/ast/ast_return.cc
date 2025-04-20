@@ -25,12 +25,12 @@ bool AstReturn::compile(HCC* hcc) {
 		hcc->values.pop();
 
 		if (ret->reg_name != hcc->backend->abi.return_register) {
-			hcc->backend->emit_move(hcc->getOutFd(), hcc->backend->abi.return_register, ret->reg_name);
+			hcc->backend->emit_move(hcc->backend->abi.return_register, ret->reg_name);
 		}
 	}
-	hcc->backend->emit_function_epilogue(hcc->getOutFd());
+	hcc->backend->emit_function_epilogue();
 
-	fprintf(hcc->getOutFd(), "\n");
+	hcc->backend->output += "\n";
 
 	return true;
 }

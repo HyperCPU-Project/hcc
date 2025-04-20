@@ -14,6 +14,6 @@ void AstNumber::print(int indent) const {
 bool AstNumber::compile(HCC* hcc) {
 	std::unique_ptr<Value> v(Value::createAsRegister(hcc, value));
 	hcc->values.push(std::move(v));
-	fprintf(hcc->getOutFd(), "\n");
+	hcc->backend->output += "\n";
 	return true;
 }

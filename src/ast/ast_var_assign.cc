@@ -23,7 +23,7 @@ bool AstVarAssign::compile(HCC* hcc) {
 		return false;
 
 	if (!hcc->current_function.variables.contains(name)) {
-		fmt::print("[hcc] undefined variable {}\n", name);
+		hcc_compile_error = fmt::sprintf("undefined variable %s", name);
 		return false;
 	}
 
@@ -34,7 +34,7 @@ bool AstVarAssign::compile(HCC* hcc) {
 
 	expr_var->setto(hcc, expr_value.get());
 
-	fprintf(hcc->getOutFd(), "\n");
+	hcc->backend->output += "\n";
 
 	return true;
 }

@@ -11,7 +11,7 @@ void AstVarRef::print(int indent) const {
 
 bool AstVarRef::compile(HCC* hcc) {
 	if (!hcc->current_function.variables.contains(name)) {
-		fmt::print("[hcc] undefined variable {}\n", name);
+		hcc_compile_error = fmt::sprintf("undefined variable %s", name);
 		return false;
 	}
 
@@ -19,7 +19,7 @@ bool AstVarRef::compile(HCC* hcc) {
 
 	hcc->values.push(std::move(out));
 
-	fprintf(hcc->getOutFd(), "\n");
+	hcc->backend->output += "\n";
 
 	return true;
 }

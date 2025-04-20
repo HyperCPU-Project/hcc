@@ -11,3 +11,6 @@ find_package(fmt)
 if(LINUX)
 	add_compile_options("-Wall" "-Wextra" "-Wpedantic")
 endif()
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})

@@ -4,12 +4,19 @@
 #include <result.hpp>
 #include <yy.hpp>
 
+#ifdef HCC_NOPRIVATE
+#define hccprivate public
+#else
+#define hccprivate private
+#endif
+
+extern std::string hcc_compile_error;
+
 namespace hcc {
 class Value;
 
 class HCC {
-private:
-	YY_BUFFER_STATE buffer;
+	hccprivate : YY_BUFFER_STATE buffer;
 	FILE* outfd;
 
 public:
