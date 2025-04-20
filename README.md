@@ -3,7 +3,7 @@
 # Hyper C Compiler: hcc
 Multi-backend K&R style C compiler
 
-> [!NOTE]  
+> [!NOTE]
 > This compiler can't compile for architectures like x86, x86_64, arm. This compiler is intended for use with HyperCPU and qproc
 
 HCC is a C compiler, made for HyperCPU and qproc, it's very extensible and it's easy to create backends for it
@@ -42,20 +42,10 @@ It's _kinda_ large (2 Mb or 1.9MiB) because C++, but whatever.
 
 Here's the arguments you can provide to it:
 
-- ```--help``` or ```-h```
-
-Prints a help message containing the usage of HCC
-- ```-o <filename>```
-
-Sets an output filename for the generated assembly
-- ```--backend <qproc/hypercpu>```
-
-Sets a compilation backend (target)
-- ```--ast```
-
-Prints an abstract syntax tree when the parsing is done
+- ```--help``` or ```-h``` — Prints a help message containing the usage of HCC
+- ```-o <filename>``` — Sets an output filename for the generated assembly
+- ```--backend <qproc/hypercpu>``` — Sets a compilation backend (target)
+- ```--ast``` — Prints an abstract syntax tree when the parsing is done
 
 ## CMake Build Options
-- HCC_NO_TESTS
-
-If set to 1, it will not build tests
+- HCC_NO_TESTS — If set to 1, it will not build tests
