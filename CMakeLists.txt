@@ -3,6 +3,9 @@ project(hcc)
 
 include("cmake/configuration.cmake")
 
-add_subdirectory("dist/googletest")
 add_subdirectory("src/")
-add_subdirectory("tests/")
+
+if(HCC_NO_TESTS EQUAL 0)
+  add_subdirectory("dist/googletest")
+  add_subdirectory("tests/")
+endif()

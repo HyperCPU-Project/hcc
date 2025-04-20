@@ -54,3 +54,8 @@ Sets a compilation backend (target)
 - ```--ast```
 
 Prints an abstract syntax tree when the parsing is done
+
+## CMake Build Options
+- HCC_NO_TESTS
+
+If set to 1, it will not build tests
