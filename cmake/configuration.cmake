@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
-find_package(fmt)
+find_package(fmt CONFIG REQUIRED)
 
 if(LINUX)
 	add_compile_options("-Wall" "-Wextra" "-Wpedantic")

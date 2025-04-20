@@ -11,7 +11,7 @@ file(GLOB HCC_LIB_SOURCES CONFIGURE_DEPENDS "*.cc" "ast/*.cc" "backend/*/*.cc" "
 add_library(hcc_lib STATIC ${HCC_LIB_SOURCES} ${BISON_Parser_OUTPUTS} ${FLEX_Lexer_OUTPUTS})
 target_precompile_headers(hcc_lib PRIVATE pch.hpp)
 target_include_directories(hcc_lib PRIVATE "." ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(hcc_lib fmt::fmt)
+target_link_libraries(hcc_lib fmt::fmt-header-only)
 set_target_properties(hcc_lib PROPERTIES OUTPUT_NAME "hcc")
 
 add_executable(hcc "main/main.cc")

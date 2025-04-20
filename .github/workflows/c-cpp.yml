@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Debug
+          cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="-static"
           make -j$(nproc)
           ./hcctest
           mv hcc ../hcc-x86_64
