@@ -6,7 +6,7 @@ HyperCPUBackend::HyperCPUBackend() {
 	reg_index = 0;
 	types["void"] = TypeMetadata{"void", 0};
 	types["int"] = TypeMetadata{"int", 4};
-	types["long"] = TypeMetadata{"long", 4}; // size of 4 is intentional here
+	types["long"] = TypeMetadata{"long", 8}; // size of 4 is intentional here
 	abi.return_register = "x0";
 	for (int i = 2; i <= 7; i++) {
 		abi.args_registers.push_back(fmt::format("x{}", i));
