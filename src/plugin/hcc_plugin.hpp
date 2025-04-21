@@ -1,4 +1,4 @@
-#include <pch.hpp>
+#include <string>
 
 namespace hcc {
 class Backend;
@@ -20,6 +20,10 @@ public:
 		delete plugin;                                                                                                                                                                                                                                             \
 	}                                                                                                                                                                                                                                                            \
 	}
+
+#ifndef fnptr
+#define fnptr(ret, name, ...) ret (*name)(__VA_ARGS__)
+#endif
 
 typedef fnptr(hcc::IPlugin*, hccplugin_create_t);
 typedef fnptr(void, hccplugin_destroy_t, hcc::IPlugin*);
