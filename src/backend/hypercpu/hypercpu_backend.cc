@@ -97,34 +97,17 @@ void HyperCPUBackend::emit_reserve_stack_space(uint64_t size) {
 std::string HyperCPUBackend::emit_load_from_stack(uint64_t align, std::string reg) {
 	output += "// emit_load_from_stack\n";
 	if (reg.empty()) {
-		reg = "r" + std::to_string(increment_reg_index());
-		while (reg == "r0" || reg == "r1")
-			reg = "r" + std::to_string(increment_reg_index());
+		reg = "x" + std::to_string(increment_reg_index());
+		while (reg == "x0" || reg == "x1")
+			reg = "x" + std::to_string(increment_reg_index());
 	}
-	output += fmt::sprintf("mov r0 bp\n");
-	output += fmt::sprintf("movi r1 %d\n", align);
-	output += fmt::sprintf("sub r0 r1\n");
-	output += fmt::sprintf("lod %s dword r0\n", reg);
+	output += fmt::sprintf("mov %s, b64 ptr [xbp+0x%016llx];\n", reg, ((uint64_t)((-align) - 1)));
 	return reg;
 }
 
 void HyperCPUBackend::emit_store_from_stack(uint64_t align, std::string rsrc) {
 	output += "// emit_store_from_stack\n";
-	bool is_used_reg = (rsrc == "r0" || rsrc == "r1");
-
-	if (is_used_reg)
-		output += fmt::sprintf("push %s\n", rsrc);
-	output += fmt::sprintf("mov r0 bp\n");
-	output += fmt::sprintf("movi r1 %d\n", align);
-	output += fmt::sprintf("sub r0 r1\n");
-	if (rsrc == "r0") {
-		output += fmt::sprintf("  ");
-		is_used_reg = true;
-		rsrc = "r1";
-	}
-	if (is_used_reg)
-		output += fmt::sprintf("pop %s\n", rsrc);
-	output += fmt::sprintf("str dword r0 %s\n", rsrc);
+	output += fmt::sprintf("mov b64 ptr [xbp+0x%016llx], %s\n", ((uint64_t)((-align) - 1)), rsrc);
 }
 
 std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::string reg) {
@@ -136,8 +119,7 @@ std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::strin
 	reg = "r" + reg;
 
 	output += fmt::sprintf("mov %s, xbp;\n", reg);
-	output += fmt::sprintf("mov x0, %d;\n", align);
-	output += fmt::sprintf("sub %s, r0;\n", reg);
+	output += fmt::sprintf("sub %s, %d;\n", reg, align);
 	return reg;
 }
 
