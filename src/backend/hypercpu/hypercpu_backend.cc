@@ -75,11 +75,16 @@ void HyperCPUBackend::emit_mul(std::string ROUT, std::string RLHS, std::string R
 
 void HyperCPUBackend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
 	output += "// emit_div\n";
+	// RLHS - x0
+	// RRHS - x2
+	output += fmt::sprintf("push x1;\n", RLHS);
+	if (RRHS != "x2")
+		output += fmt::sprintf("mov x2, %s;\n", RRHS);
+	output += fmt::sprintf("div %s;\n", RLHS);
+	output += fmt::sprintf("pop x1;\n", RLHS);
 	if (ROUT != RLHS) {
-		output += fmt::sprintf("div %s, %s;\nmov %s, %s;\n", RLHS, RRHS, ROUT, RLHS);
-		return;
+		output += fmt::sprintf("mov %s, %s;\n", RLHS, ROUT);
 	}
-	output += fmt::sprintf("div %s, %s;\n", RLHS, RRHS);
 }
 
 void HyperCPUBackend::emit_move(std::string rdest, std::string rsrc) {
