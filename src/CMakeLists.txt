@@ -8,7 +8,7 @@ add_flex_bison_dependency(Lexer Parser)
 
 file(GLOB HCC_LIB_SOURCES CONFIGURE_DEPENDS "*.cc" "ast/*.cc" "backend/*/*.cc" "backend/*.cc" "value/*.cc")
 
-add_library(hcc_lib STATIC ${HCC_LIB_SOURCES} ${BISON_Parser_OUTPUTS} ${FLEX_Lexer_OUTPUTS})
+add_library(hcc_lib STATIC ${HCC_LIB_SOURCES} ${BISON_Parser_OUTPUTS} ${FLEX_Lexer_OUTPUTS} "plugin/hcc_plugin.cc")
 target_precompile_headers(hcc_lib PRIVATE pch.hpp)
 target_include_directories(hcc_lib PRIVATE "." ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(hcc_lib fmt::fmt-header-only)
@@ -18,3 +18,7 @@ add_executable(hcc "main/main.cc")
 target_precompile_headers(hcc PRIVATE pch.hpp)
 target_link_libraries(hcc hcc_lib)
 target_include_directories(hcc PRIVATE "." ${CMAKE_CURRENT_BINARY_DIR})
+
+add_library(hccp_main SHARED "plugin/hcc_main_plugin.cc" "plugin/hcc_plugin.cc")
+target_precompile_headers(hccp_main PRIVATE pch.hpp)
+target_include_directories(hccp_main PRIVATE "." ${CMAKE_CURRENT_BINARY_DIR})

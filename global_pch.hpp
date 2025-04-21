@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <dlfcn.h>
 #include <filesystem>
 #include <fmt/format.h>
 #include <fmt/printf.h>
@@ -18,3 +19,5 @@
 #include <string>
 #include <variant>
 #include <vector>
+
+#define fnptr(ret, name, ...) ret (*name)(__VA_ARGS__)
