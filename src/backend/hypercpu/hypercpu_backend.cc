@@ -41,7 +41,7 @@ std::string HyperCPUBackend::emit_mov_const(uint64_t value, std::string reg_name
 		reg_name = fmt::format("x{}", increment_reg_index());
 	}
 
-	output += fmt::sprintf("mov %s, 0s%ld;\n", reg_name, value);
+	output += fmt::sprintf("mov %s, 0u%ld;\n", reg_name, value);
 
 	return reg_name;
 }
@@ -101,13 +101,13 @@ std::string HyperCPUBackend::emit_load_from_stack(uint64_t align, std::string re
 		while (reg == "x0" || reg == "x1")
 			reg = "x" + std::to_string(increment_reg_index());
 	}
-	output += fmt::sprintf("mov %s, b64 ptr [xbp+0x%016llx];\n", reg, ((uint64_t)((-align) - 1)));
+	output += fmt::sprintf("mov %s, b64 ptr [xbp+0u%d];\n", reg, (0xff - align + 1));
 	return reg;
 }
 
 void HyperCPUBackend::emit_store_from_stack(uint64_t align, std::string rsrc) {
 	output += "// emit_store_from_stack\n";
-	output += fmt::sprintf("mov b64 ptr [xbp+0x%016llx], %s\n", ((uint64_t)((-align) - 1)), rsrc);
+	output += fmt::sprintf("mov b64 ptr [xbp+0u%d], %s;\n", (0xff - align + 1), rsrc);
 }
 
 std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::string reg) {
