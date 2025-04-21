@@ -39,12 +39,12 @@ backends:
 				fmt::print("[hcc] failed to select a backend: {}\n", result.get_error().value());
 				return 1;
 			}
-			fmt::print("[hcc] loaded plugin `{}`\n", hcc.plugins.back()->name);
 		} else if (arg == "--plugin") {
 			auto result = hcc.loadPlugin(argsShift());
 			if (result.is_error()) {
 				fmt::print("[hcc] failed to load a plugin: {}\n", result.get_error().value());
 			}
+			fmt::print("[hcc] loaded plugin `{}`\n", hcc.plugins.back()->name);
 		} else {
 			hcc.sources.push_back(arg);
 		}
