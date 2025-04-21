@@ -1,3 +1,4 @@
+#include <backend/hypercpu/hypercpu_backend.hpp>
 #include <backend/qproc/qproc_backend.hpp>
 #include <fmt/printf.h>
 #include <hcc.hpp>
@@ -85,7 +86,7 @@ Result<NoSuccess, std::string> HCC::selectBackend(std::string name) {
 	if (name == "qproc") {
 		backend = new QprocBackend();
 	} else if (name == "hypercpu") {
-		// TODO
+		backend = new HyperCPUBackend();
 	} else {
 		return Result<NoSuccess, std::string>::error("no such backend");
 	}
