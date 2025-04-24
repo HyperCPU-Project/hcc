@@ -21,6 +21,13 @@ Value* Value::createAsRegister(HCC* hcc, uint64_t _value, std::string reg_name) 
 	return value;
 }
 
+Value* Value::createAsCompileTimeValue([[maybe_unused]] HCC* hcc, uint64_t _value) {
+	Value* value = new Value();
+	value->is_compile_time = true;
+	value->compile_time_value = _value;
+	return value;
+}
+
 Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type) {
 	Value* value = new Value();
 
@@ -34,6 +41,14 @@ Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type) {
 	return value;
 }
 
+Value* Value::use(HCC* hcc) {
+	if (!is_compile_time)
+		return this;
+
+	Value* value = Value::createAsRegister(hcc, compile_time_value);
+	return value;
+}
+
 Value* Value::doCondLod(HCC* hcc, std::string load_reg) {
 	if (isRegister())
 		return this;
@@ -43,6 +58,11 @@ Value* Value::doCondLod(HCC* hcc, std::string load_reg) {
 }
 
 void Value::add(HCC* hcc, Value* other) {
+	if (is_compile_time && other->is_compile_time) {
+		compile_time_value += other->compile_time_value;
+		return;
+	}
+
 	Value* LHS = doCondLod(hcc);
 	Value* RHS = other->doCondLod(hcc);
 
@@ -59,6 +79,11 @@ void Value::add(HCC* hcc, Value* other) {
 }
 
 void Value::sub(HCC* hcc, Value* other) {
+	if (is_compile_time && other->is_compile_time) {
+		compile_time_value -= other->compile_time_value;
+		return;
+	}
+
 	Value* LHS = doCondLod(hcc);
 	Value* RHS = other->doCondLod(hcc);
 
@@ -75,6 +100,11 @@ void Value::sub(HCC* hcc, Value* other) {
 }
 
 void Value::mul(HCC* hcc, Value* other) {
+	if (is_compile_time && other->is_compile_time) {
+		compile_time_value *= other->compile_time_value;
+		return;
+	}
+
 	Value* LHS = doCondLod(hcc);
 	Value* RHS = other->doCondLod(hcc);
 
@@ -91,6 +121,11 @@ void Value::mul(HCC* hcc, Value* other) {
 }
 
 void Value::div(HCC* hcc, Value* other) {
+	if (is_compile_time && other->is_compile_time) {
+		compile_time_value /= other->compile_time_value;
+		return;
+	}
+
 	Value* LHS = doCondLod(hcc);
 	Value* RHS = other->doCondLod(hcc);
 
@@ -107,6 +142,11 @@ void Value::div(HCC* hcc, Value* other) {
 }
 
 void Value::setto(HCC* hcc, Value* other) {
+	if (is_compile_time && other->is_compile_time) {
+		compile_time_value = other->compile_time_value;
+		return;
+	}
+
 	if (!isRegister() && other->isRegister()) {
 		hcc->backend->emit_store_from_stack(var_stack_align, other->reg_name);
 	} else if (isRegister() && other->isRegister()) {

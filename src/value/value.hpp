@@ -9,6 +9,9 @@ class Value {
 public:
 	std::string reg_name;
 
+	bool is_compile_time;
+	uint64_t compile_time_value;
+
 	uint64_t var_stack_align;
 	std::string var_name;
 	TypeMetadata var_type;
@@ -19,7 +22,10 @@ public:
 	bool isRegister();
 
 	static Value* createAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
+	static Value* createAsCompileTimeValue(HCC* hcc, uint64_t value);
 	static Value* createAsStackVar(HCC* hcc, TypeMetadata type);
+
+	Value* use(HCC* hcc);
 
 	Value* doCondLod(HCC* hcc, std::string load_reg = "");
 
