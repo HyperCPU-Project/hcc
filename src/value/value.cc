@@ -6,6 +6,8 @@ using namespace hcc;
 
 Value::Value() {
 	reg_name = "";
+	is_compile_time = false;
+	compile_time_value = 0;
 }
 
 Value::~Value() {
@@ -50,8 +52,12 @@ Value* Value::use(HCC* hcc) {
 }
 
 Value* Value::doCondLod(HCC* hcc, std::string load_reg) {
-	if (isRegister())
+	if (isRegister() && !is_compile_time)
 		return this;
+	if (is_compile_time) {
+		return use(hcc);
+	}
+
 	auto value = new Value();
 	value->reg_name = hcc->backend->emit_load_from_stack(this->var_stack_align, load_reg);
 	return value;
@@ -147,7 +153,15 @@ void Value::setto(HCC* hcc, Value* other) {
 		return;
 	}
 
-	if (!isRegister() && other->isRegister()) {
+	if (!is_compile_time && other->is_compile_time) {
+		Value* v = other->use(hcc);
+		if (isRegister()) {
+			hcc->backend->emit_move(this->reg_name, v->reg_name);
+		} else {
+			hcc->backend->emit_store_from_stack(var_stack_align, v->reg_name);
+		}
+		delete v;
+	} else if (!isRegister() && other->isRegister()) {
 		hcc->backend->emit_store_from_stack(var_stack_align, other->reg_name);
 	} else if (isRegister() && other->isRegister()) {
 		hcc->backend->emit_move(this->reg_name, other->reg_name);
