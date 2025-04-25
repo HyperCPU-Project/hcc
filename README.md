@@ -17,24 +17,24 @@ int main(){
     return (69 / 3) * 3;
 }
 ```
-- Output (qproc backend with some formatting)
+- Output (hypercpu backend with some formatting)
 ```assembly
+.attr(entry) hcc_start_main:
+	mov xsp, 0xfff;
+	mov xbp, 0xfff;
+	call main;
+	hlt;
+
 main:
-    push bp
-    mov bp sp
+	push xbp;
+	mov xbp, xsp;
 
-    movi r1 69
-    movi r2 3
-    div r1 r2
+	mov x1, 0u69;
+	mov x0, x1;
 
-    movi r3 3
-    mul r1 r3
-
-    mov r0 r1
-
-    mov sp bp
-    pop bp
-    pop ip
+	mov xsp, xbp;
+	pop xbp;
+	pop xip;
 ```
 
 ## The hcc executable
