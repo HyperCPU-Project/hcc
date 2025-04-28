@@ -19,14 +19,6 @@ HCC::~HCC() {
 		fclose(outfd);
 	if (backend)
 		delete backend;
-
-	for (IPlugin* plugin : plugins) {
-		delete plugin;
-	}
-
-	for (void* handle : plugins_dlhandles) {
-		dlclose(handle);
-	}
 }
 
 Result<NoSuccess, std::string> HCC::parseAndCompile() {
@@ -85,34 +77,6 @@ void HCC::openOutput(std::string filename) {
 	if (outfd)
 		fclose(outfd);
 	outfd = fopen(filename.c_str(), "w");
-}
-
-Result<NoSuccess, std::string> HCC::loadPlugin(std::string filename) {
-	IPlugin* plugin = nullptr;
-
-	void* handle = dlopen(filename.c_str(), RTLD_NOW);
-	if (!handle) {
-		return Result<NoSuccess, std::string>::error(std::format("failed to open plugin file: {}", dlerror()));
-	}
-
-	dlerror();
-
-	hccplugin_create_t hccplugin_create = (hccplugin_create_t)(dlsym(handle, "hccplugin_create"));
-	if (!hccplugin_create) {
-		dlclose(handle);
-		return Result<NoSuccess, std::string>::error("could not find symbol hccplugin_create");
-	}
-
-	plugin = hccplugin_create();
-	if (!plugin) {
-		dlclose(handle);
-		return Result<NoSuccess, std::string>::error("hccplugin_create possibly failed");
-	}
-
-	plugins_dlhandles.push_back(handle);
-	plugins.push_back(plugin);
-
-	return Result<NoSuccess, std::string>::success({});
 }
 
 Result<NoSuccess, std::string> HCC::selectBackend(std::string name) {

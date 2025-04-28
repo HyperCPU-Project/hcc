@@ -1,7 +1,6 @@
 #pragma once
 #include <backend/backend.hpp>
 #include <pch.hpp>
-#include <plugin/hcc_plugin.hpp>
 #include <result.hpp>
 #include <yy.hpp>
 
@@ -20,10 +19,7 @@ class HCC {
 	hccprivate : YY_BUFFER_STATE buffer;
 	FILE* outfd;
 
-	std::vector<void*> plugins_dlhandles = {};
-
 public:
-	std::vector<IPlugin*> plugins = {};
 	std::vector<std::string> sources;
 	bool print_ast;
 
@@ -38,7 +34,6 @@ public:
 	Result<NoSuccess, std::string> parseAndCompile();
 
 	void openOutput(std::string filename);
-	Result<NoSuccess, std::string> loadPlugin(std::string filename);
 
 	Result<NoSuccess, std::string> selectBackend(std::string name);
 

@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <dlfcn.h>
 #include <filesystem>
 #include <fmt/format.h>
 #include <fmt/printf.h>
