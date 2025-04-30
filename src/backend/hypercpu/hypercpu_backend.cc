@@ -23,10 +23,7 @@ uint64_t HyperCPUBackend::increment_reg_index() {
 
 void HyperCPUBackend::emit_function_prologue(std::string name) {
 	output += "// emit_function_prologue\n";
-	if (name == "main")
-		output += fmt::sprintf(".attr(entry) %s:\n", name);
-	else
-		output += fmt::sprintf("%s:\n", name);
+	output += fmt::sprintf("%s:\n", name);
 	output += fmt::sprintf("push xbp;\nmov xbp, xsp;\n");
 }
 
