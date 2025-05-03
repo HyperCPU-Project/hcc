@@ -22,17 +22,11 @@ bool AstVarAssign::compile(HCC* hcc) {
 	if (!expr->compile(hcc))
 		return false;
 
-	if (!hcc->current_function.variables.contains(name)) {
-		hcc_compile_error = fmt::sprintf("undefined variable %s", name);
-		return false;
-	}
+	IrOpcode op;
+	op.type = IrOpcode::IR_ASSIGN;
+	op.assign.name = name;
 
-	auto& expr_var = hcc->current_function.variables[name];
-
-	auto expr_value = std::move(hcc->values.top());
-	hcc->values.pop();
-
-	expr_var->setto(hcc, expr_value.get());
+	hcc->ir.add(op);
 
 	return true;
 }

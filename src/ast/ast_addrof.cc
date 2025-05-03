@@ -15,10 +15,12 @@ bool AstAddrof::compile(HCC* hcc) {
 		return false;
 	}
 
+	/*
 	auto out = std::unique_ptr<Value>(new Value());
 	out->reg_name = hcc->backend->emit_loadaddr_from_stack(hcc->current_function.variables[name]->var_stack_align);
 
 	hcc->values.push(std::move(out));
+	*/
 
 	return true;
 }

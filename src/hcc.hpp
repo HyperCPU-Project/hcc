@@ -1,13 +1,15 @@
 #pragma once
 #include <backend/backend.hpp>
+#include <flags.hpp>
+#include <ir/ir.hpp>
 #include <pch.hpp>
 #include <result.hpp>
 #include <yy.hpp>
 
 #ifdef HCC_NOPRIVATE
-#define hccprivate public
+#define hccprivate public:
 #else
-#define hccprivate private
+#define hccprivate private:
 #endif
 
 extern std::string hcc_compile_error;
@@ -16,7 +18,7 @@ namespace hcc {
 class Value;
 
 class HCC {
-	hccprivate : YY_BUFFER_STATE buffer;
+	hccprivate Parser* parser;
 	FILE* outfd;
 
 public:
@@ -24,6 +26,10 @@ public:
 	bool print_ast;
 
 	Backend* backend;
+	IR ir;
+
+	enum Optimizations { OPT_ONERET };
+	Flags<Optimizations> optimizations;
 
 	FunctionMetadata current_function;
 	std::stack<std::unique_ptr<Value>> values;

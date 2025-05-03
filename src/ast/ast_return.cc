@@ -17,6 +17,7 @@ AstReturn::~AstReturn() {
 }
 
 bool AstReturn::compile(HCC* hcc) {
+	/*
 	if (expr) {
 		if (!expr->compile(hcc))
 			return false;
@@ -33,6 +34,17 @@ bool AstReturn::compile(HCC* hcc) {
 			delete ret;
 	}
 	hcc->backend->emit_function_epilogue();
+	*/
+
+	if (expr) {
+		if (!expr->compile(hcc))
+			return false;
+	}
+
+	IrOpcode op;
+	op.type = IrOpcode::IR_RET;
+
+	hcc->ir.add(op);
 
 	return true;
 }

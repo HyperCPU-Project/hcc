@@ -1,15 +1,22 @@
+%define api.pure full
+%lex-param { yyscan_t scanner }
+%parse-param { void *scanner }
+%parse-param { hcc::Parser *ctx }
+
 %{
 #include <iostream>
 #include <string>
 #include <vector>
 #include <ast/ast.hpp>
+#include <parser.hpp>
 
-extern int yylex();
-extern int line_num;
-void yyerror(const char* s);
+typedef void* yyscan_t;
+int yylex(YYSTYPE *yylval_param, yyscan_t scanner);
+void yyerror(yyscan_t scanner,hcc::Parser *ctx, const char *msg);
 
-hcc::AstRootNode* root = nullptr;
 std::string hcc_parse_error = "";
+
+#define PARSER (yyget_extra(scanner))
 %}
 
 %code requires {
@@ -17,9 +24,19 @@ std::string hcc_parse_error = "";
 #include <metadata.hpp>
 
 struct ParserArgData {
-std::string name;
-std::string type;
+	std::string name;
+	std::string type;
 };
+
+namespace hcc {
+	struct Parser {
+		unsigned long line_num = 1;
+		hcc::AstRootNode* root = nullptr;
+	};
+}
+
+hcc::Parser* yyget_extra(void*);
+
 }
 
 %union {
@@ -66,9 +83,9 @@ std::string type;
 
 program:
 	topstatements {
-		root = new hcc::AstRootNode();
+		PARSER->root = new hcc::AstRootNode();
 		for (const auto& func : *$1) {
-			root->children.push_back(func);
+			PARSER->root->children.push_back(func);
 		}
 		delete $1;
 	}
@@ -290,6 +307,6 @@ factor:
 
 %%
 
-void yyerror(const char* s) {
-	hcc_parse_error = fmt::format("error at line {}: {}", line_num, s);
+void yyerror([[maybe_unused]] yyscan_t scanner,hcc::Parser *ctx, const char *s) {
+	hcc_parse_error = fmt::format("error at line {}: {}", ctx->line_num, s);
 }

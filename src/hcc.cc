@@ -2,16 +2,26 @@
 #include <backend/qproc/qproc_backend.hpp>
 #include <fmt/printf.h>
 #include <hcc.hpp>
+#include <parser.hpp>
 #include <util.hpp>
 #include <value/value.hpp>
 #include <yy.hpp>
 
-std::string hcc_compile_error = "";
-
 using namespace hcc;
 
+typedef void* yyscan_t;
+
+void yylex_init(yyscan_t*);
+void yylex_destroy(yyscan_t);
+void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
+
+std::string hcc_compile_error = "";
+
 HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
+	parser = new Parser();
+
 	current_function.align = 0;
+	optimizations.SetFlag(Optimizations::OPT_ONERET);
 }
 
 HCC::~HCC() {
@@ -22,10 +32,14 @@ HCC::~HCC() {
 }
 
 Result<NoSuccess, std::string> HCC::parseAndCompile() {
+	yyscan_t scanner;
+	YY_BUFFER_STATE buffer;
+
+	yylex_init(&scanner);
+	yyset_extra(this->parser, scanner);
+
 	hcc_parse_error.clear();
 	hcc_compile_error.clear();
-	line_num = 1;
-	root = nullptr;
 
 	if (sources.empty()) {
 		return Result<NoSuccess, std::string>::error("no sources provided");
@@ -49,26 +63,32 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 		code += result.get_success().value() + "\n";
 	}
 
-	buffer = yy_scan_string(code.c_str());
-	yyparse();
-	yy_delete_buffer(buffer);
+	buffer = yy_scan_string(code.c_str(), scanner);
+	yyparse(scanner, this->parser);
 
-	if (!root) {
+	yy_delete_buffer(buffer, scanner);
+	yylex_destroy(scanner);
+
+	if (!parser->root) {
 		return Result<NoSuccess, std::string>::error(fmt::format("root == nullptr (parse error: {})", hcc_parse_error));
 	}
 
 	if (print_ast) {
-		root->print();
+		parser->root->print();
 	}
 
-	if (!root->compile(this)) {
+	if (!parser->root->compile(this)) {
 		return Result<NoSuccess, std::string>::error("compile error: " + hcc_compile_error);
+	}
+
+	if (!ir.compile(this)) {
+		return Result<NoSuccess, std::string>::error("ir compile error: " + hcc_compile_error);
 	}
 
 	fmt::fprintf(outfd, "%s", backend->output);
 
-	if (root)
-		delete root;
+	if (parser->root)
+		delete parser->root;
 
 	return Result<NoSuccess, std::string>::success({});
 }

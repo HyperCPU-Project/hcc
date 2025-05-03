@@ -65,6 +65,12 @@ void Backend::emit_push(std::string reg) {
 void Backend::emit_pop(std::string reg) {
 }
 
+void Backend::emit_single_ret() {
+}
+
+void Backend::emit_label(std::string name) {
+}
+
 TypeMetadata* Backend::get_type_from_name(std::string name) {
 	if (!types.contains(name)) {
 		hcc_compile_error = fmt::sprintf("unknown type %s", name);

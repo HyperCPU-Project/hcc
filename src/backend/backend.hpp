@@ -42,6 +42,9 @@ public:
 	virtual void emit_push(std::string reg);
 	virtual void emit_pop(std::string reg);
 
+	virtual void emit_single_ret();
+	virtual void emit_label(std::string name);
+
 	virtual TypeMetadata* get_type_from_name(std::string name);
 };
 } // namespace hcc

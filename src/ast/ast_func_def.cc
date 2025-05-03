@@ -1,3 +1,4 @@
+#include "ir/ir.hpp"
 #include <ast/ast.hpp>
 #include <hcc.hpp>
 #include <value/value.hpp>
@@ -21,29 +22,20 @@ void AstFuncDef::print(int indent) const {
 }
 
 bool AstFuncDef::compile(HCC* hcc) {
-	hcc->backend->emit_function_prologue(name);
+	IrOpcode op;
+	op.type = IrOpcode::IR_FUNCDEF;
+	op.funcdef.name = name;
 
-	unsigned int i = 0;
 	for (auto& [arg_name, arg_type] : args) {
-		if (i > hcc->backend->abi.args_registers.size()) {
-			hcc_compile_error = fmt::format("{} arguments exceeds the amount that the target machine can handle", i);
+		op.funcdef.arg_names.push_back(arg_name);
+
+		TypeMetadata* md = hcc->backend->get_type_from_name(arg_type);
+		if (!md)
 			return false;
-		}
-
-		TypeMetadata* type_md = hcc->backend->get_type_from_name(arg_type);
-		if (!type_md)
-			return false;
-
-		auto var = std::unique_ptr<Value>(Value::createAsStackVar(hcc, *type_md));
-		Value reg_var;
-		reg_var.reg_name = hcc->backend->abi.args_registers[i];
-
-		var->setto(hcc, &reg_var);
-
-		hcc->current_function.variables[arg_name] = std::move(var);
-
-		i++;
+		op.funcdef.arg_types.push_back(*md);
 	}
+
+	hcc->ir.add(op);
 
 	if (!AstNode::compile(hcc))
 		return false;

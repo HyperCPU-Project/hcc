@@ -151,3 +151,13 @@ void QprocBackend::emit_pop(std::string reg) {
 	output += "; emit_pop\n";
 	output += fmt::sprintf("pop %s\n", reg);
 }
+
+void QprocBackend::emit_single_ret() {
+	output += "// emit_single_ret\n";
+	output += "pop ip\n";
+}
+
+void QprocBackend::emit_label(std::string name) {
+	output += "// emit_label\n";
+	output += name + ":\n";
+}

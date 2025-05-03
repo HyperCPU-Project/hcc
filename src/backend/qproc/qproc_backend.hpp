@@ -31,5 +31,8 @@ public:
 
 	void emit_push(std::string reg) override;
 	void emit_pop(std::string reg) override;
+
+	void emit_single_ret() override;
+	void emit_label(std::string name) override;
 };
 } // namespace hcc

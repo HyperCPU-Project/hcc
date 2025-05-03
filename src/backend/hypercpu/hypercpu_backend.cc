@@ -139,3 +139,13 @@ void HyperCPUBackend::emit_pop(std::string reg) {
 	output += "// emit_pop\n";
 	output += fmt::sprintf("pop %s\n", reg);
 }
+
+void HyperCPUBackend::emit_single_ret() {
+	output += "// emit_single_ret\n";
+	output += "pop xip\n";
+}
+
+void HyperCPUBackend::emit_label(std::string name) {
+	output += "// emit_label\n";
+	output += name + ":\n";
+}
