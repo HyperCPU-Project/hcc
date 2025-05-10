@@ -22,6 +22,7 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 
 	current_function.align = 0;
 	optimizations.SetFlag(Optimizations::OPT_ONERET);
+	optimizations.SetFlag(Optimizations::OPT_DCE_UNUSED);
 }
 
 HCC::~HCC() {
@@ -81,6 +82,7 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 		return Result<NoSuccess, std::string>::error("compile error: " + hcc_compile_error);
 	}
 
+	ir.performStaticOptimizations(this);
 	if (!ir.compile(this)) {
 		return Result<NoSuccess, std::string>::error("ir compile error: " + hcc_compile_error);
 	}

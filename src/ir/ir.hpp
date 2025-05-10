@@ -76,11 +76,14 @@ private:
 	IrOpcode next();
 	IrOpcode peek(unsigned long count = 1);
 
+	void optimize_dce_unused(HCC* hcc);
+
 public:
 	IR();
 
 	void add(IrOpcode op);
 
+	void performStaticOptimizations(HCC* hcc);
 	bool compile(HCC* hcc);
 };
 } // namespace hcc
