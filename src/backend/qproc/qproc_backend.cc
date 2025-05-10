@@ -15,7 +15,7 @@ QprocBackend::QprocBackend() {
 }
 
 uint64_t QprocBackend::increment_reg_index() {
-	uint64_t res = ++reg_index;
+	uint64_t res = reg_index++;
 	if (reg_index > 12) {
 		reg_index = 0;
 	}

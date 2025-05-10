@@ -18,6 +18,10 @@ uint64_t Backend::increment_reg_index() {
 	return 0;
 }
 
+void Backend::reset_reg_index() {
+	reg_index = 0;
+}
+
 void Backend::emit_function_prologue(std::string name) {
 }
 

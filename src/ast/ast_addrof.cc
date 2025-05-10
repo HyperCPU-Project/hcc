@@ -1,5 +1,6 @@
 #include <ast/ast.hpp>
 #include <hcc.hpp>
+#include <ir/ir.hpp>
 #include <value/value.hpp>
 
 using namespace hcc;
@@ -10,10 +11,10 @@ void AstAddrof::print(int indent) const {
 }
 
 bool AstAddrof::compile(HCC* hcc) {
-	if (!hcc->current_function.variables.contains(name)) {
+	/*if (!hcc->current_function.variables.contains(name)) {
 		hcc_compile_error = fmt::sprintf("undefined variable %s", name);
 		return false;
-	}
+	}*/
 
 	/*
 	auto out = std::unique_ptr<Value>(new Value());
@@ -21,6 +22,12 @@ bool AstAddrof::compile(HCC* hcc) {
 
 	hcc->values.push(std::move(out));
 	*/
+
+	IrOpcode op;
+	op.type = IrOpcode::IR_ADDROF;
+	op.addrof.name = name;
+
+	hcc->ir.add(op);
 
 	return true;
 }

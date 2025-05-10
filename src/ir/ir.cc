@@ -51,6 +51,7 @@ bool IR::compile(HCC* hcc) {
 				hcc->backend->emit_single_ret();
 				next();
 			} else {
+				hcc->backend->reset_reg_index();
 				hcc->backend->emit_function_prologue(op.funcdef.name);
 			}
 			break;

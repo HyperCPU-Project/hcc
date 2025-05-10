@@ -23,6 +23,7 @@ struct IrOpcode {
 		IR_ASSIGN,
 		IR_ASM,
 		IR_VARREF,
+		IR_ADDROF,
 	} type;
 
 	struct {
@@ -61,6 +62,10 @@ struct IrOpcode {
 	struct {
 		std::string name;
 	} varref;
+
+	struct {
+		std::string name;
+	} addrof;
 };
 
 class IR {

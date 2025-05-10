@@ -14,7 +14,7 @@ HyperCPUBackend::HyperCPUBackend() {
 }
 
 uint64_t HyperCPUBackend::increment_reg_index() {
-	uint64_t res = ++reg_index;
+	uint64_t res = reg_index++;
 	if (reg_index > 7) {
 		reg_index = 0;
 	}

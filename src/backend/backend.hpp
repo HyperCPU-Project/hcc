@@ -18,6 +18,7 @@ public:
 	virtual ~Backend() = 0;
 
 	uint64_t increment_reg_index();
+	void reset_reg_index();
 
 	virtual void emit_function_prologue(std::string name);
 	virtual void emit_function_epilogue();
