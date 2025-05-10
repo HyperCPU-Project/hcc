@@ -79,6 +79,8 @@ private:
 	void optimize_dce_unused(HCC* hcc);
 
 public:
+	size_t passes_for_each_optimization = 64;
+
 	IR();
 
 	void add(IrOpcode op);

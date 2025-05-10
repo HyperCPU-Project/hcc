@@ -36,13 +36,14 @@ IrOpcode IR::peek(unsigned long count) {
 
 void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 	std::vector<std::string> used_vars;
-	for (size_t passes = 64; passes > 0; passes--) {
+	for (size_t passes = passes_for_each_optimization; passes > 0; passes--) {
 		std::string var = "";
 		std::vector<size_t> remove_indexes;
 		for (size_t i = 0; i < ir.size(); i++) {
 			IrOpcode& op = ir[i];
 
 			if (op.type == IrOpcode::IR_ALLOCA && var.empty()) { // found a variable allocation, perform a unused DCE pass on it
+				// detect if a variable has been confirmed used in the previous pass, otherwise try to optimize it
 				if (std::find(used_vars.begin(), used_vars.end(), op.alloca.name) == used_vars.end()) {
 					var = op.alloca.name;
 					remove_indexes.insert(remove_indexes.begin(), i);
@@ -53,10 +54,13 @@ void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 				var.clear();
 				break;
 			} else if (op.type == IrOpcode::IR_ASSIGN && op.assign.name == var) {
+				// we still optimizin' it since the variable can be assigned, but not used
+				// in cases where it would be used in the future, IR_VARREF will discard the removal of this opcode
 				remove_indexes.insert(remove_indexes.begin(), i);
 				break;
 			}
 		}
+
 		if (!var.empty()) {
 			for (size_t index : remove_indexes) {
 				ir.erase(ir.begin() + index);
