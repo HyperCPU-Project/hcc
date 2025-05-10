@@ -38,29 +38,29 @@ void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 	std::vector<std::string> used_vars;
 	for (size_t passes = 64; passes > 0; passes--) {
 		std::string var = "";
-		size_t remove_index = 0;
+		std::vector<size_t> remove_indexes;
 		for (size_t i = 0; i < ir.size(); i++) {
 			IrOpcode& op = ir[i];
 
 			if (op.type == IrOpcode::IR_ALLOCA && var.empty()) { // found a variable allocation, perform a unused DCE pass on it
 				if (std::find(used_vars.begin(), used_vars.end(), op.alloca.name) == used_vars.end()) {
 					var = op.alloca.name;
-					remove_index = i;
+					remove_indexes.insert(remove_indexes.begin(), i);
 				}
 			} else if (op.type == IrOpcode::IR_VARREF && op.varref.name == var) {
 				used_vars.push_back(var);
-				remove_index = 0;
+				remove_indexes.clear();
 				var.clear();
 				break;
 			} else if (op.type == IrOpcode::IR_ASSIGN && op.assign.name == var) {
-				used_vars.push_back(var);
-				remove_index = 0;
-				var.clear();
+				remove_indexes.insert(remove_indexes.begin(), i);
 				break;
 			}
 		}
 		if (!var.empty()) {
-			ir.erase(ir.begin() + remove_index);
+			for (size_t index : remove_indexes) {
+				ir.erase(ir.begin() + index);
+			}
 			passes++;
 		}
 	}
