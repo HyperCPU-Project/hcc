@@ -125,6 +125,9 @@ bool IR::compile(HCC* hcc) {
 			}
 
 			hcc->backend->emit_function_epilogue();
+
+			while (!hcc->values.empty())
+				hcc->values.pop();
 		} break;
 		case IrOpcode::IR_ALLOCA: {
 			std::unique_ptr<Value> value(Value::createAsStackVar(hcc, op.alloca.md));
@@ -193,6 +196,17 @@ bool IR::compile(HCC* hcc) {
 			}
 
 			std::unique_ptr<Value> out(hcc->current_function.variables[op.varref.name]->doCondLod(hcc));
+
+			hcc->values.push(std::move(out));
+		} break;
+		case IrOpcode::IR_ADDROF: {
+			if (!hcc->current_function.variables.contains(op.addrof.name)) {
+				hcc_compile_error = fmt::sprintf("undefined variable %s", op.addrof.name);
+				return false;
+			}
+
+			auto out = std::unique_ptr<Value>(new Value());
+			out->reg_name = hcc->backend->emit_loadaddr_from_stack(hcc->current_function.variables[op.addrof.name]->var_stack_align);
 
 			hcc->values.push(std::move(out));
 		} break;
