@@ -13,11 +13,6 @@ void AstNumber::print(int indent) const {
 }
 
 bool AstNumber::compile(HCC* hcc) {
-	/*
-	std::unique_ptr<Value> v(Value::createAsCompileTimeValue(hcc, value));
-	hcc->values.push(std::move(v));
-	*/
-
 	IrOpcode op;
 	op.type = IrOpcode::IR_CCTV;
 	op.cctv.value = value;
