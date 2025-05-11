@@ -17,24 +17,14 @@ int main(){
     return (69 / 3) * 3;
 }
 ```
-- Output (hypercpu backend with some formatting)
+- Output (hypercpu backend with constant folding, DCE and fp omission)
 ```assembly
-.attr(entry) hcc_start_main:
-	mov xsp, 0xfff;
-	mov xbp, 0xfff;
-	call main;
-	hlt;
-
+// emit_label
 main:
-	push xbp;
-	mov xbp, xsp;
-
-	mov x1, 0u69;
-	mov x0, x1;
-
-	mov xsp, xbp;
-	pop xbp;
-	pop xip;
+// emit_mov_const
+mov x0, 0u69;
+// emit_single_ret
+pop xip
 ```
 
 ## The hcc executable
