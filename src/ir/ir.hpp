@@ -24,6 +24,7 @@ struct IrOpcode {
 		IR_ASM,
 		IR_VARREF,
 		IR_ADDROF,
+		IR_LINE, // just marker that does nothing, needed for static optimizations
 	} type;
 
 	struct {
@@ -83,6 +84,7 @@ public:
 
 	IR();
 
+	void add_line();
 	void add(IrOpcode op);
 
 	void performStaticOptimizations(HCC* hcc);

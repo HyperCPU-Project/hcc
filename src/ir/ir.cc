@@ -7,6 +7,12 @@ using namespace hcc;
 
 IR::IR() = default;
 
+void IR::add_line() {
+	IrOpcode op;
+	op.type = IrOpcode::IR_LINE;
+	ir.push_back(op);
+}
+
 void IR::add(IrOpcode op) {
 	ir.push_back(op);
 }
@@ -46,7 +52,7 @@ void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 				// detect if a variable has been confirmed used in the previous pass, otherwise try to optimize it
 				if (std::find(used_vars.begin(), used_vars.end(), op.alloca.name) == used_vars.end()) {
 					var = op.alloca.name;
-					remove_indexes.insert(remove_indexes.begin(), i);
+					remove_indexes.push_back(i);
 				}
 			} else if (op.type == IrOpcode::IR_VARREF && op.varref.name == var) {
 				used_vars.push_back(var);
@@ -56,10 +62,16 @@ void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 			} else if (op.type == IrOpcode::IR_ASSIGN && op.assign.name == var) {
 				// we still optimizin' it since the variable can be assigned, but not used
 				// in cases where it would be used in the future, IR_VARREF will discard the removal of this opcode
-				remove_indexes.insert(remove_indexes.begin(), i);
-				break;
+				for (size_t j = i; j >= 0; j--) {
+					remove_indexes.push_back(j);
+					if (ir[j].type == IrOpcode::IR_LINE) {
+						break;
+					}
+				}
 			}
 		}
+
+		std::sort(remove_indexes.begin(), remove_indexes.end(), std::greater<>());
 
 		if (!var.empty()) {
 			for (size_t index : remove_indexes) {
@@ -210,6 +222,8 @@ bool IR::compile(HCC* hcc) {
 
 			hcc->values.push(std::move(out));
 		} break;
+		case IrOpcode::IR_LINE:
+			break;
 		default:
 			break;
 		}
