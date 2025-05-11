@@ -28,7 +28,7 @@ public:
 	Backend* backend;
 	IR ir;
 
-	enum Optimizations { OPT_ONERET, OPT_DCE_UNUSED };
+	enum Optimizations { OPT_ONERET, OPT_DCE_UNUSED, OPT_STACK_SETUP };
 	Flags<Optimizations> optimizations;
 
 	FunctionMetadata current_function;

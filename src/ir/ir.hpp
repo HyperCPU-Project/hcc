@@ -32,6 +32,8 @@ struct IrOpcode {
 
 		std::vector<TypeMetadata> arg_types;
 		std::vector<std::string> arg_names;
+
+		bool need_stack = false;
 	} funcdef;
 
 	struct {
@@ -78,6 +80,7 @@ private:
 	IrOpcode peek(unsigned long count = 1);
 
 	void optimize_dce_unused(HCC* hcc);
+	void optimize_stack_setup(HCC* hcc);
 
 public:
 	size_t passes_for_each_optimization = 64;
@@ -86,6 +89,8 @@ public:
 
 	void add_line();
 	void add(IrOpcode op);
+
+	bool opcode_affects_stack(IrOpcode op);
 
 	void performStaticOptimizations(HCC* hcc);
 	bool compile(HCC* hcc);

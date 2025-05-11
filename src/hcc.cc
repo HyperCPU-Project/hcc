@@ -23,6 +23,7 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 	current_function.align = 0;
 	optimizations.SetFlag(Optimizations::OPT_ONERET);
 	optimizations.SetFlag(Optimizations::OPT_DCE_UNUSED);
+	optimizations.SetFlag(Optimizations::OPT_STACK_SETUP);
 }
 
 HCC::~HCC() {

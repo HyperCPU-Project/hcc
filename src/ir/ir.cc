@@ -82,13 +82,40 @@ void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 	}
 }
 
+void IR::optimize_stack_setup([[maybe_unused]] HCC* hcc) {
+	IrOpcode* currentFunc = nullptr;
+	for (size_t i = 0; i < ir.size(); i++) {
+		IrOpcode& op = ir[i];
+		if (op.type == IrOpcode::IR_FUNCDEF) {
+			currentFunc = &op;
+		} else if (opcode_affects_stack(op)) {
+			currentFunc->funcdef.need_stack = true;
+		}
+	}
+}
+
+bool IR::opcode_affects_stack(IrOpcode op) {
+	switch (op.type) {
+	case IrOpcode::IR_ALLOCA:
+		return true;
+	case IrOpcode::IR_CSV:
+		return true;
+	default:
+		return false;
+	}
+}
+
 void IR::performStaticOptimizations(HCC* hcc) {
 	if (hcc->optimizations.HasFlag(HCC::OPT_DCE_UNUSED)) {
 		optimize_dce_unused(hcc);
 	}
+	if (hcc->optimizations.HasFlag(HCC::OPT_STACK_SETUP)) {
+		optimize_stack_setup(hcc);
+	}
 }
 
 bool IR::compile(HCC* hcc) {
+	IrOpcode currentFuncdefOp;
 	for (;;) {
 		IrOpcode op = next();
 		if (op.type == IrOpcode::IR_END)
@@ -105,8 +132,13 @@ bool IR::compile(HCC* hcc) {
 				hcc->backend->emit_single_ret();
 				next();
 			} else {
-				hcc->backend->reset_reg_index();
-				hcc->backend->emit_function_prologue(op.funcdef.name);
+				if (op.funcdef.need_stack) {
+					hcc->backend->reset_reg_index();
+					hcc->backend->emit_function_prologue(op.funcdef.name);
+				} else {
+					hcc->backend->emit_label(op.funcdef.name);
+				}
+				currentFuncdefOp = op;
 			}
 			break;
 		case IrOpcode::IR_CREG: {
@@ -136,7 +168,10 @@ bool IR::compile(HCC* hcc) {
 					delete value;
 			}
 
-			hcc->backend->emit_function_epilogue();
+			if (currentFuncdefOp.funcdef.need_stack)
+				hcc->backend->emit_function_epilogue();
+			else
+				hcc->backend->emit_single_ret();
 
 			while (!hcc->values.empty())
 				hcc->values.pop();
