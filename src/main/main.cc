@@ -23,6 +23,8 @@ options:
   -o               set output filename
   --backend        set a backend
   --ast            print AST
+	-f               enable optimizations
+	-fno-            disable optimizations
 backends:
   qproc
   hypercpu (beta)
@@ -38,6 +40,32 @@ backends:
 				fmt::print("[hcc] failed to select a backend: {}\n", result.get_error().value());
 				return 1;
 			}
+		} else if (arg.starts_with("-fno-")) {
+			std::string optimization_name = arg;
+			optimization_name.erase(optimization_name.begin(), optimization_name.begin() + 5);
+
+			HCC::Optimization optimization = hcc.getOptimizationFromName(optimization_name);
+			if (optimization == (HCC::Optimization)-1) {
+				fmt::println("[hcc] no such optimization: {}", optimization_name);
+				return 1;
+			} else {
+				if (hcc.optimizations.HasFlag(optimization))
+					hcc.optimizations.UnsetFlag(optimization);
+			}
+		} else if (arg.starts_with("-f")) {
+			std::string optimization_name = arg;
+			optimization_name.erase(optimization_name.begin(), optimization_name.begin() + 2);
+
+			HCC::Optimization optimization = hcc.getOptimizationFromName(optimization_name);
+			if (optimization == (HCC::Optimization)-1) {
+				fmt::println("[hcc] no such optimization: {}", optimization_name);
+				return 1;
+			} else {
+				hcc.optimizations.SetFlag(optimization);
+			}
+		} else if (arg.starts_with("-")) {
+			fmt::println("[hcc] unknown flag: {}", arg);
+			return 1;
 		} else {
 			hcc.sources.push_back(arg);
 		}

@@ -127,7 +127,7 @@ bool IR::compile(HCC* hcc) {
 			return false;
 			break;
 		case IrOpcode::IR_FUNCDEF:
-			if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(HCC::Optimizations::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
+			if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(HCC::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
 				hcc->backend->emit_label(op.funcdef.name);
 				hcc->backend->emit_single_ret();
 				next();

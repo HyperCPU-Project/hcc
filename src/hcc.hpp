@@ -28,8 +28,8 @@ public:
 	Backend* backend;
 	IR ir;
 
-	enum Optimizations { OPT_CONSTANT_FOLDING, OPT_FUNCTION_BODY_ELIMINATION, OPT_DCE_UNUSED, OPT_FP_OMISSION };
-	Flags<Optimizations> optimizations;
+	enum Optimization { OPT_CONSTANT_FOLDING, OPT_FUNCTION_BODY_ELIMINATION, OPT_DCE_UNUSED, OPT_FP_OMISSION };
+	Flags<Optimization> optimizations;
 
 	FunctionMetadata current_function;
 	std::stack<std::unique_ptr<Value>> values;
@@ -42,6 +42,8 @@ public:
 	void openOutput(std::string filename);
 
 	Result<NoSuccess, std::string> selectBackend(std::string name);
+
+	Optimization getOptimizationFromName(std::string name);
 
 	FILE* getOutFd();
 };

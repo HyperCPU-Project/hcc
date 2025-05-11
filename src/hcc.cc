@@ -21,10 +21,10 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 	parser = new Parser();
 
 	current_function.align = 0;
-	optimizations.SetFlag(Optimizations::OPT_CONSTANT_FOLDING);
-	optimizations.SetFlag(Optimizations::OPT_FUNCTION_BODY_ELIMINATION);
-	optimizations.SetFlag(Optimizations::OPT_DCE_UNUSED);
-	optimizations.SetFlag(Optimizations::OPT_FP_OMISSION);
+	optimizations.SetFlag(OPT_CONSTANT_FOLDING);
+	optimizations.SetFlag(OPT_FUNCTION_BODY_ELIMINATION);
+	optimizations.SetFlag(OPT_DCE_UNUSED);
+	optimizations.SetFlag(OPT_FP_OMISSION);
 }
 
 HCC::~HCC() {
@@ -116,6 +116,20 @@ Result<NoSuccess, std::string> HCC::selectBackend(std::string name) {
 	}
 
 	return Result<NoSuccess, std::string>::success({});
+}
+
+HCC::Optimization HCC::getOptimizationFromName(std::string name) {
+	if (name == "constant-folding") {
+		return OPT_CONSTANT_FOLDING;
+	} else if (name == "omit-frame-pointer") {
+		return OPT_FP_OMISSION;
+	} else if (name == "function-body-elimination") {
+		return OPT_FUNCTION_BODY_ELIMINATION;
+	} else if (name == "dce-unused") {
+		return OPT_DCE_UNUSED;
+	}
+
+	return (Optimization)-1;
 }
 
 FILE* HCC::getOutFd() {
