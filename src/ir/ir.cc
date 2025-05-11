@@ -109,7 +109,7 @@ void IR::performStaticOptimizations(HCC* hcc) {
 	if (hcc->optimizations.HasFlag(HCC::OPT_DCE_UNUSED)) {
 		optimize_dce_unused(hcc);
 	}
-	if (hcc->optimizations.HasFlag(HCC::OPT_STACK_SETUP)) {
+	if (hcc->optimizations.HasFlag(HCC::OPT_FP_OMISSION)) {
 		optimize_stack_setup(hcc);
 	}
 }
@@ -127,7 +127,7 @@ bool IR::compile(HCC* hcc) {
 			return false;
 			break;
 		case IrOpcode::IR_FUNCDEF:
-			if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(HCC::Optimizations::OPT_ONERET)) { // function with no body that instantly returns
+			if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(HCC::Optimizations::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
 				hcc->backend->emit_label(op.funcdef.name);
 				hcc->backend->emit_single_ret();
 				next();

@@ -21,9 +21,10 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 	parser = new Parser();
 
 	current_function.align = 0;
-	optimizations.SetFlag(Optimizations::OPT_ONERET);
+	optimizations.SetFlag(Optimizations::OPT_CONSTANT_FOLDING);
+	optimizations.SetFlag(Optimizations::OPT_FUNCTION_BODY_ELIMINATION);
 	optimizations.SetFlag(Optimizations::OPT_DCE_UNUSED);
-	optimizations.SetFlag(Optimizations::OPT_STACK_SETUP);
+	optimizations.SetFlag(Optimizations::OPT_FP_OMISSION);
 }
 
 HCC::~HCC() {
