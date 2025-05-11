@@ -62,7 +62,7 @@ void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
 			} else if (op.type == IrOpcode::IR_ASSIGN && op.assign.name == var) {
 				// we still optimizin' it since the variable can be assigned, but not used
 				// in cases where it would be used in the future, IR_VARREF will discard the removal of this opcode
-				for (size_t j = i; j >= 0; j--) {
+				for (size_t j = i;; j--) {
 					remove_indexes.push_back(j);
 					if (ir[j].type == IrOpcode::IR_LINE) {
 						break;
