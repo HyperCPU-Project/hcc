@@ -36,6 +36,8 @@ Here's the arguments you can provide to it:
 - ```-o <filename>``` — Sets an output filename for the generated assembly
 - ```--backend <qproc/hypercpu>``` — Sets a compilation backend (target)
 - ```--ast``` — Prints an abstract syntax tree when the parsing is done
+- ```-f<optimization name>``` — Enables optimizations
+- ```-fno-<optimization name>``` — Disables optimizations
 
 ## CMake Build Options
 - HCC_NO_TESTS — If set to 1, it will not build tests
