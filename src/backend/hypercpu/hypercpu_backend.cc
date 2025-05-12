@@ -29,7 +29,7 @@ void HyperCPUBackend::emit_function_prologue(std::string name) {
 
 void HyperCPUBackend::emit_function_epilogue() {
 	output += "// emit_function_epilogue\n";
-	output += fmt::sprintf("mov xsp, xbp;\npop xbp;\nret;;\n");
+	output += fmt::sprintf("mov xsp, xbp;\npop xbp;\nret;\n");
 }
 
 std::string HyperCPUBackend::emit_mov_const(uint64_t value, std::string reg_name) {
