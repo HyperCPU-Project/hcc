@@ -60,7 +60,7 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
 	for (std::string source : sources) {
 		auto result = readFile(source);
 		if (result.is_error()) {
-			fmt::print("[ncc] failed to read {}: {}\n", source, result.get_error().value());
+			fmt::print("[hcc] failed to read {}: {}\n", source, result.get_error().value());
 		}
 
 		code += result.get_success().value() + "\n";
