@@ -50,11 +50,11 @@ void Backend::emit_move(std::string rdest, std::string rsrc) {
 void Backend::emit_reserve_stack_space(uint64_t size) {
 }
 
-std::string Backend::emit_load_from_stack(uint64_t align, std::string load_reg) {
+std::string Backend::emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg) {
 	return "";
 }
 
-void Backend::emit_store_from_stack(uint64_t align, std::string rsrc) {
+void Backend::emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) {
 }
 
 std::string Backend::emit_loadaddr_from_stack(uint64_t align, std::string load_reg) {

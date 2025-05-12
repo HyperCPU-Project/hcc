@@ -101,7 +101,7 @@ void QprocBackend::emit_reserve_stack_space(uint64_t size) {
 	output += fmt::sprintf("movi r0 %ld\nsub sp, r0\n", size);
 }
 
-std::string QprocBackend::emit_load_from_stack(uint64_t align, std::string reg) {
+std::string QprocBackend::emit_load_from_stack(uint64_t align, uint64_t size, std::string reg) {
 	if (codegen_comments)
 		output += "; emit_load_from_stack\n";
 	if (reg.empty()) {
@@ -112,11 +112,16 @@ std::string QprocBackend::emit_load_from_stack(uint64_t align, std::string reg) 
 	output += fmt::sprintf("mov r0 bp\n");
 	output += fmt::sprintf("movi r1 %d\n", align);
 	output += fmt::sprintf("sub r0 r1\n");
-	output += fmt::sprintf("lod %s dword r0\n", reg);
+	if (size == 1)
+		output += fmt::sprintf("lod %s byte r0\n", reg);
+	if (size == 2)
+		output += fmt::sprintf("lod %s word r0\n", reg);
+	else
+		output += fmt::sprintf("lod %s dword r0\n", reg);
 	return reg;
 }
 
-void QprocBackend::emit_store_from_stack(uint64_t align, std::string rsrc) {
+void QprocBackend::emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) {
 	if (codegen_comments)
 		output += "; emit_store_from_stack\n";
 	bool is_used_reg = (rsrc == "r0" || rsrc == "r1");
@@ -133,7 +138,13 @@ void QprocBackend::emit_store_from_stack(uint64_t align, std::string rsrc) {
 	}
 	if (is_used_reg)
 		output += fmt::sprintf("pop %s\n", rsrc);
-	output += fmt::sprintf("str dword r0 %s\n", rsrc);
+
+	if (size == 1)
+		output += fmt::sprintf("str byte r0 %s\n", rsrc);
+	if (size == 2)
+		output += fmt::sprintf("str word r0 %s\n", rsrc);
+	else
+		output += fmt::sprintf("str dword r0 %s\n", rsrc);
 }
 
 std::string QprocBackend::emit_loadaddr_from_stack(uint64_t align, std::string reg) {
