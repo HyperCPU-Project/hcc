@@ -12,6 +12,8 @@ public:
 	std::string output;
 	ABIMetadata abi;
 
+	bool codegen_comments = false;
+
 	std::map<std::string, TypeMetadata> types;
 
 	Backend();
