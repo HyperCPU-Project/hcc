@@ -11,6 +11,7 @@ int main(int argc, char** argv) {
 	HCC hcc;
 
 	hcc.openOutput("a.s");
+	hcc.selectBackend("hypercpu");
 
 	argsShift();
 	for ([[maybe_unused]] int i = 0; argc; ++i) {
