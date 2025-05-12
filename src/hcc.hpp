@@ -28,7 +28,7 @@ public:
 	Backend* backend;
 	IR ir;
 
-	enum Optimization { OPT_CONSTANT_FOLDING, OPT_FUNCTION_BODY_ELIMINATION, OPT_DCE_UNUSED, OPT_FP_OMISSION };
+	enum Optimization { OPT_CONSTANT_FOLDING, OPT_FUNCTION_BODY_ELIMINATION, OPT_DCE, OPT_FP_OMISSION };
 	Flags<Optimization> optimizations;
 
 	FunctionMetadata current_function;

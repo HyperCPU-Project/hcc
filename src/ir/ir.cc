@@ -106,7 +106,7 @@ bool IR::opcode_affects_stack(IrOpcode op) {
 }
 
 void IR::performStaticOptimizations(HCC* hcc) {
-	if (hcc->optimizations.HasFlag(HCC::OPT_DCE_UNUSED)) {
+	if (hcc->optimizations.HasFlag(HCC::OPT_DCE)) {
 		optimize_dce_unused(hcc);
 	}
 	if (hcc->optimizations.HasFlag(HCC::OPT_FP_OMISSION)) {

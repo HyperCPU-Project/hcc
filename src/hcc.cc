@@ -23,7 +23,7 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 	current_function.align = 0;
 	optimizations.SetFlag(OPT_CONSTANT_FOLDING);
 	optimizations.SetFlag(OPT_FUNCTION_BODY_ELIMINATION);
-	optimizations.SetFlag(OPT_DCE_UNUSED);
+	optimizations.SetFlag(OPT_DCE);
 	optimizations.SetFlag(OPT_FP_OMISSION);
 }
 
@@ -125,8 +125,8 @@ HCC::Optimization HCC::getOptimizationFromName(std::string name) {
 		return OPT_FP_OMISSION;
 	} else if (name == "function-body-elimination") {
 		return OPT_FUNCTION_BODY_ELIMINATION;
-	} else if (name == "dce-unused") {
-		return OPT_DCE_UNUSED;
+	} else if (name == "dce") {
+		return OPT_DCE;
 	}
 
 	return (Optimization)-1;
