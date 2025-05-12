@@ -25,6 +25,7 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 	optimizations.SetFlag(OPT_FUNCTION_BODY_ELIMINATION);
 	optimizations.SetFlag(OPT_DCE);
 	optimizations.SetFlag(OPT_FP_OMISSION);
+	optimizations.SetFlag(OPT_STACK_RESERVE);
 }
 
 HCC::~HCC() {
@@ -127,6 +128,8 @@ HCC::Optimization HCC::getOptimizationFromName(std::string name) {
 		return OPT_FUNCTION_BODY_ELIMINATION;
 	} else if (name == "dce") {
 		return OPT_DCE;
+	} else if (name == "stack-reserve") {
+		return OPT_STACK_RESERVE;
 	}
 
 	return (Optimization)-1;

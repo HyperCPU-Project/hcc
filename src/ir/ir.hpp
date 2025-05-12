@@ -27,6 +27,7 @@ struct IrOpcode {
 		IR_CALL,
 		IR_LINE,	// just marker that does nothing, needed for static optimizations
 		IR_RESET, // resets register counter
+		IR_RESERVE,
 	} type;
 
 	struct {
@@ -75,6 +76,10 @@ struct IrOpcode {
 	struct {
 		std::string name;
 	} call;
+
+	struct {
+		uint64_t bytes;
+	} reserve;
 };
 
 class IR {
@@ -87,6 +92,7 @@ private:
 
 	void optimize_dce_unused(HCC* hcc);
 	void optimize_stack_setup(HCC* hcc);
+	void optimize_stack_reserve(HCC* hcc);
 
 public:
 	size_t passes_for_each_optimization = 64;

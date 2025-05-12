@@ -100,6 +100,35 @@ void IR::optimize_stack_setup([[maybe_unused]] HCC* hcc) {
 	}
 }
 
+void IR::optimize_stack_reserve([[maybe_unused]] HCC* hcc) {
+	size_t insert_index = 0;
+	size_t bytes = 0;
+	std::vector<std::pair<size_t, size_t>> inserts;
+
+	for (size_t i = 0; i < ir.size(); i++) {
+		IrOpcode& op = ir[i];
+		if (op.type == IrOpcode::IR_FUNCDEF && insert_index == 0) {
+			insert_index = i + 1;
+			bytes = 0;
+		} else if ((op.type == IrOpcode::IR_FUNCDEF || op.type == IrOpcode::IR_END) && insert_index > 0) {
+			inserts.insert(inserts.begin(), std::make_pair(insert_index, (size_t)bytes));
+			insert_index = i + 1;
+			bytes = 0;
+			if (op.type == IrOpcode::IR_END)
+				break;
+		} else if (op.type == IrOpcode::IR_ALLOCA && i != 0) {
+			bytes += op.alloca.md.size;
+		}
+	}
+
+	for (auto pair : inserts) {
+		IrOpcode res;
+		res.type = IrOpcode::IR_RESERVE;
+		res.reserve.bytes = pair.second;
+		ir.insert(ir.begin() + pair.first, res);
+	}
+}
+
 bool IR::opcode_affects_stack(IrOpcode op) {
 	switch (op.type) {
 	case IrOpcode::IR_ALLOCA:
@@ -112,11 +141,20 @@ bool IR::opcode_affects_stack(IrOpcode op) {
 }
 
 void IR::performStaticOptimizations(HCC* hcc) {
+	{
+		IrOpcode op;
+		op.type = IrOpcode::IR_END;
+		add(op);
+	}
+
 	if (hcc->optimizations.HasFlag(HCC::OPT_DCE)) {
 		optimize_dce_unused(hcc);
 	}
 	if (hcc->optimizations.HasFlag(HCC::OPT_FP_OMISSION)) {
 		optimize_stack_setup(hcc);
+	}
+	if (hcc->optimizations.HasFlag(HCC::OPT_STACK_RESERVE)) {
+		optimize_stack_reserve(hcc);
 	}
 }
 
@@ -183,7 +221,7 @@ bool IR::compile(HCC* hcc) {
 				hcc->values.pop();
 		} break;
 		case IrOpcode::IR_ALLOCA: {
-			std::unique_ptr<Value> value(Value::createAsStackVar(hcc, op.alloca.md));
+			std::unique_ptr<Value> value(Value::createAsStackVar(hcc, op.alloca.md, false));
 			hcc->current_function.variables[op.alloca.name] = std::move(value);
 		} break;
 		case IrOpcode::IR_ADD: {
@@ -274,6 +312,10 @@ bool IR::compile(HCC* hcc) {
 			break;
 		case IrOpcode::IR_RESET:
 			hcc->backend->reset_reg_index();
+			break;
+		case IrOpcode::IR_RESERVE:
+			if (op.reserve.bytes > 0)
+				hcc->backend->emit_reserve_stack_space(op.reserve.bytes);
 			break;
 		default:
 			break;

@@ -29,13 +29,14 @@ Value* Value::createAsCompileTimeValue([[maybe_unused]] HCC* hcc, uint64_t _valu
 	return value;
 }
 
-Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type) {
+Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type, bool reserve) {
 	Value* value = new Value();
 
 	value->var_stack_align = hcc->current_function.align + type.size;
 	value->var_type = type;
 
-	hcc->backend->emit_reserve_stack_space(type.size);
+	if (reserve)
+		hcc->backend->emit_reserve_stack_space(type.size);
 
 	hcc->current_function.align += type.size;
 
