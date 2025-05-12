@@ -127,17 +127,17 @@ std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::strin
 
 void HyperCPUBackend::emit_call(std::string name) {
 	output += "// emit_call\n";
-	output += fmt::sprintf("call %s\n", name);
+	output += fmt::sprintf("call %s;\n", name);
 }
 
 void HyperCPUBackend::emit_push(std::string reg) {
 	output += "// emit_push\n";
-	output += fmt::sprintf("push %s\n", reg);
+	output += fmt::sprintf("push %s;\n", reg);
 }
 
 void HyperCPUBackend::emit_pop(std::string reg) {
 	output += "// emit_pop\n";
-	output += fmt::sprintf("pop %s\n", reg);
+	output += fmt::sprintf("pop %s;\n", reg);
 }
 
 void HyperCPUBackend::emit_single_ret() {
