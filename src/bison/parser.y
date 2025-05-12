@@ -36,6 +36,8 @@ std::string type;
 	std::map<std::string, std::string>* arg_list;
 	std::vector<hcc::AstNode*>* call_arg_list;
 
+	std::vector<std::string>* string_vec;
+
 	ParserArgData *arg;
 }
 
@@ -58,6 +60,7 @@ std::string type;
 %type <call_arg_list> call_arg_list
 %type <node> call_arg
 %type <node> fncall
+%type <string_vec> declaration_names
 
 %left PLUS MINUS
 %left MULTIPLY DIVIDE
@@ -169,15 +172,28 @@ statement:
 	;
 
 declaration:
-	IDENTIFIER IDENTIFIER SEMICOLON {
+	IDENTIFIER declaration_names SEMICOLON {
 		auto* decl = new hcc::AstVarDeclare();
-		decl->name = *$2;
+		decl->names = *$2;
 		decl->type = *$1;
 		delete $2;
 		delete $1;
 		$$ = decl;
 	}
 	;
+
+declaration_names:
+	IDENTIFIER {
+		auto* names = new std::vector<std::string>();
+		names->push_back(*$1);
+		delete $1;
+		$$ = names;
+	}
+	| declaration_names COMMA IDENTIFIER {
+		$1->push_back(*$3);
+		delete $3;
+		$$ = $1;
+	}
 
 fncall:
   IDENTIFIER LPAREN call_arg_list {

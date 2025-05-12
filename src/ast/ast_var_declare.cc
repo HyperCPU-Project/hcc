@@ -8,7 +8,12 @@ void AstVarDeclare::print(int indent) const {
 	printIndent(indent);
 	std::cout << "AstVarDeclare" << std::endl;
 	printIndent(indent + 1);
-	std::cout << "name: " << name << std::endl;
+	std::cout << "names: ";
+	for (std::string name : names) {
+		std::cout << name << " ";
+	}
+	std::cout << std::endl;
+
 	printIndent(indent + 1);
 	std::cout << "type: " << type << std::endl;
 }
@@ -18,9 +23,11 @@ bool AstVarDeclare::compile(HCC* hcc) {
 	if (!var_type)
 		return false;
 
-	std::unique_ptr<Value> value(Value::createAsStackVar(hcc, *var_type));
+	for (std::string name : names) {
+		std::unique_ptr<Value> value(Value::createAsStackVar(hcc, *var_type));
 
-	hcc->current_function.variables[name] = std::move(value);
+		hcc->current_function.variables[name] = std::move(value);
+	}
 
 	return true;
 }
