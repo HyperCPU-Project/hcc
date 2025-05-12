@@ -50,5 +50,11 @@ bool AstFuncCall::compile(HCC* hcc) {
 	hcc->values.push(std::move(ret));
 	*/
 
+	IrOpcode op;
+	op.type = IrOpcode::IR_CALL;
+	op.call.name = name;
+
+	hcc->ir.add(op);
+
 	return true;
 }

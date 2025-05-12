@@ -257,6 +257,13 @@ bool IR::compile(HCC* hcc) {
 
 			hcc->values.push(std::move(out));
 		} break;
+		case IrOpcode::IR_CALL: {
+			hcc->backend->emit_call(op.call.name);
+			auto value = std::make_unique<Value>();
+			value->reg_name = hcc->backend->abi.return_register;
+
+			hcc->values.push(std::move(value));
+		} break;
 		case IrOpcode::IR_LINE:
 			break;
 		default:
