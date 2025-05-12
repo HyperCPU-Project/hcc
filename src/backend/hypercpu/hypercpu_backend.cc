@@ -112,8 +112,6 @@ std::string HyperCPUBackend::emit_load_from_stack(uint64_t align, uint64_t size,
 		output += "// emit_load_from_stack\n";
 	if (reg.empty()) {
 		reg = "x" + std::to_string(increment_reg_index());
-		while (reg == "x0" || reg == "x1")
-			reg = "x" + std::to_string(increment_reg_index());
 	}
 	output += fmt::sprintf("mov %s, b%d ptr [xbp+0u%d];\n", reg, size * 8, (0xff - align + 1));
 	return reg;
