@@ -5,6 +5,8 @@ using namespace hcc;
 HyperCPUBackend::HyperCPUBackend() {
 	reg_index = 0;
 	types["void"] = TypeMetadata{"void", 0};
+	types["char"] = TypeMetadata{"char", 1};
+	types["short"] = TypeMetadata{"short", 2};
 	types["int"] = TypeMetadata{"int", 4};
 	types["long"] = TypeMetadata{"long", 8}; // size of 4 is intentional here
 	abi.return_register = "x0";

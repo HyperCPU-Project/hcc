@@ -6,6 +6,8 @@ using namespace hcc;
 QprocBackend::QprocBackend() {
 	reg_index = 0;
 	types["void"] = TypeMetadata{"void", 0};
+	types["char"] = TypeMetadata{"char", 1};
+	types["short"] = TypeMetadata{"short", 2};
 	types["int"] = TypeMetadata{"int", 4};
 	types["long"] = TypeMetadata{"long", 4}; // size of 4 is intentional here
 	abi.return_register = "r0";
