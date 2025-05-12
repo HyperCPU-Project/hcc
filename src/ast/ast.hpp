@@ -31,7 +31,7 @@ public:
 
 class AstVarDeclare : public AstNode {
 public:
-	std::string name;
+	std::vector<std::string> names;
 	std::string type;
 	void print(int indent = 0) const override;
 	bool compile(HCC* hcc) override;
