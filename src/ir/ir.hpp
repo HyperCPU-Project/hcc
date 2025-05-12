@@ -25,7 +25,8 @@ struct IrOpcode {
 		IR_VARREF,
 		IR_ADDROF,
 		IR_CALL,
-		IR_LINE, // just marker that does nothing, needed for static optimizations
+		IR_LINE,	// just marker that does nothing, needed for static optimizations
+		IR_RESET, // resets register counter
 	} type;
 
 	struct {
@@ -93,6 +94,7 @@ public:
 	IR();
 
 	void add_line();
+	void add_reset();
 	void add(IrOpcode op);
 
 	bool opcode_affects_stack(IrOpcode op);

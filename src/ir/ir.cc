@@ -13,6 +13,12 @@ void IR::add_line() {
 	ir.push_back(op);
 }
 
+void IR::add_reset() {
+	IrOpcode op;
+	op.type = IrOpcode::IR_RESET;
+	ir.push_back(op);
+}
+
 void IR::add(IrOpcode op) {
 	ir.push_back(op);
 }
@@ -265,6 +271,9 @@ bool IR::compile(HCC* hcc) {
 			hcc->values.push(std::move(value));
 		} break;
 		case IrOpcode::IR_LINE:
+			break;
+		case IrOpcode::IR_RESET:
+			hcc->backend->reset_reg_index();
 			break;
 		default:
 			break;
