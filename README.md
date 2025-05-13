@@ -19,12 +19,9 @@ int main(){
 ```
 - Output (hypercpu backend with constant folding, DCE and fp omission)
 ```assembly
-// emit_label
 main:
-// emit_mov_const
 mov x0, 0u69;
-// emit_single_ret
-pop xip
+ret;
 ```
 
 ## The hcc executable
