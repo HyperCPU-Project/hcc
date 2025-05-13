@@ -26,6 +26,7 @@ HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
 	optimizations.SetFlag(OPT_DCE);
 	optimizations.SetFlag(OPT_FP_OMISSION);
 	optimizations.SetFlag(OPT_STACK_RESERVE);
+	optimizations.SetFlag(OPT_CONSTANT_PROPAGATION);
 }
 
 HCC::~HCC() {
@@ -130,6 +131,8 @@ HCC::Optimization HCC::getOptimizationFromName(std::string name) {
 		return OPT_DCE;
 	} else if (name == "stack-reserve") {
 		return OPT_STACK_RESERVE;
+	} else if (name == "constant-propagation") {
+		return OPT_CONSTANT_PROPAGATION;
 	}
 
 	return (Optimization)-1;
