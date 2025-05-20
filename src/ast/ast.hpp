@@ -2,109 +2,109 @@
 #include <pch.hpp>
 
 namespace hcc {
-class HCC;
-class AstNode {
-public:
-	virtual ~AstNode() = 0;
-	virtual void print(int indent = 0) const = 0;
-	virtual bool compile(HCC* hcc);
+  class HCC;
+  class AstNode {
+  public:
+    virtual ~AstNode() = 0;
+    virtual void print(int indent = 0) const = 0;
+    virtual bool compile(HCC* hcc);
 
-	std::vector<AstNode*> children;
+    std::vector<AstNode*> children;
 
-protected:
-	void printIndent(int indent) const;
-};
+  protected:
+    void printIndent(int indent) const;
+  };
 
-class AstRootNode : public AstNode {
-public:
-	void print(int indent = 0) const override;
-};
+  class AstRootNode : public AstNode {
+  public:
+    void print(int indent = 0) const override;
+  };
 
-class AstFuncDef : public AstNode {
-public:
-	std::string name;
-	std::map<std::string, std::string> args;
+  class AstFuncDef : public AstNode {
+  public:
+    std::string name;
+    std::map<std::string, std::string> args;
 
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-};
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+  };
 
-class AstVarDeclare : public AstNode {
-public:
-	std::vector<std::string> names;
-	std::string type;
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-};
+  class AstVarDeclare : public AstNode {
+  public:
+    std::vector<std::string> names;
+    std::string type;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+  };
 
-class AstVarAssign : public AstNode {
-public:
-	std::string name;
-	AstNode* expr;
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-	~AstVarAssign();
-};
+  class AstVarAssign : public AstNode {
+  public:
+    std::string name;
+    AstNode* expr;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+    ~AstVarAssign();
+  };
 
-class AstNumber : public AstNode {
-public:
-	int value;
-	explicit AstNumber(int val) : value(val) {
-	}
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-};
+  class AstNumber : public AstNode {
+  public:
+    int value;
+    explicit AstNumber(int val) : value(val) {
+    }
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+  };
 
-class AstBinaryOp : public AstNode {
-public:
-	AstNode* left;
-	AstNode* right;
-	std::string op;
+  class AstBinaryOp : public AstNode {
+  public:
+    AstNode* left;
+    AstNode* right;
+    std::string op;
 
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
 
-	~AstBinaryOp();
-};
+    ~AstBinaryOp();
+  };
 
-class AstReturn : public AstNode {
-public:
-	AstNode* expr;
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
+  class AstReturn : public AstNode {
+  public:
+    AstNode* expr;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
 
-	~AstReturn();
-};
+    ~AstReturn();
+  };
 
-class AstVarRef : public AstNode {
-public:
-	std::string name;
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-};
+  class AstVarRef : public AstNode {
+  public:
+    std::string name;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+  };
 
-class AstAsm : public AstNode {
-public:
-	std::string code;
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-};
+  class AstAsm : public AstNode {
+  public:
+    std::string code;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+  };
 
-class AstAddrof : public AstNode {
-public:
-	std::string name;
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
-};
+  class AstAddrof : public AstNode {
+  public:
+    std::string name;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
+  };
 
-class AstFuncCall : public AstNode {
-public:
-	std::vector<AstNode*> args;
-	std::string name;
+  class AstFuncCall : public AstNode {
+  public:
+    std::vector<AstNode*> args;
+    std::string name;
 
-	void print(int indent = 0) const override;
-	bool compile(HCC* hcc) override;
+    void print(int indent = 0) const override;
+    bool compile(HCC* hcc) override;
 
-	~AstFuncCall();
-};
+    ~AstFuncCall();
+  };
 } // namespace hcc

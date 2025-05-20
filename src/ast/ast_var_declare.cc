@@ -5,32 +5,32 @@
 using namespace hcc;
 
 void AstVarDeclare::print(int indent) const {
-	printIndent(indent);
-	std::cout << "AstVarDeclare" << std::endl;
-	printIndent(indent + 1);
-	std::cout << "names: ";
-	for (std::string name : names) {
-		std::cout << name << " ";
-	}
-	std::cout << std::endl;
+  printIndent(indent);
+  std::cout << "AstVarDeclare" << std::endl;
+  printIndent(indent + 1);
+  std::cout << "names: ";
+  for (std::string name : names) {
+    std::cout << name << " ";
+  }
+  std::cout << std::endl;
 
-	printIndent(indent + 1);
-	std::cout << "type: " << type << std::endl;
+  printIndent(indent + 1);
+  std::cout << "type: " << type << std::endl;
 }
 
 bool AstVarDeclare::compile(HCC* hcc) {
-	TypeMetadata* var_type = hcc->backend->get_type_from_name(type);
-	if (!var_type)
-		return false;
+  TypeMetadata* var_type = hcc->backend->get_type_from_name(type);
+  if (!var_type)
+    return false;
 
-	for (std::string name : names) {
-		IrOpcode op;
-		op.type = IrOpcode::IR_ALLOCA;
-		op.alloca.name = name;
-		op.alloca.md = *var_type;
+  for (std::string name : names) {
+    IrOpcode op;
+    op.type = IrOpcode::IR_ALLOCA;
+    op.alloca.name = name;
+    op.alloca.md = *var_type;
 
-		hcc->ir.add(op);
-	}
+    hcc->ir.add(op);
+  }
 
-	return true;
+  return true;
 }
