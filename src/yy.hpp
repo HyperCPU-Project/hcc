@@ -3,7 +3,7 @@
 #include <pch.hpp>
 
 namespace hcc {
-struct Parser;
+  struct Parser;
 }
 
 typedef struct yy_buffer_state* YY_BUFFER_STATE;
