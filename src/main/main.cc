@@ -47,7 +47,7 @@ backends:
 
       HCC::Optimization optimization = hcc.getOptimizationFromName(optimization_name);
       if (optimization == (HCC::Optimization)-1) {
-        fmt::println("[hcc] no such optimization: {}", optimization_name);
+        fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
         if (hcc.optimizations.HasFlag(optimization))
@@ -59,13 +59,13 @@ backends:
 
       HCC::Optimization optimization = hcc.getOptimizationFromName(optimization_name);
       if (optimization == (HCC::Optimization)-1) {
-        fmt::println("[hcc] no such optimization: {}", optimization_name);
+        fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
         hcc.optimizations.SetFlag(optimization);
       }
     } else if (arg.starts_with("-")) {
-      fmt::println("[hcc] unknown flag: {}", arg);
+      fmt::print("[hcc] unknown flag: {}\n", arg);
       return 1;
     } else {
       hcc.sources.push_back(arg);
