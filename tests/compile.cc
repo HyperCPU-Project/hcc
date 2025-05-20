@@ -7,7 +7,6 @@
 #include <util.hpp>
 
 std::string compile_output = "";
-char compile_output_raw[32767];
 
 Result<NoSuccess, std::string> compile_quick(std::string code, std::string backend) {
   compile_output.clear();
@@ -24,16 +23,30 @@ Result<NoSuccess, std::string> compile_quick(std::string code, std::string backe
 
   hcc.sources.push_back(filename);
 
-  hcc.outfd = fmemopen(compile_output_raw, sizeof(compile_output_raw), "w");
+  hcc.outfd = fopen("tests_tmp/a.out", "w");
 
   fmt::print("[hcctest] compiling temp C file {}\n", filename);
 
-  auto result = hcc.selectBackend(backend);
-  if (result.is_error())
+  {
+    auto result = hcc.selectBackend(backend);
+    if (result.is_error())
+      return result;
+  }
+
+  {
+    auto result = hcc.parseAndCompile();
+    if (result.is_error())
+      return result;
+
+    compile_output = readFile("tests_tmp/a.out").get_success().value();
+    compile_output = hcc.backend->output;
+    fclose(hcc.outfd);
+    /*
+    fmt::println("-------");
+    fmt::println("{}", hcc.backend->output);
+    fmt::println("-------");
+    */
+
     return result;
-
-  result = hcc.parseAndCompile();
-  compile_output = hcc.backend->output;
-
-  return result;
+  }
 }

@@ -86,6 +86,9 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
     return Result<NoSuccess, std::string>::error("compile error: " + hcc_compile_error);
   }
 
+  if (ir.results_in_error(this)) {
+    return Result<NoSuccess, std::string>::error("ir compile error: " + hcc_compile_error);
+  }
   ir.performStaticOptimizations(this);
   if (!ir.compile(this)) {
     return Result<NoSuccess, std::string>::error("ir compile error: " + hcc_compile_error);
