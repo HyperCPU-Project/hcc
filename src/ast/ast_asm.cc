@@ -10,6 +10,10 @@ void AstAsm::print(int indent) const {
 }
 
 bool AstAsm::compile(HCC* hcc) {
-	hcc->backend->output += code + "\n";
+	IrOpcode op;
+	op.type = IrOpcode::IR_ASM;
+	op.asm_.code = code;
+
+	hcc->ir.add(op);
 	return true;
 }

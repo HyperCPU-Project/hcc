@@ -17,22 +17,17 @@ AstReturn::~AstReturn() {
 }
 
 bool AstReturn::compile(HCC* hcc) {
+	hcc->ir.add_reset();
+
 	if (expr) {
 		if (!expr->compile(hcc))
 			return false;
-		auto ret_raw = std::move(hcc->values.top());
-		hcc->values.pop();
-
-		auto ret = ret_raw->use(hcc);
-
-		if (ret->reg_name != hcc->backend->abi.return_register) {
-			hcc->backend->emit_move(hcc->backend->abi.return_register, ret->reg_name);
-		}
-
-		if (ret != ret_raw.get())
-			delete ret;
 	}
-	hcc->backend->emit_function_epilogue();
+
+	IrOpcode op;
+	op.type = IrOpcode::IR_RET;
+
+	hcc->ir.add(op);
 
 	return true;
 }

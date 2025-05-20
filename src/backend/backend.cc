@@ -18,6 +18,10 @@ uint64_t Backend::increment_reg_index() {
 	return 0;
 }
 
+void Backend::reset_reg_index() {
+	reg_index = 0;
+}
+
 void Backend::emit_function_prologue(std::string name) {
 }
 
@@ -46,11 +50,11 @@ void Backend::emit_move(std::string rdest, std::string rsrc) {
 void Backend::emit_reserve_stack_space(uint64_t size) {
 }
 
-std::string Backend::emit_load_from_stack(uint64_t align, std::string load_reg) {
+std::string Backend::emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg) {
 	return "";
 }
 
-void Backend::emit_store_from_stack(uint64_t align, std::string rsrc) {
+void Backend::emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) {
 }
 
 std::string Backend::emit_loadaddr_from_stack(uint64_t align, std::string load_reg) {
@@ -63,6 +67,12 @@ void Backend::emit_call(std::string name) {
 void Backend::emit_push(std::string reg) {
 }
 void Backend::emit_pop(std::string reg) {
+}
+
+void Backend::emit_single_ret() {
+}
+
+void Backend::emit_label(std::string name) {
 }
 
 TypeMetadata* Backend::get_type_from_name(std::string name) {

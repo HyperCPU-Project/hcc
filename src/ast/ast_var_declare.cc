@@ -24,9 +24,12 @@ bool AstVarDeclare::compile(HCC* hcc) {
 		return false;
 
 	for (std::string name : names) {
-		std::unique_ptr<Value> value(Value::createAsStackVar(hcc, *var_type));
+		IrOpcode op;
+		op.type = IrOpcode::IR_ALLOCA;
+		op.alloca.name = name;
+		op.alloca.md = *var_type;
 
-		hcc->current_function.variables[name] = std::move(value);
+		hcc->ir.add(op);
 	}
 
 	return true;

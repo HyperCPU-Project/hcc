@@ -22,14 +22,17 @@ public:
 	void emit_move(std::string rdest, std::string rsrc) override;
 
 	void emit_reserve_stack_space(uint64_t size) override;
-	void emit_store_from_stack(uint64_t align, std::string rsrc) override;
+	void emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) override;
 
-	std::string emit_load_from_stack(uint64_t align, std::string load_reg = "") override;
+	std::string emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg = "") override;
 	std::string emit_loadaddr_from_stack(uint64_t align, std::string load_reg = "") override;
 
 	void emit_call(std::string name) override;
 
 	void emit_push(std::string reg) override;
 	void emit_pop(std::string reg) override;
+
+	void emit_single_ret() override;
+	void emit_label(std::string name) override;
 };
 } // namespace hcc

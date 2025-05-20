@@ -1,25 +1,29 @@
+%option reentrant bison-bridge
+%option noyywrap
+%option extra-type="hcc::Parser*"
+
 %{
 #include "parser.hpp"
 #include <string>
 
-#define YY_DECL int yylex()
+typedef void* yyscan_t;
 
-int line_num = 1;
+#define PARSER (yyget_extra(yyscanner))
 %}
 
 %%
 
 [ \t]           ;
-[\n]            { line_num++; }
+[\n]            { PARSER->line_num++; }
 "return"        { return RETURN; }
 "asm"        { return ASM; }
-[0-9]+          { yylval.number = std::stoi(yytext); return NUMBER; }
+[0-9]+          { yylval->number = std::stoi(yytext); return NUMBER; }
 [a-zA-Z_][a-zA-Z0-9_]* {
-	yylval.string = new std::string(yytext);
+	yylval->string = new std::string(yytext);
 	return IDENTIFIER;
 }
 \"([^\\\"\n]|\\.)*\" {
-	yylval.string = new std::string(yytext + 1, yytext + yyleng - 1);
+	yylval->string = new std::string(yytext + 1, yytext + yyleng - 1);
   return STRING_LITERAL;
 }
 "="             { return ASSIGN; }
@@ -37,7 +41,3 @@ int line_num = 1;
 .               { printf("[hcc] unknown token: %s\n", yytext); }
 
 %%
-
-int yywrap() {
-    return 1;
-}

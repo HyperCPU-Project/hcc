@@ -1,6 +1,5 @@
 #include <ast/ast.hpp>
 #include <hcc.hpp>
-#include <memory>
 #include <value/value.hpp>
 
 using namespace hcc;
@@ -22,6 +21,7 @@ AstFuncCall::~AstFuncCall() {
 }
 
 bool AstFuncCall::compile(HCC* hcc) {
+	/*
 	std::vector<std::string> pushed_regs;
 	for (unsigned int i = 0; i < args.size() && i < hcc->backend->abi.args_registers.size(); i++) {
 		if (!args[i]->compile(hcc))
@@ -48,6 +48,13 @@ bool AstFuncCall::compile(HCC* hcc) {
 	auto ret = std::make_unique<Value>();
 	ret->reg_name = hcc->backend->abi.return_register;
 	hcc->values.push(std::move(ret));
+	*/
+
+	IrOpcode op;
+	op.type = IrOpcode::IR_CALL;
+	op.call.name = name;
+
+	hcc->ir.add(op);
 
 	return true;
 }

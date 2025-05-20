@@ -17,24 +17,11 @@ int main(){
     return (69 / 3) * 3;
 }
 ```
-- Output (hypercpu backend with some formatting)
+- Output (hypercpu backend with constant folding, DCE and fp omission)
 ```assembly
-.attr(entry) hcc_start_main:
-	mov xsp, 0xfff;
-	mov xbp, 0xfff;
-	call main;
-	hlt;
-
 main:
-	push xbp;
-	mov xbp, xsp;
-
-	mov x1, 0u69;
-	mov x0, x1;
-
-	mov xsp, xbp;
-	pop xbp;
-	pop xip;
+mov x0, 0u69;
+ret;
 ```
 
 ## The hcc executable
@@ -46,6 +33,8 @@ Here's the arguments you can provide to it:
 - ```-o <filename>``` — Sets an output filename for the generated assembly
 - ```--backend <qproc/hypercpu>``` — Sets a compilation backend (target)
 - ```--ast``` — Prints an abstract syntax tree when the parsing is done
+- ```-f<optimization name>``` — Enables optimizations
+- ```-fno-<optimization name>``` — Disables optimizations
 
 ## CMake Build Options
 - HCC_NO_TESTS — If set to 1, it will not build tests

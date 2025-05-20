@@ -23,7 +23,7 @@ public:
 
 	static Value* createAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
 	static Value* createAsCompileTimeValue(HCC* hcc, uint64_t value);
-	static Value* createAsStackVar(HCC* hcc, TypeMetadata type);
+	static Value* createAsStackVar(HCC* hcc, TypeMetadata type, bool reserve = true);
 
 	Value* use(HCC* hcc);
 

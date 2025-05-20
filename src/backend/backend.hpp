@@ -12,12 +12,15 @@ public:
 	std::string output;
 	ABIMetadata abi;
 
+	bool codegen_comments = false;
+
 	std::map<std::string, TypeMetadata> types;
 
 	Backend();
 	virtual ~Backend() = 0;
 
 	uint64_t increment_reg_index();
+	void reset_reg_index();
 
 	virtual void emit_function_prologue(std::string name);
 	virtual void emit_function_epilogue();
@@ -33,14 +36,17 @@ public:
 
 	virtual void emit_reserve_stack_space(uint64_t size);
 
-	virtual std::string emit_load_from_stack(uint64_t align, std::string load_reg = "");
-	virtual void emit_store_from_stack(uint64_t align, std::string rsrc);
+	virtual std::string emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg = "");
+	virtual void emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc);
 	virtual std::string emit_loadaddr_from_stack(uint64_t align, std::string load_reg = "");
 
 	virtual void emit_call(std::string name);
 
 	virtual void emit_push(std::string reg);
 	virtual void emit_pop(std::string reg);
+
+	virtual void emit_single_ret();
+	virtual void emit_label(std::string name);
 
 	virtual TypeMetadata* get_type_from_name(std::string name);
 };

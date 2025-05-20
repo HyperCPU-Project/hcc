@@ -10,14 +10,11 @@ void AstVarRef::print(int indent) const {
 }
 
 bool AstVarRef::compile(HCC* hcc) {
-	if (!hcc->current_function.variables.contains(name)) {
-		hcc_compile_error = fmt::sprintf("undefined variable %s", name);
-		return false;
-	}
+	IrOpcode op;
+	op.type = IrOpcode::IR_VARREF;
+	op.varref.name = name;
 
-	std::unique_ptr<Value> out(hcc->current_function.variables[name]->doCondLod(hcc));
-
-	hcc->values.push(std::move(out));
+	hcc->ir.add(op);
 
 	return true;
 }
