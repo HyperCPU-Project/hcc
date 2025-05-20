@@ -40,7 +40,6 @@ Result<NoSuccess, std::string> compile_quick(std::string code, std::string backe
 
     compile_output = readFile("tests_tmp/a.out").get_success().value();
     compile_output = hcc.backend->output;
-    fclose(hcc.outfd);
     /*
     fmt::println("-------");
     fmt::println("{}", hcc.backend->output);
