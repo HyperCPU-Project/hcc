@@ -108,5 +108,7 @@ namespace hcc {
 
     void performStaticOptimizations(HCC* hcc);
     bool compile(HCC* hcc);
+
+    bool results_in_error(HCC* hcc);
   };
 } // namespace hcc

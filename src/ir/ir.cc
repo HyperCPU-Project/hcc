@@ -246,3 +246,11 @@ bool IR::compile(HCC* hcc) {
   }
   return true;
 }
+
+bool IR::results_in_error(HCC* hcc) {
+  index = 0;
+  bool result = !compile(hcc);
+  hcc->backend->output.clear();
+  index = 0;
+  return result;
+}
