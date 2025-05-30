@@ -17,7 +17,8 @@ void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
 
 std::string hcc_compile_error = "";
 
-HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
+HCC::HCC()
+    : outfd(nullptr), print_ast(false), backend(nullptr), values() {
   parser = new Parser();
 
   current_function.align = 0;
@@ -94,7 +95,10 @@ Result<NoSuccess, std::string> HCC::parseAndCompile() {
     return Result<NoSuccess, std::string>::error("ir compile error: " + hcc_compile_error);
   }
 
-  fmt::fprintf(outfd, "%s", backend->output);
+  backend->peephole_optimize();
+  asm_output = backend->compile_calls();
+
+  fmt::fprintf(outfd, "%s", asm_output);
 
   if (parser->root)
     delete parser->root;

@@ -201,7 +201,8 @@ bool IR::compile(HCC* hcc) {
       expr_var->setto(hcc, expr_value.get());
     } break;
     case IrOpcode::IR_ASM:
-      hcc->backend->output += op.asm_.code + "\n";
+      // TODO: Add a new call in the Backend class for this since emitcalls don't allow doing this
+      // hcc->backend->output += op.asm_.code + "\n";
       break;
     case IrOpcode::IR_VARREF: {
       if (!hcc->current_function.variables.contains(op.varref.name)) {
@@ -250,7 +251,7 @@ bool IR::compile(HCC* hcc) {
 bool IR::results_in_error(HCC* hcc) {
   index = 0;
   bool result = !compile(hcc);
-  hcc->backend->output.clear();
+  hcc->backend->emitcalls.clear();
   index = 0;
   return result;
 }
