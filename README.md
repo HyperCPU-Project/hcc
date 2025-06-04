@@ -69,23 +69,24 @@ Besides `hcc` executable file, tests also will be built. If you are not interest
 `hcc` executable file is _kinda_ large (*2 MB / 1.9MiB*) because of C++, but whatever.
 
 ```bash
-$ ./hcc [-h | --help] [-o FILENAME] [--backend BACKEND] [--ast] [-fOPTIMIZATION] [-fno-OPTIMIZATION] source
+$ ./hcc [-h | --help] [-v | --version] [-o FILENAME] [--backend BACKEND] [--ast] [-fOPTIMIZATION] [-fno-OPTIMIZATION] source
 ```
 
 * `source` — source code file to be compiled.
 * `-h`, `--help` — display help message and exit.
-- `-o FILENAME` — specify output binary file name.
-- `--backend BACKEND` — specify compilation backend (target). Available values are: `qproc`, `hypercpu`.
-- `--ast` — print an abstract syntax tree when the parsing is done.
-- `-fOPTIMIZATION` — enable optimization.
-- ```-fno-OPTIMIZATION``` — disables optimization.
+* `-v`, `--version` — display program version and exit.
+* `-o FILENAME` — specify output binary file name.
+* `--backend BACKEND` — specify compilation backend (target). Available values are: `qproc`, `hypercpu`.
+* `--ast` — print an abstract syntax tree when the parsing is done.
+* `-fOPTIMIZATION` — enable optimization.
+* ```-fno-OPTIMIZATION``` — disables optimization.
 
 ### Authors
 
 Hyper C Compiler is brought to you by these wonderful people:
 
-* **[aceinetx](https://github.com/aceinetx)** — project founder and lead developer.
-* **[Ivan Movchan](https://github.com/ivan-movchan)** — project artist and just a contributor.
+* **[aceinetx](https://github.com/aceinetx)** — hcc author and lead developer.
+* **[Ivan Movchan](https://github.com/ivan-movchan)** — HyperCPU Project artist and contributor.
 
 ### License
 
