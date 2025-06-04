@@ -17,7 +17,8 @@ void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
 
 std::string hcc_compile_error = "";
 
-HCC::HCC() : outfd(nullptr), print_ast(false), backend(nullptr), values() {
+HCC::HCC()
+    : outfd(nullptr), print_ast(false), backend(nullptr), values() {
   parser = new Parser();
 
   current_function.align = 0;
@@ -124,21 +125,17 @@ Result<NoSuccess, std::string> HCC::selectBackend(std::string name) {
 }
 
 HCC::Optimization HCC::getOptimizationFromName(std::string name) {
-  if (name == "constant-folding") {
-    return OPT_CONSTANT_FOLDING;
-  } else if (name == "omit-frame-pointer") {
-    return OPT_FP_OMISSION;
-  } else if (name == "function-body-elimination") {
-    return OPT_FUNCTION_BODY_ELIMINATION;
-  } else if (name == "dce") {
-    return OPT_DCE;
-  } else if (name == "stack-reserve") {
-    return OPT_STACK_RESERVE;
-  } else if (name == "constant-propagation") {
-    return OPT_CONSTANT_PROPAGATION;
-  }
+  auto names = mapbox::eternal::map<mapbox::eternal::string, HCC::Optimization>({{"constant-folding", OPT_CONSTANT_FOLDING},
+                                                                                 {"emit-frame-pointer", OPT_FP_OMISSION},
+                                                                                 {"function-body-elimination", OPT_FUNCTION_BODY_ELIMINATION},
+                                                                                 {"dce", OPT_DCE},
+                                                                                 {"stack-reserve", OPT_STACK_RESERVE},
+                                                                                 {"constant-propagation", OPT_CONSTANT_PROPAGATION}});
 
-  return (Optimization)-1;
+  if (!names.contains(name.c_str()))
+    return (Optimization)-1;
+
+  return names.at(name.c_str());
 }
 
 FILE* HCC::getOutFd() {
