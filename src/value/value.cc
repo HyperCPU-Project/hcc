@@ -128,7 +128,12 @@ void Value::mul(HCC* hcc, Value* other) {
 
 void Value::div(HCC* hcc, Value* other) {
   if (is_compile_time && other->is_compile_time) {
-    compile_time_value /= other->compile_time_value;
+    if (other->compile_time_value == 0) {
+      puts("[hcc] zero division error occurred, aborting");
+      exit(2);
+    } else {
+      compile_time_value /= other->compile_time_value;
+    }
     return;
   }
 
