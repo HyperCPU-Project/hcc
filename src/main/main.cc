@@ -4,6 +4,7 @@
 #include <util.hpp>
 #include <value/value.hpp>
 #include <yy.hpp>
+#include <version.hpp>
 
 using namespace hcc;
 
@@ -21,6 +22,7 @@ int main(int argc, char** argv) {
       fmt::print(R"(usage: hcc [OPTION]... [INPUT]
 options:
   --help | -h      print this message
+  --version | -v   print version
   -o               set output filename
   --backend        set a backend
   --ast            print AST
@@ -33,6 +35,9 @@ backends:
       return 0;
     } else if (arg == "-o") {
       hcc.openOutput(argsShift());
+    } else if (arg == "-v" || arg == "--version") {
+      fmt::print("{}\n", hcc_version);
+      return 0;
     } else if (arg == "--ast") {
       hcc.print_ast = true;
     } else if (arg == "--backend") {
