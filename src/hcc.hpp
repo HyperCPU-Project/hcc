@@ -42,11 +42,11 @@ namespace hcc {
     HCC();
     ~HCC();
 
-    Result<NoSuccess, std::string> parseAndCompile();
+    Result<void, std::string> parseAndCompile();
 
     void openOutput(std::string filename);
 
-    Result<NoSuccess, std::string> selectBackend(std::string name);
+    Result<void, std::string> selectBackend(std::string name);
 
     Optimization getOptimizationFromName(std::string name);
 
