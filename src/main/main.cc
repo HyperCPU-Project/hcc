@@ -24,8 +24,8 @@ options:
   -o               set output filename
   --backend        set a backend
   --ast            print AST
-	-f               enable optimizations
-	-fno-            disable optimizations
+  -f               enable optimizations
+  -fno-            disable optimizations
 backends:
   qproc
   hypercpu (beta)

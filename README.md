@@ -38,7 +38,7 @@ ret;
 >[!WARNING]
 > The project supports GNU/Linux systems only. It is known to be successfully built on `x86_32`, `x86_64`, `ARMv7` and `ARMv8` architectures.
 >
-> The project does not support Windows and \*BSD systems, as well as HyperCPU.
+> Windows and BSD* support is not tested, but it could possibly be built under these systems 
 
 #### Binaries
 
