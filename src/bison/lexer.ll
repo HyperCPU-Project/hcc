@@ -1,5 +1,6 @@
 %option reentrant bison-bridge
 %option noyywrap
+%option nounput
 %option extra-type="hcc::Parser*"
 
 %{

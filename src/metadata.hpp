@@ -12,7 +12,7 @@ namespace hcc {
 
   typedef struct TypeMetadata {
     std::string name;
-    uint8_t size; // in bytes
+    uint8_t size = 1; // in bytes
   } TypeMetadata;
 
   typedef struct FunctionMetadata {

@@ -78,7 +78,7 @@ namespace hcc {
     } call;
 
     struct {
-      uint64_t bytes;
+      uint64_t bytes = 0;
     } reserve;
   };
 
