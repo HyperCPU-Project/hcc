@@ -68,7 +68,7 @@ hcc::Parser* yyget_extra(void*);
 %type <node> program function_definition
 %type <node> expression term factor
 %type <node> statement declaration assignment return_statement
-%type <stmt_list> statement_list
+%type <stmt_list> statement_list block
 %type <node> topstatement
 %type <top_stmt_list> topstatements
 %type <node> asm_statement
@@ -95,16 +95,16 @@ program:
 	;
 
 function_definition:
-	IDENTIFIER IDENTIFIER LPAREN arg_list LBRACE statement_list RBRACE {
+	IDENTIFIER IDENTIFIER LPAREN arg_list block {
 		auto* func = new hcc::AstFuncDef();
 		func->name = *$2;
 		func->args = *$4;
-		for (const auto& stmt : *$6) {
+		for (const auto& stmt : *$5) {
 			func->children.push_back(stmt);
 		}
 		delete $4;
 		delete $2;
-		delete $6;
+		delete $5;
 		delete $1;
 		$$ = func;
 	}
@@ -166,6 +166,14 @@ topstatement:
 	| asm_statement
 	;
 
+block:
+	LBRACE statement_list RBRACE {
+		$$ = $2;
+	}
+	| LBRACE RBRACE {
+		$$ = new std::vector<hcc::AstNode*>();
+	}
+
 statement_list:
 	statement {
 		$$ = new std::vector<hcc::AstNode*>();
@@ -174,9 +182,6 @@ statement_list:
 	| statement_list statement {
 		$1->push_back($2);
 		$$ = $1;
-	}
-	| {
-		$$ = new std::vector<hcc::AstNode*>();
 	}
 	;
 
