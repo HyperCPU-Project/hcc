@@ -49,21 +49,16 @@ Pre-compiled binaries are currently not available. Sorry.
 Building Hyper C Compiler requires these dependencies to be installed:
 
 * GCC `>=12` or Clang `>=14`;
-* GNU make, CMake `>=3.25`;
-* `bison`, `flex` and `fmt` libraries.
+* xmake;
+* `bison`, `flex`, `fmt` and `gtest` libraries.
 
 After installing dependencies build the project by executing these commands:
 
 ```bash
 git clone --recursive https://github.com/HyperCPU-Project/hcc # Clone the repository.
 cd hcc
-cmake -S . -B build # Generate build files.
-cd build
-make
+xmake build
 ```
-
-Besides `hcc` executable file, tests also will be built. If you are not interested in tests, specify `HCC_NO_TESTS=1` CMake build option.
-
 ### Usage
 
 `hcc` executable file is _kinda_ large (*2 MB / 1.9MiB*) because of C++, but whatever.
