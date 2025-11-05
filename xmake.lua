@@ -47,4 +47,6 @@ target("hcctest")
 
 	add_deps("hcc_core")
 	add_packages("gtest")
+
+	set_default(false)
 target_end()
