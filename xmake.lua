@@ -2,7 +2,7 @@ add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "build"}) -- generate compile commands
 add_rules("lex", "yacc")
 
-add_requires("fmt", "bison", "flex", "gtest") -- libs
+add_requires("fmt", "bison", "gtest") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
