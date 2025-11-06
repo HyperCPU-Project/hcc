@@ -27,9 +27,6 @@ uint64_t QprocBackend::increment_reg_index() {
   return res;
 }
 
-void QprocBackend::peephole_optimize() {
-}
-
 void QprocBackend::emit_function_prologue(std::string name) {
   EmitCall c;
   c.type = Backend::EmitCall::FUNCTION_PROLOGUE;
@@ -281,9 +278,10 @@ void QprocBackend::emit_push(std::string reg) {
 }
 
 void QprocBackend::emit_push_imm(long val) {
-  if (codegen_comments)
-    output += "; emit_push_imm\n";
-  output += fmt::sprintf("push %ld\n", val);
+  EmitCall c;
+  c.type = Backend::EmitCall::PUSH_IMM;
+  c.push_imm.val = val;
+  emitcalls.push_back(c);
 }
 
 void QprocBackend::emit_pop(std::string reg) {

@@ -37,6 +37,7 @@ namespace hcc {
         LOADADDR_FROM_STACK,
         CALL,
         PUSH,
+        PUSH_IMM,
         POP,
         SINGLE_RET,
         LABEL,
@@ -97,6 +98,10 @@ namespace hcc {
       struct {
         std::string reg;
       } push;
+
+      struct {
+        long val;
+      } push_imm;
 
       struct {
         std::string reg;

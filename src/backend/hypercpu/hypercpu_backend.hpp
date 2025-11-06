@@ -9,7 +9,6 @@ namespace hcc {
 
     uint64_t increment_reg_index();
 
-    void peephole_optimize() override;
     std::string compile_calls() override;
 
     void emit_function_prologue(std::string name) override;
@@ -33,6 +32,7 @@ namespace hcc {
     void emit_call(std::string name) override;
 
     void emit_push(std::string reg) override;
+    void emit_push_imm(long val) override;
     void emit_pop(std::string reg) override;
 
     void emit_single_ret() override;

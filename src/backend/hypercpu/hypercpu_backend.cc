@@ -26,9 +26,6 @@ uint64_t HyperCPUBackend::increment_reg_index() {
   return res;
 }
 
-void HyperCPUBackend::peephole_optimize() {
-}
-
 void HyperCPUBackend::emit_function_prologue(std::string name) {
   EmitCall c;
   c.type = Backend::EmitCall::FUNCTION_PROLOGUE;
@@ -156,6 +153,13 @@ void HyperCPUBackend::emit_push(std::string reg) {
   EmitCall c;
   c.type = Backend::EmitCall::PUSH;
   c.push.reg = reg;
+  emitcalls.push_back(c);
+}
+
+void HyperCPUBackend::emit_push_imm(long val) {
+  EmitCall c;
+  c.type = Backend::EmitCall::PUSH_IMM;
+  c.push_imm.val = val;
   emitcalls.push_back(c);
 }
 
