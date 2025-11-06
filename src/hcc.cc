@@ -94,7 +94,10 @@ Result<void, std::string> HCC::parseAndCompile() {
     return Result<void, std::string>::error("ir compile error: " + hcc_compile_error);
   }
 
-  fmt::fprintf(outfd, "%s", backend->output);
+  backend->peephole_optimize();
+  asm_output = backend->compile_calls();
+
+  fmt::fprintf(outfd, "%s", asm_output);
 
   if (parser->root)
     delete parser->root;

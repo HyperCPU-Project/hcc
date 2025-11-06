@@ -24,6 +24,7 @@ namespace hcc {
   public:
     std::vector<std::string> sources;
     bool print_ast;
+    std::string asm_output;
 
     Backend* backend;
     IR ir;

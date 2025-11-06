@@ -174,7 +174,8 @@ bool IR::compile(HCC* hcc) {
       */
     } break;
     case IrOpcode::IR_ASM:
-      hcc->backend->output += op.asm_.code + "\n";
+      // TODO: Add a new call in the Backend class for this since emitcalls don't allow doing this
+      // hcc->backend->output += op.asm_.code + "\n";
       break;
     case IrOpcode::IR_VARREF: {
       /*
@@ -223,7 +224,7 @@ hcc->values.push(std::move(out));
 bool IR::results_in_error(HCC* hcc) {
   index = 0;
   bool result = !compile(hcc);
-  hcc->backend->output.clear();
+  hcc->backend->emitcalls.clear();
   index = 0;
   return result;
 }

@@ -26,146 +26,155 @@ uint64_t HyperCPUBackend::increment_reg_index() {
   return res;
 }
 
+void HyperCPUBackend::peephole_optimize() {
+}
+
 void HyperCPUBackend::emit_function_prologue(std::string name) {
-  if (codegen_comments)
-    output += "// emit_function_prologue\n";
-  output += fmt::sprintf("%s:\n", name);
-  output += fmt::sprintf("push xbp;\nmov xbp, xsp;\n");
+  EmitCall c;
+  c.type = Backend::EmitCall::FUNCTION_PROLOGUE;
+  c.function_prologue.name = name;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_function_epilogue() {
-  if (codegen_comments)
-    output += "// emit_function_epilogue\n";
-  output += fmt::sprintf("mov xsp, xbp;\npop xbp;\nret;\n");
+  EmitCall c;
+  c.type = Backend::EmitCall::FUNCTION_EPILOGUE;
+  emitcalls.push_back(c);
 }
 
 std::string HyperCPUBackend::emit_mov_const(uint64_t value, std::string reg_name) {
-  if (codegen_comments)
-    output += "// emit_mov_const\n";
   if (reg_name == "") {
     reg_name = fmt::format("x{}", increment_reg_index());
   }
 
-  output += fmt::sprintf("mov %s, 0u%ld;\n", reg_name, value);
-
+  EmitCall c;
+  c.type = Backend::EmitCall::MOV_CONST;
+  c.mov_const.value = value;
+  c.mov_const.reg_name = reg_name;
+  emitcalls.push_back(c);
   return reg_name;
 }
 
 void HyperCPUBackend::emit_add(std::string ROUT, std::string RLHS, std::string RRHS) {
-  if (codegen_comments)
-    output += "// emit_add\n";
-  if (ROUT != RLHS) {
-    output += fmt::sprintf("add %s, %s;\nmov %s, %s;\n", RLHS, RRHS, ROUT, RLHS);
-    return;
-  }
-  output += fmt::sprintf("add %s, %s;\n", RLHS, RRHS);
+  EmitCall c;
+  c.type = Backend::EmitCall::ADD;
+  c.add.ROUT = ROUT;
+  c.add.RLHS = RLHS;
+  c.add.RRHS = RRHS;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) {
-  if (codegen_comments)
-    output += "// emit_sub\n";
-  if (ROUT != RLHS) {
-    output += fmt::sprintf("sub %s, %s;\nmov %s, %s;\n", RLHS, RRHS, ROUT, RLHS);
-    return;
-  }
-  output += fmt::sprintf("sub %s, %s;\n", RLHS, RRHS);
+  EmitCall c;
+  c.type = Backend::EmitCall::SUB;
+  c.sub.ROUT = ROUT;
+  c.sub.RLHS = RLHS;
+  c.sub.RRHS = RRHS;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) {
-  if (codegen_comments)
-    output += "// emit_mul\n";
-  if (ROUT != RLHS) {
-    output += fmt::sprintf("mul %s, %s;\nmov %s, %s;\n", RLHS, RRHS, ROUT, RLHS);
-    return;
-  }
-  output += fmt::sprintf("mul %s, %s;\n", RLHS, RRHS);
+  EmitCall c;
+  c.type = Backend::EmitCall::MUL;
+  c.mul.ROUT = ROUT;
+  c.mul.RLHS = RLHS;
+  c.mul.RRHS = RRHS;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
-  if (codegen_comments)
-    output += "// emit_div\n";
-  // RLHS - x0
-  // RRHS - x2
-  output += fmt::sprintf("push x1;\n", RLHS);
-  if (RRHS != "x2")
-    output += fmt::sprintf("mov x2, %s;\n", RRHS);
-  output += fmt::sprintf("div %s;\n", RLHS);
-  output += fmt::sprintf("pop x1;\n", RLHS);
-  if (ROUT != RLHS) {
-    output += fmt::sprintf("mov %s, %s;\n", RLHS, ROUT);
-  }
+  EmitCall c;
+  c.type = Backend::EmitCall::DIV;
+  c.div.ROUT = ROUT;
+  c.div.RLHS = RLHS;
+  c.div.RRHS = RRHS;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_move(std::string rdest, std::string rsrc) {
-  if (rdest != rsrc) {
-    if (codegen_comments)
-      output += "// emit_move\n";
-    output += fmt::sprintf("mov %s, %s;\n", rdest, rsrc);
-  }
+  EmitCall c;
+  c.type = Backend::EmitCall::MOVE;
+  c.move.rdest = rdest;
+  c.move.rsrc = rsrc;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_reserve_stack_space(uint64_t size) {
-  if (codegen_comments)
-    output += "// emit_reserve_stack_space\n";
-  output += fmt::sprintf("sub xsp, 0u%ld;\n", size);
+  EmitCall c;
+  c.type = Backend::EmitCall::RESERVE_STACK_SPACE;
+  c.reserve_stack_space.size = size;
+  emitcalls.push_back(c);
 }
 
 std::string HyperCPUBackend::emit_load_from_stack(uint64_t align, uint64_t size, std::string reg) {
-  if (codegen_comments)
-    output += "// emit_load_from_stack\n";
   if (reg.empty()) {
     reg = "x" + std::to_string(increment_reg_index());
   }
-  output += fmt::sprintf("mov %s, b%d ptr [xbp+0u%d];\n", reg, size * 8, (0xff - align + 1));
+
+  EmitCall c;
+  c.type = Backend::EmitCall::LOAD_FROM_STACK;
+  c.load_from_stack.align = align;
+  c.load_from_stack.size = size;
+  c.load_from_stack.load_reg = reg;
+  emitcalls.push_back(c);
   return reg;
 }
 
 void HyperCPUBackend::emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) {
-  if (codegen_comments)
-    output += "// emit_store_from_stack\n";
-  output += fmt::sprintf("mov b%d ptr [xbp+0u%d], %s;\n", size * 8, (0xff - align + 1), rsrc);
+  EmitCall c;
+  c.type = Backend::EmitCall::STORE_FROM_STACK;
+  c.store_from_stack.align = align;
+  c.store_from_stack.size = size;
+  c.store_from_stack.rsrc = rsrc;
+  emitcalls.push_back(c);
 }
 
 std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::string reg) {
-  if (codegen_comments)
-    output += "// emit_loadaddr_from_stack\n";
+
   if (reg.empty())
     reg = std::to_string(increment_reg_index());
-  if (reg == "r0")
+  if (reg == "x0")
     reg = std::to_string(increment_reg_index());
-  reg = "r" + reg;
+  reg = "x" + reg;
 
-  output += fmt::sprintf("mov %s, xbp;\n", reg);
-  output += fmt::sprintf("sub %s, %d;\n", reg, align);
+  EmitCall c;
+  c.type = Backend::EmitCall::LOADADDR_FROM_STACK;
+  c.loadaddr_from_stack.align = align;
+  c.loadaddr_from_stack.load_reg = reg;
+  emitcalls.push_back(c);
   return reg;
 }
 
 void HyperCPUBackend::emit_call(std::string name) {
-  if (codegen_comments)
-    output += "// emit_call\n";
-  output += fmt::sprintf("call %s;\n", name);
+  EmitCall c;
+  c.type = Backend::EmitCall::CALL;
+  c.call.name = name;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_push(std::string reg) {
-  if (codegen_comments)
-    output += "// emit_push\n";
-  output += fmt::sprintf("push %s;\n", reg);
+  EmitCall c;
+  c.type = Backend::EmitCall::PUSH;
+  c.push.reg = reg;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_pop(std::string reg) {
-  if (codegen_comments)
-    output += "// emit_pop\n";
-  output += fmt::sprintf("pop %s;\n", reg);
+  EmitCall c;
+  c.type = Backend::EmitCall::POP;
+  c.pop.reg = reg;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_single_ret() {
-  if (codegen_comments)
-    output += "// emit_single_ret\n";
-  output += "ret;\n";
+  EmitCall c;
+  c.type = Backend::EmitCall::SINGLE_RET;
+  emitcalls.push_back(c);
 }
 
 void HyperCPUBackend::emit_label(std::string name) {
-  if (codegen_comments)
-    output += "// emit_label\n";
-  output += name + ":\n";
+  EmitCall c;
+  c.type = Backend::EmitCall::LABEL;
+  c.label.name = name;
+  emitcalls.push_back(c);
 }

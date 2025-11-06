@@ -22,6 +22,13 @@ void Backend::reset_reg_index() {
   reg_index = 0;
 }
 
+void Backend::peephole_optimize() {
+}
+
+std::string Backend::compile_calls() {
+  return "";
+}
+
 void Backend::emit_function_prologue(std::string name) {
 }
 
