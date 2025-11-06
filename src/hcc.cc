@@ -2,7 +2,7 @@
 #include <backend/qproc/qproc_backend.hpp>
 #include <fmt/printf.h>
 #include <hcc.hpp>
-#include <parser.hpp>
+#include <parser.tab.hpp>
 #include <util.hpp>
 #include <value/value.hpp>
 #include <yy.hpp>

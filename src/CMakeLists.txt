@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.20)
 
 include("../cmake/configuration.cmake")
 
-bison_target(Parser bison/parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.hpp)
-flex_target(Lexer bison/lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp)
+bison_target(Parser bison/parser.yy ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.hpp)
+flex_target(Lexer bison/lexer.ll ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp)
 add_flex_bison_dependency(Lexer Parser)
 
 file(GLOB HCC_LIB_SOURCES CONFIGURE_DEPENDS "*.cc" "ast/*.cc" "backend/*/*.cc" "backend/*.cc" "value/*.cc" "ir/*.cc" "ir/optimizations/*.cc")

@@ -3,7 +3,7 @@
 %option extra-type="hcc::Parser*"
 
 %{
-#include "parser.hpp"
+#include "parser.tab.hpp"
 #include <string>
 
 typedef void* yyscan_t;
