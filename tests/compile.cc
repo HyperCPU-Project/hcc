@@ -38,8 +38,8 @@ Result<void, std::string> compile_quick(std::string code, std::string backend) {
     if (result.is_error())
       return result;
 
-    compile_output = readFile("tests_tmp/a.out").get_success().value();
-    compile_output = hcc.backend->output;
+    // compile_output = readFile("tests_tmp/a.out").get_success().value();
+    compile_output = hcc.asm_output;
     /*
     fmt::println("-------");
     fmt::println("{}", hcc.backend->output);

@@ -22,6 +22,10 @@ void Backend::reset_reg_index() {
   reg_index = 0;
 }
 
+std::string Backend::compile_calls() {
+  return "";
+}
+
 void Backend::emit_function_prologue(std::string name) {
 }
 
@@ -65,6 +69,8 @@ void Backend::emit_call(std::string name) {
 }
 
 void Backend::emit_push(std::string reg) {
+}
+void Backend::emit_push_imm(long val) {
 }
 void Backend::emit_pop(std::string reg) {
 }

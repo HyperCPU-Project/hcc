@@ -8,6 +8,7 @@ namespace hcc {
   typedef struct ABIMetadata {
     std::string return_register;
     std::vector<std::string> args_registers;
+    std::vector<std::string> registers;
   } ABIMetadata;
 
   typedef struct TypeMetadata {
@@ -18,6 +19,6 @@ namespace hcc {
   typedef struct FunctionMetadata {
     std::string name;
     uint64_t align;
-    std::map<std::string, std::unique_ptr<Value>> variables;
+    std::map<std::string, size_t> variables;
   } FunctionMetadata;
 } // namespace hcc

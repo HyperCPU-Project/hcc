@@ -1,6 +1,5 @@
 #include <ast/ast.hpp>
 #include <hcc.hpp>
-#include <value/value.hpp>
 
 using namespace hcc;
 
@@ -19,12 +18,14 @@ AstReturn::~AstReturn() {
 bool AstReturn::compile(HCC* hcc) {
   hcc->ir.add_reset();
 
+  IrOpcode op;
+
   if (expr) {
     if (!expr->compile(hcc))
       return false;
+    op.ret.has_value = true;
   }
 
-  IrOpcode op;
   op.type = IrOpcode::IR_RET;
 
   hcc->ir.add(op);

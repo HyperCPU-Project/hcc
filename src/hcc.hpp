@@ -24,6 +24,7 @@ namespace hcc {
   public:
     std::vector<std::string> sources;
     bool print_ast;
+    std::string asm_output;
 
     Backend* backend;
     IR ir;
@@ -37,7 +38,6 @@ namespace hcc {
     Flags<Optimization> optimizations;
 
     FunctionMetadata current_function;
-    std::stack<std::unique_ptr<Value>> values;
 
     HCC();
     ~HCC();
