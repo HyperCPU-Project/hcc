@@ -42,10 +42,10 @@ std::string QprocBackend::compile_calls() {
     case Backend::EmitCall::MUL:
       if (codegen_comments)
         output += "; emit_mul\n";
-      if (ec.sub.ROUT != ec.sub.RLHS) {
-        output += fmt::sprintf("mul %s %s\nmov %s %s\n", ec.sub.RLHS, ec.sub.RRHS, ec.sub.ROUT, ec.sub.RLHS);
+      if (ec.mul.ROUT != ec.mul.RLHS) {
+        output += fmt::sprintf("mul %s %s\nmov %s %s\n", ec.mul.RLHS, ec.mul.RRHS, ec.mul.ROUT, ec.mul.RLHS);
       } else
-        output += fmt::sprintf("mul %s %s\n", ec.sub.RLHS, ec.sub.RRHS);
+        output += fmt::sprintf("mul %s %s\n", ec.mul.RLHS, ec.mul.RRHS);
       break;
     case Backend::EmitCall::DIV:
       if (codegen_comments)
