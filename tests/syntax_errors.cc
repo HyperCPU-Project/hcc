@@ -1,5 +1,5 @@
 #include "yy.hpp"
-#include <compile.hpp>
+#include "compile.hpp"
 #include <gtest/gtest.h>
 
 TEST(HCCTest, LineErrorTest) {

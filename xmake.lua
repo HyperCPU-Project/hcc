@@ -6,30 +6,42 @@ add_requires("fmt", "bison", "gtest") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
-add_includedirs("src") -- includes for all targets
+add_includedirs("src/Core", "src/Common", "src") -- includes for all targets
 
-target("hcc_core")
+target("hcc_common")
 	set_kind("static")
 	add_files(
-		"src/*.cc",
-		"src/ast/*.cc",
-		"src/backend/*/*.cc",
-		"src/backend/*.cc",
-		"src/ir/*.cc"
+		"src/Common/*.cc"
 	)
-	add_files("src/ir/optimizations/*.cc")
-
-	add_files("src/bison/*.ll", "src/bison/*.yy")
 
 	set_pcxxheader("global_pch.hpp")
 
 	add_packages("fmt")
 target_end()
 
+target("hcc_core")
+	set_kind("static")
+	add_files(
+		"src/Core/*.cc",
+		"src/Core/ast/*.cc",
+		"src/Core/backend/*/*.cc",
+		"src/Core/backend/*.cc",
+		"src/Core/ir/*.cc"
+	)
+	add_files("src/Core/ir/optimizations/*.cc")
+
+	add_files("src/Core/bison/*.ll", "src/Core/bison/*.yy")
+
+	set_pcxxheader("global_pch.hpp")
+
+	add_deps("hcc_common")
+	add_packages("fmt")
+target_end()
+
 
 target("hcc")
 	set_kind("binary")
-	add_files("src/main/main.cc")
+	add_files("src/Main/main.cc")
 
 	set_pcxxheader("global_pch.hpp")
 
@@ -38,7 +50,7 @@ target("hcc")
 target_end()
 
 
-target("hcctest")
+target("hcc_test")
 	set_kind("binary")
 	add_files(
 		"tests/*.cc"
