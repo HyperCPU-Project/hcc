@@ -123,6 +123,11 @@ bool IR::compile(HCC* hcc) {
     case IrOpcode::IR_ALLOCA: {
       /* std::unique_ptr<Value> value(Value::createAsStackVar(hcc, op.alloca.md, false));
        hcc->current_function.variables[op.alloca.name] = std::move(value); */
+      size_t align;
+      align = hcc->current_function.align + op.alloca.md.size;
+      hcc->current_function.variables[op.alloca.name] = align;
+
+      // hcc->backend->emit_reserve_stack_space(op.alloca.md.size);
     } break;
     case IrOpcode::IR_ADD: {
       hcc->backend->emit_pop(hcc->backend->abi.registers[1]);
@@ -149,19 +154,23 @@ bool IR::compile(HCC* hcc) {
       hcc->backend->emit_push(hcc->backend->abi.registers[0]);
     } break;
     case IrOpcode::IR_ASSIGN: {
+      if (!hcc->current_function.variables.contains(op.assign.name)) {
+        hcc_compile_error = fmt::sprintf("undefined variable %s", op.assign.name);
+        return false;
+      }
+
+      size_t align = hcc->current_function.variables[op.assign.name];
+      std::string reg = hcc->backend->abi.registers[1];
+
+      hcc->backend->emit_pop(reg);
+      hcc->backend->emit_store_from_stack(align, 4, reg);
       /*
-if (!hcc->current_function.variables.contains(op.assign.name)) {
-hcc_compile_error = fmt::sprintf("undefined variable %s", op.assign.name);
-return false;
-}
 
-auto& expr_var = hcc->current_function.variables[op.assign.name];
+      auto expr_value = std::move(hcc->values.top());
+      hcc->values.pop();
 
-auto expr_value = std::move(hcc->values.top());
-hcc->values.pop();
-
-expr_var->setto(hcc, expr_value.get());
-*/
+      expr_var->setto(hcc, expr_value.get());
+      */
     } break;
     case IrOpcode::IR_ASM:
       hcc->backend->output += op.asm_.code + "\n";
