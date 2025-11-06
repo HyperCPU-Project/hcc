@@ -40,11 +40,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libfmt-dev build-essential bison flex xmake
+          sudo apt-get install -y libfmt-dev build-essential bison flex xmake libgtest-dev
 
       - name: Build
         run: |
-          xrepo install -y gtest
           xmake build
           mv $(find build/linux -name "hcc") ./hcc-x86_64
 
