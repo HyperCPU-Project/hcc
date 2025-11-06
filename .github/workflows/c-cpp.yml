@@ -49,6 +49,7 @@ jobs:
 
       - name: Test
         run: |
+          xmake build hcc_test
           xmake run hcc_test
 
       - name: Upload artifact
