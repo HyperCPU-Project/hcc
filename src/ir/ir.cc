@@ -186,6 +186,7 @@ bool IR::compile(HCC* hcc) {
       size_t off = hcc->current_function.variables[op.varref.name];
       std::string reg = hcc->backend->abi.registers[0];
       hcc->backend->emit_load_from_stack(off, 4, reg);
+      // TODO: Size is constant, add type info for vars
       hcc->backend->emit_push(reg);
     } break;
     case IrOpcode::IR_ADDROF: {
