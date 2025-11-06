@@ -43,6 +43,7 @@ namespace hcc {
     virtual void emit_call(std::string name);
 
     virtual void emit_push(std::string reg);
+    virtual void emit_push_imm(long val);
     virtual void emit_pop(std::string reg);
 
     virtual void emit_single_ret();

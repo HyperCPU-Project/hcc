@@ -66,6 +66,8 @@ void Backend::emit_call(std::string name) {
 
 void Backend::emit_push(std::string reg) {
 }
+void Backend::emit_push_imm(long val) {
+}
 void Backend::emit_pop(std::string reg) {
 }
 

@@ -14,6 +14,9 @@ QprocBackend::QprocBackend() {
   for (int i = 2; i <= 12; i++) {
     abi.args_registers.push_back(fmt::format("r{}", i));
   }
+  for (int i = 0; i <= 12; i++) {
+    abi.registers.push_back(fmt::format("r{}", i));
+  }
 }
 
 uint64_t QprocBackend::increment_reg_index() {
@@ -172,6 +175,12 @@ void QprocBackend::emit_push(std::string reg) {
   if (codegen_comments)
     output += "; emit_push\n";
   output += fmt::sprintf("push %s\n", reg);
+}
+
+void QprocBackend::emit_push_imm(long val) {
+  if (codegen_comments)
+    output += "; emit_push_imm\n";
+  output += fmt::sprintf("push %ld\n", val);
 }
 
 void QprocBackend::emit_pop(std::string reg) {

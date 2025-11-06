@@ -4,7 +4,6 @@
 #include <hcc.hpp>
 #include <parser.hpp>
 #include <util.hpp>
-#include <value/value.hpp>
 #include <yy.hpp>
 
 using namespace hcc;
@@ -18,7 +17,7 @@ void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
 std::string hcc_compile_error = "";
 
 HCC::HCC()
-    : outfd(nullptr), print_ast(false), backend(nullptr), values() {
+    : outfd(nullptr), print_ast(false), backend(nullptr) {
   parser = new Parser();
 
   current_function.align = 0;

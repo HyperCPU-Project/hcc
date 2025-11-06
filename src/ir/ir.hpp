@@ -53,6 +53,10 @@ namespace hcc {
     } csv;
 
     struct {
+      bool has_value = false;
+    } ret;
+
+    struct {
       TypeMetadata md;
       std::string name;
     } alloca;
@@ -93,7 +97,6 @@ namespace hcc {
     void optimize_dce_unused(HCC* hcc);
     void optimize_stack_setup(HCC* hcc);
     void optimize_stack_reserve(HCC* hcc);
-    void optimize_constant_propagation(HCC* hcc);
 
   public:
     size_t passes_for_each_optimization = 64;

@@ -13,6 +13,9 @@ HyperCPUBackend::HyperCPUBackend() {
   for (int i = 2; i <= 7; i++) {
     abi.args_registers.push_back(fmt::format("x{}", i));
   }
+  for (int i = 0; i <= 7; i++) {
+    abi.registers.push_back(fmt::format("x{}", i));
+  }
 }
 
 uint64_t HyperCPUBackend::increment_reg_index() {

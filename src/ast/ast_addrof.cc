@@ -1,7 +1,6 @@
 #include <ast/ast.hpp>
 #include <hcc.hpp>
 #include <ir/ir.hpp>
-#include <value/value.hpp>
 
 using namespace hcc;
 
