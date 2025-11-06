@@ -63,9 +63,11 @@ void IR::performStaticOptimizations(HCC* hcc) {
     add(op);
   }
 
+  /*
   for (IrOpcode& op : ir) {
     fmt::println("{}", (int)op.type);
   }
+  */
 
   if (hcc->optimizations.HasFlag(HCC::OPT_CONSTANT_PROPAGATION)) {
     optimize_constant_propagation(hcc);
@@ -122,13 +124,9 @@ bool IR::compile(HCC* hcc) {
         hcc->backend->emit_single_ret();
     } break;
     case IrOpcode::IR_ALLOCA: {
-      /* std::unique_ptr<Value> value(Value::createAsStackVar(hcc, op.alloca.md, false));
-       hcc->current_function.variables[op.alloca.name] = std::move(value); */
-      size_t align;
-      align = hcc->current_function.align + op.alloca.md.size;
-      hcc->current_function.variables[op.alloca.name] = align;
-
-      // hcc->backend->emit_reserve_stack_space(op.alloca.md.size);
+      size_t offset;
+      offset = hcc->current_function.align + op.alloca.md.size;
+      hcc->current_function.variables[op.alloca.name] = VariableMetadata(offset, op.alloca.md);
     } break;
     case IrOpcode::IR_ADD: {
       hcc->backend->emit_pop(hcc->backend->abi.registers[1]);
@@ -160,11 +158,12 @@ bool IR::compile(HCC* hcc) {
         return false;
       }
 
-      size_t align = hcc->current_function.variables[op.assign.name];
+      auto& var = hcc->current_function.variables[op.varref.name];
+      size_t align = var.offset;
       std::string reg = hcc->backend->abi.registers[1];
 
       hcc->backend->emit_pop(reg);
-      hcc->backend->emit_store_from_stack(align, 4, reg);
+      hcc->backend->emit_store_from_stack(align, var.type.size, reg);
       /*
 
       auto expr_value = std::move(hcc->values.top());
@@ -178,15 +177,14 @@ bool IR::compile(HCC* hcc) {
       // hcc->backend->output += op.asm_.code + "\n";
       break;
     case IrOpcode::IR_VARREF: {
-
       if (!hcc->current_function.variables.contains(op.varref.name)) {
         hcc_compile_error = fmt::sprintf("undefined variable %s", op.varref.name);
         return false;
       }
-      size_t off = hcc->current_function.variables[op.varref.name];
+
+      auto& var = hcc->current_function.variables[op.varref.name];
       std::string reg = hcc->backend->abi.registers[0];
-      hcc->backend->emit_load_from_stack(off, 4, reg);
-      // TODO: Size is constant, add type info for vars
+      hcc->backend->emit_load_from_stack(var.offset, var.type.size, reg);
       hcc->backend->emit_push(reg);
     } break;
     case IrOpcode::IR_ADDROF: {
