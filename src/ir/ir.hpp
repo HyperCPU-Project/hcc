@@ -94,6 +94,7 @@ namespace hcc {
     IrOpcode next();
     IrOpcode peek(unsigned long count = 1);
 
+    void optimize_constant_propagation(HCC* hcc);
     void optimize_dce_unused(HCC* hcc);
     void optimize_stack_setup(HCC* hcc);
     void optimize_stack_reserve(HCC* hcc);

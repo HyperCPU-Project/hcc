@@ -63,8 +63,12 @@ void IR::performStaticOptimizations(HCC* hcc) {
     add(op);
   }
 
+  for (IrOpcode& op : ir) {
+    fmt::println("{}", (int)op.type);
+  }
+
   if (hcc->optimizations.HasFlag(HCC::OPT_CONSTANT_PROPAGATION)) {
-    // optimize_constant_propagation(hcc);
+    optimize_constant_propagation(hcc);
   }
   if (hcc->optimizations.HasFlag(HCC::OPT_DCE)) {
     optimize_dce_unused(hcc);
@@ -78,9 +82,6 @@ void IR::performStaticOptimizations(HCC* hcc) {
 }
 
 bool IR::compile(HCC* hcc) {
-  /*for (IrOpcode& op : ir) {
-    fmt::println("{}", (int)op.type);
-  }*/
   IrOpcode currentFuncdefOp;
   for (;;) {
     IrOpcode op = next();
