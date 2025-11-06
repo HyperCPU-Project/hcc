@@ -42,7 +42,7 @@ jobs:
 
       - name: Build
         run: |
-          xrepo install gtest -y
+          xrepo install -y gtest
           xmake build
           mv $(find build/linux -name "hcc") ./hcc-x86_64
 
