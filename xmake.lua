@@ -15,7 +15,6 @@ target("hcc_core")
 		"src/ast/*.cc",
 		"src/backend/*/*.cc",
 		"src/backend/*.cc",
-		"src/value/*.cc",
 		"src/ir/*.cc"
 	)
 	add_files("src/ir/optimizations/*.cc")
