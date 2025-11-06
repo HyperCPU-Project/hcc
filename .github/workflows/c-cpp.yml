@@ -12,6 +12,7 @@ on:
       - "CMakeLists.txt"
       - "*.hpp"
       - "xmake.lua"
+      - ".github/workflows/**"
   pull_request:
     branches:
       - "**"
@@ -23,6 +24,7 @@ on:
       - "CMakeLists.txt"
       - "*.hpp"
       - "xmake.lua"
+      - ".github/workflows/**"
 
 jobs:
   build:
