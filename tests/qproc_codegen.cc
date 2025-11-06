@@ -1,4 +1,4 @@
-#include <compile.hpp>
+#include "compile.hpp"
 #include <gtest/gtest.h>
 
 TEST(HCCTest, FunctionQprocCodegenTest) {

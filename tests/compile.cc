@@ -1,7 +1,7 @@
-#include <compile.hpp>
+#include "compile.hpp"
+#include "main.hpp"
 #include <cstdio>
 #include <filesystem>
-#include <main.hpp>
 #include <pch.hpp>
 #include <string>
 #include <util.hpp>
