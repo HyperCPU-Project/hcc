@@ -27,10 +27,6 @@ uint64_t QprocBackend::increment_reg_index() {
 void QprocBackend::peephole_optimize() {
 }
 
-std::string QprocBackend::compile_calls() {
-  return "";
-}
-
 void QprocBackend::emit_function_prologue(std::string name) {
   EmitCall c;
   c.type = Backend::EmitCall::FUNCTION_PROLOGUE;
