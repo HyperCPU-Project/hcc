@@ -2,9 +2,27 @@ name: C/C++ CI
 
 on:
   push:
-    branches: ["master"]
+    branches:
+      - "**"
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "hccstd/**"
+      - "cmake/**"
+      - "CMakeLists.txt"
+      - "*.hpp"
+      - "xmake.lua"
   pull_request:
-    branches: ["master"]
+    branches:
+      - "**"
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "hccstd/**"
+      - "cmake/**"
+      - "CMakeLists.txt"
+      - "*.hpp"
+      - "xmake.lua"
 
 jobs:
   build:
@@ -20,16 +38,17 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libfmt-dev build-essential cmake
+          sudo apt-get install -y libfmt-dev build-essential bison flex xmake
 
       - name: Build
         run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Debug
-          make -j$(nproc)
-          ./hcctest
-          mv hcc ../hcc-x86_64
+          xrepo install gtest -y
+          xmake build
+          mv $(find build/linux -name "hcc") ./hcc-x86_64
+
+      - name: Test
+        run: |
+          xmake run hcctest
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

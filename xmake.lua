@@ -39,7 +39,7 @@ target("hcc")
 target_end()
 
 
-target("hcctest")
+target("hcc_test")
 	set_kind("binary")
 	add_files(
 		"tests/*.cc"
