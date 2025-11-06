@@ -1,0 +1,2 @@
+# github sees .ll files as llvm ir, since we use C++ in those files and xmake needs .ll extension to compile flex with c++, we override it to lex
+*.ll linguist-language=Lex
