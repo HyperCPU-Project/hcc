@@ -70,40 +70,40 @@ std::string QprocBackend::compile_calls() {
     case Backend::EmitCall::LOAD_FROM_STACK:
       if (codegen_comments)
         output += "; emit_load_from_stack\n";
-      output += fmt::sprintf("mov r0 bp\n");
-      output += fmt::sprintf("movi r1 %d\n", ec.load_from_stack.align);
-      output += fmt::sprintf("sub r0 r1\n");
+      output += fmt::sprintf("mov r2 bp\n");
+      output += fmt::sprintf("movi r3 %d\n", ec.load_from_stack.align);
+      output += fmt::sprintf("sub r2 r3\n");
       if (ec.load_from_stack.size == 1)
-        output += fmt::sprintf("lod %s byte r0\n", ec.load_from_stack.load_reg);
+        output += fmt::sprintf("lod %s byte r2\n", ec.load_from_stack.load_reg);
       if (ec.load_from_stack.size == 2)
-        output += fmt::sprintf("lod %s word r0\n", ec.load_from_stack.load_reg);
+        output += fmt::sprintf("lod %s word r2\n", ec.load_from_stack.load_reg);
       else
-        output += fmt::sprintf("lod %s dword r0\n", ec.load_from_stack.load_reg);
+        output += fmt::sprintf("lod %s dword r2\n", ec.load_from_stack.load_reg);
       break;
     case Backend::EmitCall::STORE_FROM_STACK: {
       if (codegen_comments)
         output += "; emit_store_from_stack\n";
-      bool is_used_reg = (ec.store_from_stack.rsrc == "r0" || ec.store_from_stack.rsrc == "r1");
+      bool is_used_reg = (ec.store_from_stack.rsrc == "r2" || ec.store_from_stack.rsrc == "r3");
 
       if (is_used_reg)
         output += fmt::sprintf("push %s\n", ec.store_from_stack.rsrc);
-      output += fmt::sprintf("mov r0 bp\n");
-      output += fmt::sprintf("movi r1 %d\n", ec.store_from_stack.align);
-      output += fmt::sprintf("sub r0 r1\n");
-      if (ec.store_from_stack.rsrc == "r0") {
+      output += fmt::sprintf("mov r2 bp\n");
+      output += fmt::sprintf("movi r3 %d\n", ec.store_from_stack.align);
+      output += fmt::sprintf("sub r2 r3\n");
+      if (ec.store_from_stack.rsrc == "r2") {
         output += fmt::sprintf("  ");
         is_used_reg = true;
-        ec.store_from_stack.rsrc = "r1";
+        ec.store_from_stack.rsrc = "r3";
       }
       if (is_used_reg)
         output += fmt::sprintf("pop %s\n", ec.store_from_stack.rsrc);
 
       if (ec.store_from_stack.size == 1)
-        output += fmt::sprintf("str byte r0 %s\n", ec.store_from_stack.rsrc);
+        output += fmt::sprintf("str byte r2 %s\n", ec.store_from_stack.rsrc);
       if (ec.store_from_stack.size == 2)
-        output += fmt::sprintf("str word r0 %s\n", ec.store_from_stack.rsrc);
+        output += fmt::sprintf("str word r2 %s\n", ec.store_from_stack.rsrc);
       else
-        output += fmt::sprintf("str dword r0 %s\n", ec.store_from_stack.rsrc);
+        output += fmt::sprintf("str dword r2 %s\n", ec.store_from_stack.rsrc);
     } break;
     case Backend::EmitCall::LOADADDR_FROM_STACK:
       if (codegen_comments)

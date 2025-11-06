@@ -178,15 +178,15 @@ bool IR::compile(HCC* hcc) {
       // hcc->backend->output += op.asm_.code + "\n";
       break;
     case IrOpcode::IR_VARREF: {
-      /*
-if (!hcc->current_function.variables.contains(op.varref.name)) {
-hcc_compile_error = fmt::sprintf("undefined variable %s", op.varref.name);
-return false;
-}
 
-std::unique_ptr<Value> out(hcc->current_function.variables[op.varref.name]->doCondLod(hcc));
-
-hcc->values.push(std::move(out));*/
+      if (!hcc->current_function.variables.contains(op.varref.name)) {
+        hcc_compile_error = fmt::sprintf("undefined variable %s", op.varref.name);
+        return false;
+      }
+      size_t off = hcc->current_function.variables[op.varref.name];
+      std::string reg = hcc->backend->abi.registers[0];
+      hcc->backend->emit_load_from_stack(off, 4, reg);
+      hcc->backend->emit_push(reg);
     } break;
     case IrOpcode::IR_ADDROF: {
       /*
