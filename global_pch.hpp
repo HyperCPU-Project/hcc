@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <eternal.hpp>
+#include <mapbox/eternal.hpp>
 #include <filesystem>
 #include <fmt/format.h>
 #include <fmt/printf.h>

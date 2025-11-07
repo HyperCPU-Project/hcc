@@ -1,3 +1,6 @@
 [submodule "dist/googletest"]
-	path = dist/googletest
+	path = foreign/googletest
 	url = https://github.com/google/googletest/
+[submodule "foreign/eternal"]
+	path = foreign/eternal
+	url = https://github.com/mapbox/eternal
