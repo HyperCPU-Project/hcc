@@ -77,7 +77,7 @@ void Backend::EmitLabel(std::string name) {
 
 TypeMetadata* Backend::GetTypeFromName(std::string name) {
   if (!types.contains(name)) {
-    hccCompileError = fmt::sprintf("unknown type %s", name);
+    hcc_compile_error = fmt::sprintf("unknown type %s", name);
     return nullptr;
   }
 

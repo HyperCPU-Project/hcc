@@ -12,7 +12,7 @@
 #define hccprivate private:
 #endif
 
-extern std::string hccCompileError;
+extern std::string hcc_compile_error;
 
 namespace hcc {
   class Value;

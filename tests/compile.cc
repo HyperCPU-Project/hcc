@@ -23,7 +23,7 @@ Result<void, std::string> compileQuick(std::string code, std::string backend) {
 
   hcc.sources.push_back(filename);
 
-  hcc.outfd = fopen("tests_tmp/a.out", "w");
+  hcc.out_fd = fopen("tests_tmp/a.out", "w");
 
   fmt::print("[hcctest] compiling temp C file {}\n", filename);
 

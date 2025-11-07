@@ -15,7 +15,7 @@ void yylex_init(yyscan_t*);
 void yylex_destroy(yyscan_t);
 void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
 
-std::string hccCompileError = "";
+std::string hcc_compile_error = "";
 
 HCC::HCC()
     : out_fd(nullptr), print_ast(false), backend(nullptr), values() {
@@ -45,7 +45,7 @@ Result<void, std::string> HCC::ParseAndCompile() {
   yyset_extra(this->parser, scanner);
 
   hcc_parse_error.clear();
-  hccCompileError.clear();
+  hcc_compile_error.clear();
 
   if (sources.empty()) {
     return Result<void, std::string>::Error("no sources provided");
@@ -84,15 +84,15 @@ Result<void, std::string> HCC::ParseAndCompile() {
   }
 
   if (!parser->root->Compile(this)) {
-    return Result<void, std::string>::Error("compile error: " + hccCompileError);
+    return Result<void, std::string>::Error("compile error: " + hcc_compile_error);
   }
 
   if (ir.resultsInError(this)) {
-    return Result<void, std::string>::Error("ir compile error: " + hccCompileError);
+    return Result<void, std::string>::Error("ir compile error: " + hcc_compile_error);
   }
   ir.PerformStaticOptimizations(this);
   if (!ir.compile(this)) {
-    return Result<void, std::string>::Error("ir compile error: " + hccCompileError);
+    return Result<void, std::string>::Error("ir compile error: " + hcc_compile_error);
   }
 
   fmt::fprintf(out_fd, "%s", backend->output);
