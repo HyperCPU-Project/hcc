@@ -5,4 +5,3 @@ include("../cmake/configuration.cmake")
 add_subdirectory("Common")
 add_subdirectory("Core")
 add_subdirectory("Main")
-

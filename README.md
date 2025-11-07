@@ -36,9 +36,9 @@ ret;
 ### Installation
 
 >[!WARNING]
-> The project supports GNU/Linux systems only. It is known to be successfully built on `x86_32`, `x86_64`, `ARMv7` and `ARMv8` architectures.
+> The project supports GNU/Linux and Windows (msys2) systems only. On GNU/Linux, it is known to be successfully built on `x86_32`, `x86_64`, `ARMv7` and `ARMv8` architectures.
 >
-> Windows and BSD* support is not tested, but it could possibly be built under these systems 
+> BSD* support is not tested, but it could possibly be built under this system
 
 #### Binaries
 
