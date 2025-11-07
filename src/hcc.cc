@@ -22,12 +22,12 @@ HCC::HCC()
   parser = new Parser();
 
   current_function.align = 0;
-  optimizations.SetFlag(OPT_CONSTANT_FOLDING);
-  optimizations.SetFlag(OPT_FUNCTION_BODY_ELIMINATION);
-  optimizations.SetFlag(OPT_DCE);
-  optimizations.SetFlag(OPT_FP_OMISSION);
-  optimizations.SetFlag(OPT_STACK_RESERVE);
-  optimizations.SetFlag(OPT_CONSTANT_PROPAGATION);
+  optimizations.SetFlag(Optimization::OPT_CONSTANT_FOLDING);
+  optimizations.SetFlag(Optimization::OPT_FUNCTION_BODY_ELIMINATION);
+  optimizations.SetFlag(Optimization::OPT_DCE);
+  optimizations.SetFlag(Optimization::OPT_FP_OMISSION);
+  optimizations.SetFlag(Optimization::OPT_STACK_RESERVE);
+  optimizations.SetFlag(Optimization::OPT_CONSTANT_PROPAGATION);
 }
 
 HCC::~HCC() {
@@ -124,16 +124,16 @@ Result<void, std::string> HCC::selectBackend(std::string name) {
   return Result<void, std::string>::success();
 }
 
-HCC::Optimization HCC::getOptimizationFromName(std::string name) {
-  auto names = mapbox::eternal::map<mapbox::eternal::string, HCC::Optimization>({{"constant-folding", OPT_CONSTANT_FOLDING},
-                                                                                 {"emit-frame-pointer", OPT_FP_OMISSION},
-                                                                                 {"function-body-elimination", OPT_FUNCTION_BODY_ELIMINATION},
-                                                                                 {"dce", OPT_DCE},
-                                                                                 {"stack-reserve", OPT_STACK_RESERVE},
-                                                                                 {"constant-propagation", OPT_CONSTANT_PROPAGATION}});
+std::optional<Optimization> HCC::getOptimizationFromName(std::string name) {
+  auto names = mapbox::eternal::map<mapbox::eternal::string, Optimization>({{"constant-folding", Optimization::OPT_CONSTANT_FOLDING},
+                                                                            {"emit-frame-pointer", Optimization::OPT_FP_OMISSION},
+                                                                            {"function-body-elimination", Optimization::OPT_FUNCTION_BODY_ELIMINATION},
+                                                                            {"dce", Optimization::OPT_DCE},
+                                                                            {"stack-reserve", Optimization::OPT_STACK_RESERVE},
+                                                                            {"constant-propagation", Optimization::OPT_CONSTANT_PROPAGATION}});
 
   if (!names.contains(name.c_str()))
-    return (Optimization)-1;
+    return {};
 
   return names.at(name.c_str());
 }

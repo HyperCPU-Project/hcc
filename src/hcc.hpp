@@ -2,6 +2,7 @@
 #include <backend/backend.hpp>
 #include <flags.hpp>
 #include <ir/ir.hpp>
+#include <optimization.hpp>
 #include <pch.hpp>
 #include <result.hpp>
 #include <yy.hpp>
@@ -28,12 +29,6 @@ namespace hcc {
     Backend* backend;
     IR ir;
 
-    enum Optimization { OPT_CONSTANT_FOLDING,
-                        OPT_FUNCTION_BODY_ELIMINATION,
-                        OPT_DCE,
-                        OPT_FP_OMISSION,
-                        OPT_STACK_RESERVE,
-                        OPT_CONSTANT_PROPAGATION };
     Flags<Optimization> optimizations;
 
     FunctionMetadata current_function;
@@ -48,7 +43,7 @@ namespace hcc {
 
     Result<void, std::string> selectBackend(std::string name);
 
-    Optimization getOptimizationFromName(std::string name);
+    std::optional<Optimization> getOptimizationFromName(std::string name);
 
     FILE* getOutFd();
   };

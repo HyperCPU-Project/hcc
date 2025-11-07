@@ -45,11 +45,12 @@ backends:
       std::string optimization_name = arg;
       optimization_name.erase(optimization_name.begin(), optimization_name.begin() + 5);
 
-      HCC::Optimization optimization = hcc.getOptimizationFromName(optimization_name);
-      if (optimization == (HCC::Optimization)-1) {
+      std::optional<Optimization> optimization_opt = hcc.getOptimizationFromName(optimization_name);
+      if (!optimization_opt.has_value()) {
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
+        Optimization optimization = optimization_opt.value();
         if (hcc.optimizations.HasFlag(optimization))
           hcc.optimizations.UnsetFlag(optimization);
       }
@@ -57,11 +58,12 @@ backends:
       std::string optimization_name = arg;
       optimization_name.erase(optimization_name.begin(), optimization_name.begin() + 2);
 
-      HCC::Optimization optimization = hcc.getOptimizationFromName(optimization_name);
-      if (optimization == (HCC::Optimization)-1) {
+      std::optional<Optimization> optimization_opt = hcc.getOptimizationFromName(optimization_name);
+      if (!optimization_opt.has_value()) {
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
+        Optimization optimization = optimization_opt.value();
         hcc.optimizations.SetFlag(optimization);
       }
     } else if (arg.starts_with("-")) {

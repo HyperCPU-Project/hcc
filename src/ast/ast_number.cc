@@ -14,7 +14,7 @@ void AstNumber::print(int indent) const {
 
 bool AstNumber::compile(HCC* hcc) {
   IrOpcode op;
-  if (hcc->optimizations.HasFlag(HCC::OPT_CONSTANT_FOLDING)) {
+  if (hcc->optimizations.HasFlag(Optimization::OPT_CONSTANT_FOLDING)) {
     op.type = IrOpcode::IR_CCTV;
     op.cctv.value = value;
   } else {

@@ -64,16 +64,16 @@ void IR::performStaticOptimizations(HCC* hcc) {
     add(op);
   }
 
-  if (hcc->optimizations.HasFlag(HCC::OPT_CONSTANT_PROPAGATION)) {
+  if (hcc->optimizations.HasFlag(Optimization::OPT_CONSTANT_PROPAGATION)) {
     optimize_constant_propagation(hcc);
   }
-  if (hcc->optimizations.HasFlag(HCC::OPT_DCE)) {
+  if (hcc->optimizations.HasFlag(Optimization::OPT_DCE)) {
     optimize_dce_unused(hcc);
   }
-  if (hcc->optimizations.HasFlag(HCC::OPT_FP_OMISSION)) {
+  if (hcc->optimizations.HasFlag(Optimization::OPT_FP_OMISSION)) {
     optimize_stack_setup(hcc);
   }
-  if (hcc->optimizations.HasFlag(HCC::OPT_STACK_RESERVE)) {
+  if (hcc->optimizations.HasFlag(Optimization::OPT_STACK_RESERVE)) {
     optimize_stack_reserve(hcc);
   }
 }
@@ -94,7 +94,7 @@ bool IR::compile(HCC* hcc) {
       return false;
       break;
     case IrOpcode::IR_FUNCDEF:
-      if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(HCC::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
+      if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(Optimization::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
         hcc->backend->emit_label(op.funcdef.name);
         hcc->backend->emit_single_ret();
         next();
