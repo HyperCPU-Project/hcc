@@ -17,30 +17,30 @@ public:
     return Result(ErrorTag{}, error);
   }
 
-  bool isSuccess() const {
-    return successValue.has_value();
+  bool IsSuccess() const {
+    return success_value.has_value();
   }
 
-  bool isError() const {
-    return errorValue.has_value();
+  bool IsError() const {
+    return error_value.has_value();
   }
 
-  std::optional<T> getSuccess() const {
-    return successValue;
+  std::optional<T> GetSuccess() const {
+    return success_value;
   }
 
-  std::optional<E> getError() const {
-    return errorValue;
+  std::optional<E> GetError() const {
+    return error_value;
   }
 
 private:
-  Result(SuccessTag, const T& value) : successValue(value), errorValue(std::nullopt) {
+  Result(SuccessTag, const T& value) : success_value(value), error_value(std::nullopt) {
   }
-  Result(ErrorTag, const E& error) : successValue(std::nullopt), errorValue(error) {
+  Result(ErrorTag, const E& error) : success_value(std::nullopt), error_value(error) {
   }
 
-  std::optional<T> successValue;
-  std::optional<E> errorValue;
+  std::optional<T> success_value;
+  std::optional<E> error_value;
 };
 
 // Specialization for T = void
@@ -50,32 +50,32 @@ public:
   struct SuccessTag {};
   struct ErrorTag {};
 
-  static Result success() {
+  static Result Success() {
     return Result(SuccessTag{});
   }
 
-  static Result error(const E& error) {
+  static Result Error(const E& error) {
     return Result(ErrorTag{}, error);
   }
 
-  bool is_success() const {
-    return isSuccess_;
+  bool IsSuccess() const {
+    return is_success_;
   }
 
-  bool is_error() const {
-    return !isSuccess_;
+  bool IsError() const {
+    return !is_success_;
   }
 
-  std::optional<E> get_error() const {
-    return is_error() ? std::optional<E>(errorValue) : std::nullopt;
+  std::optional<E> GetError() const {
+    return IsError() ? std::optional<E>(error_value) : std::nullopt;
   }
 
 private:
-  Result(SuccessTag) : isSuccess_(true) {
+  Result(SuccessTag) : is_success_(true) {
   }
-  Result(ErrorTag, const E& error) : isSuccess_(false), errorValue(error) {
+  Result(ErrorTag, const E& error) : is_success_(false), error_value(error) {
   }
 
-  bool isSuccess_ = false;
-  E errorValue;
+  bool is_success_ = false;
+  E error_value;
 };

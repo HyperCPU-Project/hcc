@@ -4,7 +4,7 @@
 
 using namespace hcc;
 
-void AstVarDeclare::print(int indent) const {
+void AstVarDeclare::Print(int indent) const {
   printIndent(indent);
   std::cout << "AstVarDeclare" << std::endl;
   printIndent(indent + 1);
@@ -18,8 +18,8 @@ void AstVarDeclare::print(int indent) const {
   std::cout << "type: " << type << std::endl;
 }
 
-bool AstVarDeclare::compile(HCC* hcc) {
-  TypeMetadata* var_type = hcc->backend->getTypeFromName(type);
+bool AstVarDeclare::Compile(HCC* hcc) {
+  TypeMetadata* var_type = hcc->backend->GetTypeFromName(type);
   if (!var_type)
     return false;
 
@@ -29,7 +29,7 @@ bool AstVarDeclare::compile(HCC* hcc) {
     op.alloca.name = name;
     op.alloca.md = *var_type;
 
-    hcc->ir.add(op);
+    hcc->ir.Add(op);
   }
 
   return true;

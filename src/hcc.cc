@@ -18,10 +18,10 @@ void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
 std::string hccCompileError = "";
 
 HCC::HCC()
-    : outFd(nullptr), printAst(false), backend(nullptr), values() {
+    : out_fd(nullptr), print_ast(false), backend(nullptr), values() {
   parser = new Parser();
 
-  currentFunction.align = 0;
+  current_function.align = 0;
   optimizations.setFlag(OPT_CONSTANT_FOLDING);
   optimizations.setFlag(OPT_FUNCTION_BODY_ELIMINATION);
   optimizations.setFlag(OPT_DCE);
@@ -31,13 +31,13 @@ HCC::HCC()
 }
 
 HCC::~HCC() {
-  if (outFd)
-    fclose(outFd);
+  if (out_fd)
+    fclose(out_fd);
   if (backend)
     delete backend;
 }
 
-Result<void, std::string> HCC::parseAndCompile() {
+Result<void, std::string> HCC::ParseAndCompile() {
   yyscan_t scanner;
   YY_BUFFER_STATE buffer;
 
@@ -48,25 +48,25 @@ Result<void, std::string> HCC::parseAndCompile() {
   hccCompileError.clear();
 
   if (sources.empty()) {
-    return Result<void, std::string>::error("no sources provided");
+    return Result<void, std::string>::Error("no sources provided");
   }
 
-  if (!outFd) {
-    return Result<void, std::string>::error("outFd == nullptr");
+  if (!out_fd) {
+    return Result<void, std::string>::Error("outFd == nullptr");
   }
 
   if (!backend) {
-    return Result<void, std::string>::error("no backend selected");
+    return Result<void, std::string>::Error("no backend selected");
   }
 
   std::string code = "";
   for (std::string source : sources) {
-    auto result = readFile(source);
-    if (result.isError()) {
-      fmt::print("[hcc] failed to read {}: {}\n", source, result.getError().value());
+    auto result = ReadFile(source);
+    if (result.IsError()) {
+      fmt::print("[hcc] failed to read {}: {}\n", source, result.GetError().value());
     }
 
-    code += result.getSuccess().value() + "\n";
+    code += result.GetSuccess().value() + "\n";
   }
 
   buffer = yy_scan_string(code.c_str(), scanner);
@@ -76,40 +76,40 @@ Result<void, std::string> HCC::parseAndCompile() {
   yylex_destroy(scanner);
 
   if (!parser->root) {
-    return Result<void, std::string>::error(fmt::format("root == nullptr (parse error: {})", hcc_parse_error));
+    return Result<void, std::string>::Error(fmt::format("root == nullptr (parse error: {})", hcc_parse_error));
   }
 
-  if (printAst) {
-    parser->root->print();
+  if (print_ast) {
+    parser->root->Print();
   }
 
-  if (!parser->root->compile(this)) {
-    return Result<void, std::string>::error("compile error: " + hccCompileError);
+  if (!parser->root->Compile(this)) {
+    return Result<void, std::string>::Error("compile error: " + hccCompileError);
   }
 
   if (ir.resultsInError(this)) {
-    return Result<void, std::string>::error("ir compile error: " + hccCompileError);
+    return Result<void, std::string>::Error("ir compile error: " + hccCompileError);
   }
-  ir.performStaticOptimizations(this);
+  ir.PerformStaticOptimizations(this);
   if (!ir.compile(this)) {
-    return Result<void, std::string>::error("ir compile error: " + hccCompileError);
+    return Result<void, std::string>::Error("ir compile error: " + hccCompileError);
   }
 
-  fmt::fprintf(outFd, "%s", backend->output);
+  fmt::fprintf(out_fd, "%s", backend->output);
 
   if (parser->root)
     delete parser->root;
 
-  return Result<void, std::string>::success();
+  return Result<void, std::string>::Success();
 }
 
-void HCC::openOutput(std::string filename) {
-  if (outFd)
-    fclose(outFd);
-  outFd = fopen(filename.c_str(), "w");
+void HCC::OpenOutput(std::string filename) {
+  if (out_fd)
+    fclose(out_fd);
+  out_fd = fopen(filename.c_str(), "w");
 }
 
-Result<void, std::string> HCC::selectBackend(std::string name) {
+Result<void, std::string> HCC::SelectBackend(std::string name) {
   if (backend)
     delete backend;
 
@@ -118,13 +118,13 @@ Result<void, std::string> HCC::selectBackend(std::string name) {
   } else if (name == "hypercpu") {
     backend = new HyperCPUBackend();
   } else {
-    return Result<void, std::string>::error("no such backend");
+    return Result<void, std::string>::Error("no such backend");
   }
 
-  return Result<void, std::string>::success();
+  return Result<void, std::string>::Success();
 }
 
-HCC::Optimization HCC::getOptimizationFromName(std::string name) {
+HCC::Optimization HCC::GetOptimizationFromName(std::string name) {
   auto names = mapbox::eternal::map<mapbox::eternal::string, HCC::Optimization>({{"constant-folding", OPT_CONSTANT_FOLDING},
                                                                                  {"emit-frame-pointer", OPT_FP_OMISSION},
                                                                                  {"function-body-elimination", OPT_FUNCTION_BODY_ELIMINATION},
@@ -138,6 +138,6 @@ HCC::Optimization HCC::getOptimizationFromName(std::string name) {
   return names.at(name.c_str());
 }
 
-FILE* HCC::getOutFd() {
-  return outFd;
+FILE* HCC::GetOutFd() {
+  return out_fd;
 }

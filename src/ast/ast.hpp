@@ -6,8 +6,8 @@ namespace hcc {
   class AstNode {
   public:
     virtual ~AstNode() = 0;
-    virtual void print(int indent = 0) const = 0;
-    virtual bool compile(HCC* hcc);
+    virtual void Print(int indent = 0) const = 0;
+    virtual bool Compile(HCC* hcc);
 
     std::vector<AstNode*> children;
 
@@ -17,7 +17,7 @@ namespace hcc {
 
   class AstRootNode : public AstNode {
   public:
-    void print(int indent = 0) const override;
+    void Print(int indent = 0) const override;
   };
 
   class AstFuncDef : public AstNode {
@@ -25,24 +25,24 @@ namespace hcc {
     std::string name;
     std::map<std::string, std::string> args;
 
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
   };
 
   class AstVarDeclare : public AstNode {
   public:
     std::vector<std::string> names;
     std::string type;
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
   };
 
   class AstVarAssign : public AstNode {
   public:
     std::string name;
     AstNode* expr;
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
     ~AstVarAssign();
   };
 
@@ -51,8 +51,8 @@ namespace hcc {
     int value;
     explicit AstNumber(int val) : value(val) {
     }
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
   };
 
   class AstBinaryOp : public AstNode {
@@ -61,8 +61,8 @@ namespace hcc {
     AstNode* right;
     std::string op;
 
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
 
     ~AstBinaryOp();
   };
@@ -70,8 +70,8 @@ namespace hcc {
   class AstReturn : public AstNode {
   public:
     AstNode* expr;
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
 
     ~AstReturn();
   };
@@ -79,22 +79,22 @@ namespace hcc {
   class AstVarRef : public AstNode {
   public:
     std::string name;
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
   };
 
   class AstAsm : public AstNode {
   public:
     std::string code;
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
   };
 
   class AstAddrof : public AstNode {
   public:
     std::string name;
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
   };
 
   class AstFuncCall : public AstNode {
@@ -102,8 +102,8 @@ namespace hcc {
     std::vector<AstNode*> args;
     std::string name;
 
-    void print(int indent = 0) const override;
-    bool compile(HCC* hcc) override;
+    void Print(int indent = 0) const override;
+    bool Compile(HCC* hcc) override;
 
     ~AstFuncCall();
   };

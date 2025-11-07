@@ -4,17 +4,17 @@
 
 using namespace hcc;
 
-void AstBinaryOp::print(int indent) const {
+void AstBinaryOp::Print(int indent) const {
   printIndent(indent);
   std::cout << "AstBinaryOp" << std::endl;
   printIndent(indent + 1);
   std::cout << "op: " << op << std::endl;
   printIndent(indent + 1);
   std::cout << "left:" << std::endl;
-  left->print(indent + 2);
+  left->Print(indent + 2);
   printIndent(indent + 1);
   std::cout << "right:" << std::endl;
-  right->print(indent + 2);
+  right->Print(indent + 2);
 }
 
 AstBinaryOp::~AstBinaryOp() {
@@ -22,10 +22,10 @@ AstBinaryOp::~AstBinaryOp() {
   delete right;
 }
 
-bool AstBinaryOp::compile(HCC* hcc) {
-  if (!left->compile(hcc))
+bool AstBinaryOp::Compile(HCC* hcc) {
+  if (!left->Compile(hcc))
     return false;
-  if (!right->compile(hcc))
+  if (!right->Compile(hcc))
     return false;
 
   IrOpcode ir_op;
@@ -40,7 +40,7 @@ bool AstBinaryOp::compile(HCC* hcc) {
     ir_op.type = IrOpcode::IR_DIV;
   }
 
-  hcc->ir.add(ir_op);
+  hcc->ir.Add(ir_op);
 
   return true;
 }

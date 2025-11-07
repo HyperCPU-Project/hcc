@@ -11,8 +11,8 @@ return
 })",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     // The bison parser expects a semicolon at the next token (which is on the 6th line), that's why we check for an error on line 6
     EXPECT_EQ(hcc_parse_error, "error at line 6: syntax error");
   }
@@ -26,8 +26,8 @@ int main({
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
   }
 }
@@ -39,8 +39,8 @@ int main() return 0;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
   }
 }
@@ -53,8 +53,8 @@ return (;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
   }
 }
@@ -68,8 +68,8 @@ int 1;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 4: syntax error");
   }
 }
@@ -85,8 +85,8 @@ x = (;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 6: syntax error");
   }
 }
@@ -97,8 +97,8 @@ main(){}
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
   }
 }
@@ -111,8 +111,8 @@ a b c d e f g
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
   }
 }
@@ -124,8 +124,8 @@ x = 2 + 2 2; }
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
   }
 }
@@ -138,8 +138,8 @@ x = 2 + 2 * 2 ); }
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 4: syntax error");
   }
 }
@@ -150,8 +150,8 @@ asm(123)
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
   }
 }
@@ -164,8 +164,8 @@ asm();
 )",
                              "qproc");
 
-  EXPECT_EQ(result.is_error(), true);
-  if (result.is_error()) {
+  EXPECT_EQ(result.IsError(), true);
+  if (result.IsError()) {
     EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
   }
 }

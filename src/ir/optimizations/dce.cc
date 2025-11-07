@@ -2,9 +2,9 @@
 
 using namespace hcc;
 
-void IR::optimizeDceUnused([[maybe_unused]] HCC* hcc) {
+void IR::OptimizeDceUnused([[maybe_unused]] HCC* hcc) {
   std::vector<std::string> used_vars;
-  for (size_t passes = passesForEachOptimization; passes > 0; passes--) {
+  for (size_t passes = passes_for_each_optimization; passes > 0; passes--) {
     std::string var = "";
     std::vector<size_t> remove_indexes;
     for (size_t i = 0; i < ir.size(); i++) {

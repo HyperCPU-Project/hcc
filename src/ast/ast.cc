@@ -10,9 +10,9 @@ AstNode::~AstNode() {
   }
 }
 
-bool AstNode::compile(HCC* hcc) {
+bool AstNode::Compile(HCC* hcc) {
   for (AstNode* node : children) {
-    if (!node->compile(hcc))
+    if (!node->Compile(hcc))
       return false;
   }
   return true;

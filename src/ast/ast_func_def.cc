@@ -5,7 +5,7 @@
 
 using namespace hcc;
 
-void AstFuncDef::print(int indent) const {
+void AstFuncDef::Print(int indent) const {
   printIndent(indent);
   std::cout << "AstFuncDef" << std::endl;
   printIndent(indent + 1);
@@ -17,27 +17,27 @@ void AstFuncDef::print(int indent) const {
   printIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
   for (const auto& stmt : children) {
-    stmt->print(indent + 1);
+    stmt->Print(indent + 1);
   }
 }
 
-bool AstFuncDef::compile(HCC* hcc) {
+bool AstFuncDef::Compile(HCC* hcc) {
   IrOpcode op;
   op.type = IrOpcode::IR_FUNCDEF;
   op.funcdef.name = name;
 
   for (auto& [arg_name, arg_type] : args) {
-    op.funcdef.argNames.push_back(arg_name);
+    op.funcdef.arg_names.push_back(arg_name);
 
-    TypeMetadata* md = hcc->backend->getTypeFromName(arg_type);
+    TypeMetadata* md = hcc->backend->GetTypeFromName(arg_type);
     if (!md)
       return false;
-    op.funcdef.argTypes.push_back(*md);
+    op.funcdef.arg_types.push_back(*md);
   }
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
-  if (!AstNode::compile(hcc))
+  if (!AstNode::Compile(hcc))
     return false;
 
   return true;

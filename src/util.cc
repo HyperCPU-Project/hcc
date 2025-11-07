@@ -2,7 +2,7 @@
 #include <result.hpp>
 #include <util.hpp>
 
-std::string _argsShift(int* argc, char*** argv) {
+std::string _ArgsShift(int* argc, char*** argv) {
   if (*argc <= 0) {
     return "";
   }
@@ -11,7 +11,7 @@ std::string _argsShift(int* argc, char*** argv) {
   return *(*argv)++;
 }
 
-Result<std::string, std::string> readFile(const std::string& filename) {
+Result<std::string, std::string> ReadFile(const std::string& filename) {
   std::ifstream file(filename);
   if (!file) {
     return Result<std::string, std::string>::error(fmt::format("could not open {}", filename));
@@ -24,7 +24,7 @@ Result<std::string, std::string> readFile(const std::string& filename) {
   return Result<std::string, std::string>::success(buffer.str());
 }
 
-bool replace(std::string& str, const std::string& from, const std::string& to) {
+bool Replace(std::string& str, const std::string& from, const std::string& to) {
   size_t start_pos = str.find(from);
   if (start_pos == std::string::npos)
     return false;

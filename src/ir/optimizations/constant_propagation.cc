@@ -2,7 +2,7 @@
 
 using namespace hcc;
 
-void IR::optimizeConstantPropagation([[maybe_unused]] HCC* hcc) {
+void IR::OptimizeConstantPropagation([[maybe_unused]] HCC* hcc) {
   struct ConstantVarInfo {
     std::string name;
     bool is_potentially_optimizable = true;

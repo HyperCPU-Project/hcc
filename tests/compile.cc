@@ -28,17 +28,17 @@ Result<void, std::string> compileQuick(std::string code, std::string backend) {
   fmt::print("[hcctest] compiling temp C file {}\n", filename);
 
   {
-    auto result = hcc.selectBackend(backend);
-    if (result.is_error())
+    auto result = hcc.SelectBackend(backend);
+    if (result.IsError())
       return result;
   }
 
   {
-    auto result = hcc.parseAndCompile();
-    if (result.is_error())
+    auto result = hcc.ParseAndCompile();
+    if (result.IsError())
       return result;
 
-    compileOutput = readFile("tests_tmp/a.out").getSuccess().value();
+    compileOutput = ReadFile("tests_tmp/a.out").GetSuccess().value();
     compileOutput = hcc.backend->output;
     /*
     fmt::println("-------");

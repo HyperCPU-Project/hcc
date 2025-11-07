@@ -19,11 +19,11 @@ namespace hcc {
 
   class HCC {
     hccprivate Parser* parser;
-    FILE* outFd;
+    FILE* out_fd;
 
   public:
     std::vector<std::string> sources;
-    bool printAst;
+    bool print_ast;
 
     Backend* backend;
     IR ir;
@@ -36,21 +36,21 @@ namespace hcc {
                         OPT_CONSTANT_PROPAGATION };
     Flags<Optimization> optimizations;
 
-    FunctionMetadata currentFunction;
+    FunctionMetadata current_function;
     std::stack<std::unique_ptr<Value>> values;
 
     HCC();
     ~HCC();
 
-    Result<void, std::string> parseAndCompile();
+    Result<void, std::string> ParseAndCompile();
 
-    void openOutput(std::string filename);
+    void OpenOutput(std::string filename);
 
-    Result<void, std::string> selectBackend(std::string name);
+    Result<void, std::string> SelectBackend(std::string name);
 
-    Optimization getOptimizationFromName(std::string name);
+    Optimization GetOptimizationFromName(std::string name);
 
-    FILE* getOutFd();
+    FILE* GetOutFd();
   };
 
 } // namespace hcc

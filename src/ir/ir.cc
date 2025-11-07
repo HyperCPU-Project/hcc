@@ -7,23 +7,23 @@ using namespace hcc;
 
 IR::IR() = default;
 
-void IR::addLine() {
+void IR::AddLine() {
   IrOpcode op;
   op.type = IrOpcode::IR_LINE;
   ir.push_back(op);
 }
 
-void IR::addReset() {
+void IR::AddReset() {
   IrOpcode op;
   op.type = IrOpcode::IR_RESET;
   ir.push_back(op);
 }
 
-void IR::add(IrOpcode op) {
+void IR::Add(IrOpcode op) {
   ir.push_back(op);
 }
 
-IrOpcode IR::next() {
+IrOpcode IR::Next() {
   if (index >= ir.size()) {
     IrOpcode op;
     op.type = IrOpcode::IR_END;
@@ -32,13 +32,13 @@ IrOpcode IR::next() {
   return ir[index++];
 }
 
-IrOpcode IR::peek(unsigned long count) {
+IrOpcode IR::Peek(unsigned long count) {
   unsigned long indexOld = index;
   IrOpcode op;
 
   op.type = IrOpcode::IR_NULL;
   for (unsigned long i = 0; i < count; i++) {
-    op = next();
+    op = Next();
   }
 
   index = indexOld;
@@ -46,7 +46,7 @@ IrOpcode IR::peek(unsigned long count) {
   return op;
 }
 
-bool IR::opcodeAffectsStack(IrOpcode op) {
+bool IR::OpcodeAffectsStack(IrOpcode op) {
   switch (op.type) {
   case IrOpcode::IR_ALLOCA:
     return true;
@@ -57,24 +57,24 @@ bool IR::opcodeAffectsStack(IrOpcode op) {
   }
 }
 
-void IR::performStaticOptimizations(HCC* hcc) {
+void IR::PerformStaticOptimizations(HCC* hcc) {
   {
     IrOpcode op;
     op.type = IrOpcode::IR_END;
-    add(op);
+    Add(op);
   }
 
-  if (hcc->optimizations.hasFlag(HCC::OPT_CONSTANT_PROPAGATION)) {
-    optimizeConstantPropagation(hcc);
+  if (hcc->optimizations.HasFlag(HCC::OPT_CONSTANT_PROPAGATION)) {
+    OptimizeConstantPropagation(hcc);
   }
-  if (hcc->optimizations.hasFlag(HCC::OPT_DCE)) {
-    optimizeDceUnused(hcc);
+  if (hcc->optimizations.HasFlag(HCC::OPT_DCE)) {
+    OptimizeDceUnused(hcc);
   }
-  if (hcc->optimizations.hasFlag(HCC::OPT_FP_OMISSION)) {
-    optimizeStackSetup(hcc);
+  if (hcc->optimizations.HasFlag(HCC::OPT_FP_OMISSION)) {
+    OptimizeStackSetup(hcc);
   }
-  if (hcc->optimizations.hasFlag(HCC::OPT_STACK_RESERVE)) {
-    optimizeStackReserve(hcc);
+  if (hcc->optimizations.HasFlag(HCC::OPT_STACK_RESERVE)) {
+    OptimizeStackReserve(hcc);
   }
 }
 
@@ -82,9 +82,9 @@ bool IR::compile(HCC* hcc) {
   /*for (IrOpcode& op : ir) {
     fmt::println("{}", (int)op.type);
   }*/
-  IrOpcode currentFuncdefOp;
+  IrOpcode current_funcdef_op;
   for (;;) {
-    IrOpcode op = next();
+    IrOpcode op = Next();
     if (op.type == IrOpcode::IR_END)
       break;
 
@@ -94,30 +94,30 @@ bool IR::compile(HCC* hcc) {
       return false;
       break;
     case IrOpcode::IR_FUNCDEF:
-      if (peek().type == IrOpcode::IR_RET && hcc->optimizations.hasFlag(HCC::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
-        hcc->backend->emitLabel(op.funcdef.name);
-        hcc->backend->emitSingleRet();
-        next();
+      if (Peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(HCC::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
+        hcc->backend->EmitLabel(op.funcdef.name);
+        hcc->backend->EmitSingleRet();
+        Next();
       } else {
-        if (op.funcdef.needStack) {
-          hcc->backend->resetRegIndex();
-          hcc->backend->emitFunctionPrologue(op.funcdef.name);
+        if (op.funcdef.need_stack) {
+          hcc->backend->ResetRegIndex();
+          hcc->backend->EmitFunctionPrologue(op.funcdef.name);
         } else {
-          hcc->backend->emitLabel(op.funcdef.name);
+          hcc->backend->EmitLabel(op.funcdef.name);
         }
-        currentFuncdefOp = op;
+        current_funcdef_op = op;
       }
       break;
     case IrOpcode::IR_CREG: {
-      auto value = std::unique_ptr<Value>(Value::createAsRegister(hcc, op.creg.value, op.creg.regName));
+      auto value = std::unique_ptr<Value>(Value::CreateAsRegister(hcc, op.creg.value, op.creg.reg_name));
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_CCTV: {
-      auto value = std::unique_ptr<Value>(Value::createAsCompileTimeValue(hcc, op.cctv.value));
+      auto value = std::unique_ptr<Value>(Value::CreateAsCompileTimeValue(hcc, op.cctv.value));
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_CSV: {
-      auto value = std::unique_ptr<Value>(Value::createAsStackVar(hcc, op.csv.md));
+      auto value = std::unique_ptr<Value>(Value::CreateAsStackVar(hcc, op.csv.md));
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_RET: {
@@ -125,27 +125,27 @@ bool IR::compile(HCC* hcc) {
         auto value_raw = std::move(hcc->values.top());
         hcc->values.pop();
 
-        auto value = value_raw->use(hcc);
+        auto value = value_raw->Use(hcc);
 
-        if (value->regName != hcc->backend->abi.returnRegister) {
-          hcc->backend->emitMove(hcc->backend->abi.returnRegister, value->regName);
+        if (value->reg_name != hcc->backend->abi.return_register) {
+          hcc->backend->EmitMove(hcc->backend->abi.return_register, value->reg_name);
         }
 
         if (value != value_raw.get())
           delete value;
       }
 
-      if (currentFuncdefOp.funcdef.needStack)
-        hcc->backend->emitFunctionEpilogue();
+      if (current_funcdef_op.funcdef.need_stack)
+        hcc->backend->EmitFunctionEpilogue();
       else
-        hcc->backend->emitSingleRet();
+        hcc->backend->EmitSingleRet();
 
       while (!hcc->values.empty())
         hcc->values.pop();
     } break;
     case IrOpcode::IR_ALLOCA: {
-      std::unique_ptr<Value> value(Value::createAsStackVar(hcc, op.alloca.md, false));
-      hcc->currentFunction.variables[op.alloca.name] = std::move(value);
+      std::unique_ptr<Value> value(Value::CreateAsStackVar(hcc, op.alloca.md, false));
+      hcc->current_function.variables[op.alloca.name] = std::move(value);
     } break;
     case IrOpcode::IR_ADD: {
       auto RHS = std::move(hcc->values.top());
@@ -153,7 +153,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->add(hcc, RHS.get());
+      LHS->Add(hcc, RHS.get());
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -163,7 +163,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->sub(hcc, RHS.get());
+      LHS->Sub(hcc, RHS.get());
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -173,7 +173,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->mul(hcc, RHS.get());
+      LHS->Mul(hcc, RHS.get());
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -183,62 +183,62 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->div(hcc, RHS.get());
+      LHS->Div(hcc, RHS.get());
 
       hcc->values.push(std::move(LHS));
     } break;
     case IrOpcode::IR_ASSIGN: {
-      if (!hcc->currentFunction.variables.contains(op.assign.name)) {
+      if (!hcc->current_function.variables.contains(op.assign.name)) {
         hccCompileError = fmt::sprintf("undefined variable %s", op.assign.name);
         return false;
       }
 
-      auto& expr_var = hcc->currentFunction.variables[op.assign.name];
+      auto& expr_var = hcc->current_function.variables[op.assign.name];
 
       auto expr_value = std::move(hcc->values.top());
       hcc->values.pop();
 
-      expr_var->setto(hcc, expr_value.get());
+      expr_var->SetTo(hcc, expr_value.get());
     } break;
     case IrOpcode::IR_ASM:
       hcc->backend->output += op.asm_.code + "\n";
       break;
     case IrOpcode::IR_VARREF: {
-      if (!hcc->currentFunction.variables.contains(op.varref.name)) {
+      if (!hcc->current_function.variables.contains(op.varref.name)) {
         hccCompileError = fmt::sprintf("undefined variable %s", op.varref.name);
         return false;
       }
 
-      std::unique_ptr<Value> out(hcc->currentFunction.variables[op.varref.name]->doCondLod(hcc));
+      std::unique_ptr<Value> out(hcc->current_function.variables[op.varref.name]->DoCondLod(hcc));
 
       hcc->values.push(std::move(out));
     } break;
     case IrOpcode::IR_ADDROF: {
-      if (!hcc->currentFunction.variables.contains(op.addrof.name)) {
+      if (!hcc->current_function.variables.contains(op.addrof.name)) {
         hccCompileError = fmt::sprintf("undefined variable %s", op.addrof.name);
         return false;
       }
 
       auto out = std::unique_ptr<Value>(new Value());
-      out->regName = hcc->backend->emitLoadaddrFromStack(hcc->currentFunction.variables[op.addrof.name]->varStackAlign);
+      out->reg_name = hcc->backend->EmitLoadaddrFromStack(hcc->current_function.variables[op.addrof.name]->var_stack_align);
 
       hcc->values.push(std::move(out));
     } break;
     case IrOpcode::IR_CALL: {
-      hcc->backend->emitCall(op.call.name);
+      hcc->backend->EmitCall(op.call.name);
       auto value = std::make_unique<Value>();
-      value->regName = hcc->backend->abi.returnRegister;
+      value->reg_name = hcc->backend->abi.return_register;
 
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_LINE:
       break;
     case IrOpcode::IR_RESET:
-      hcc->backend->resetRegIndex();
+      hcc->backend->ResetRegIndex();
       break;
     case IrOpcode::IR_RESERVE:
       if (op.reserve.bytes > 0)
-        hcc->backend->emitReserveStackSpae(op.reserve.bytes);
+        hcc->backend->EmitReserveStackSpace(op.reserve.bytes);
       break;
     default:
       break;

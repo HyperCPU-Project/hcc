@@ -29,7 +29,7 @@ namespace hcc {
         setFlag(v);
     }
 
-    bool hasFlag(T v) {
+    bool HasFlag(T v) {
       for (size_t i = 0; i < flags.size(); i++) {
         if (flags[i] == v) {
           return true;

@@ -33,15 +33,15 @@ namespace hcc {
     struct {
       std::string name;
 
-      std::vector<TypeMetadata> argTypes;
-      std::vector<std::string> argNames;
+      std::vector<TypeMetadata> arg_types;
+      std::vector<std::string> arg_names;
 
-      bool needStack = false;
+      bool need_stack = false;
     } funcdef;
 
     struct {
       uint64_t value;
-      std::string regName = "";
+      std::string reg_name = "";
     } creg;
 
     struct {
@@ -87,26 +87,26 @@ namespace hcc {
     unsigned long index;
     std::vector<IrOpcode> ir;
 
-    IrOpcode next();
-    IrOpcode peek(unsigned long count = 1);
+    IrOpcode Next();
+    IrOpcode Peek(unsigned long count = 1);
 
-    void optimizeDceUnused(HCC* hcc);
-    void optimizeStackSetup(HCC* hcc);
-    void optimizeStackReserve(HCC* hcc);
-    void optimizeConstantPropagation(HCC* hcc);
+    void OptimizeDceUnused(HCC* hcc);
+    void OptimizeStackSetup(HCC* hcc);
+    void OptimizeStackReserve(HCC* hcc);
+    void OptimizeConstantPropagation(HCC* hcc);
 
   public:
-    size_t passesForEachOptimization = 64;
+    size_t passes_for_each_optimization = 64;
 
     IR();
 
-    void addLine();
-    void addReset();
-    void add(IrOpcode op);
+    void AddLine();
+    void AddReset();
+    void Add(IrOpcode op);
 
-    bool opcodeAffectsStack(IrOpcode op);
+    bool OpcodeAffectsStack(IrOpcode op);
 
-    void performStaticOptimizations(HCC* hcc);
+    void PerformStaticOptimizations(HCC* hcc);
     bool compile(HCC* hcc);
 
     bool resultsInError(HCC* hcc);
