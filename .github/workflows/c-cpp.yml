@@ -44,6 +44,7 @@ jobs:
 
       - name: Build
         run: |
+          xmake install -y mapbox_eternal
           xmake build
           mv $(find build/linux -name "hcc") ./hcc-x86_64
 
