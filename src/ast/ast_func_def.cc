@@ -27,12 +27,12 @@ bool AstFuncDef::compile(HCC* hcc) {
   op.funcdef.name = name;
 
   for (auto& [arg_name, arg_type] : args) {
-    op.funcdef.arg_names.push_back(arg_name);
+    op.funcdef.argNames.push_back(arg_name);
 
-    TypeMetadata* md = hcc->backend->get_type_from_name(arg_type);
+    TypeMetadata* md = hcc->backend->getTypeFromName(arg_type);
     if (!md)
       return false;
-    op.funcdef.arg_types.push_back(*md);
+    op.funcdef.argTypes.push_back(*md);
   }
 
   hcc->ir.add(op);

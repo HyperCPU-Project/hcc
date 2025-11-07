@@ -17,30 +17,30 @@ public:
     return Result(ErrorTag{}, error);
   }
 
-  bool is_success() const {
-    return success_value.has_value();
+  bool isSuccess() const {
+    return successValue.has_value();
   }
 
-  bool is_error() const {
-    return error_value.has_value();
+  bool isError() const {
+    return errorValue.has_value();
   }
 
-  std::optional<T> get_success() const {
-    return success_value;
+  std::optional<T> getSuccess() const {
+    return successValue;
   }
 
-  std::optional<E> get_error() const {
-    return error_value;
+  std::optional<E> getError() const {
+    return errorValue;
   }
 
 private:
-  Result(SuccessTag, const T& value) : success_value(value), error_value(std::nullopt) {
+  Result(SuccessTag, const T& value) : successValue(value), errorValue(std::nullopt) {
   }
-  Result(ErrorTag, const E& error) : success_value(std::nullopt), error_value(error) {
+  Result(ErrorTag, const E& error) : successValue(std::nullopt), errorValue(error) {
   }
 
-  std::optional<T> success_value;
-  std::optional<E> error_value;
+  std::optional<T> successValue;
+  std::optional<E> errorValue;
 };
 
 // Specialization for T = void
@@ -59,23 +59,23 @@ public:
   }
 
   bool is_success() const {
-    return is_success_;
+    return isSuccess_;
   }
 
   bool is_error() const {
-    return !is_success_;
+    return !isSuccess_;
   }
 
   std::optional<E> get_error() const {
-    return is_error() ? std::optional<E>(error_value) : std::nullopt;
+    return is_error() ? std::optional<E>(errorValue) : std::nullopt;
   }
 
 private:
-  Result(SuccessTag) : is_success_(true) {
+  Result(SuccessTag) : isSuccess_(true) {
   }
-  Result(ErrorTag, const E& error) : is_success_(false), error_value(error) {
+  Result(ErrorTag, const E& error) : isSuccess_(false), errorValue(error) {
   }
 
-  bool is_success_ = false;
-  E error_value;
+  bool isSuccess_ = false;
+  E errorValue;
 };

@@ -2,7 +2,7 @@
 
 using namespace hcc;
 
-void IR::optimize_stack_reserve([[maybe_unused]] HCC* hcc) {
+void IR::optimizeStackReserve([[maybe_unused]] HCC* hcc) {
   size_t insert_index = 0;
   size_t bytes = 0;
   std::vector<std::pair<size_t, size_t>> inserts;

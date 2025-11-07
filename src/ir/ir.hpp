@@ -33,15 +33,15 @@ namespace hcc {
     struct {
       std::string name;
 
-      std::vector<TypeMetadata> arg_types;
-      std::vector<std::string> arg_names;
+      std::vector<TypeMetadata> argTypes;
+      std::vector<std::string> argNames;
 
-      bool need_stack = false;
+      bool needStack = false;
     } funcdef;
 
     struct {
       uint64_t value;
-      std::string reg_name = "";
+      std::string regName = "";
     } creg;
 
     struct {
@@ -90,25 +90,25 @@ namespace hcc {
     IrOpcode next();
     IrOpcode peek(unsigned long count = 1);
 
-    void optimize_dce_unused(HCC* hcc);
-    void optimize_stack_setup(HCC* hcc);
-    void optimize_stack_reserve(HCC* hcc);
-    void optimize_constant_propagation(HCC* hcc);
+    void optimizeDceUnused(HCC* hcc);
+    void optimizeStackSetup(HCC* hcc);
+    void optimizeStackReserve(HCC* hcc);
+    void optimizeConstantPropagation(HCC* hcc);
 
   public:
-    size_t passes_for_each_optimization = 64;
+    size_t passesForEachOptimization = 64;
 
     IR();
 
-    void add_line();
-    void add_reset();
+    void addLine();
+    void addReset();
     void add(IrOpcode op);
 
-    bool opcode_affects_stack(IrOpcode op);
+    bool opcodeAffectsStack(IrOpcode op);
 
     void performStaticOptimizations(HCC* hcc);
     bool compile(HCC* hcc);
 
-    bool results_in_error(HCC* hcc);
+    bool resultsInError(HCC* hcc);
   };
 } // namespace hcc

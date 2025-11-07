@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 TEST(HCCTest, UnknownBackendErrorTest) {
-  auto result = compile_quick("int main() {return 0;}", "ThisBackendDoesNotExist");
+  auto result = compileQuick("int main() {return 0;}", "ThisBackendDoesNotExist");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -11,7 +11,7 @@ TEST(HCCTest, UnknownBackendErrorTest) {
 }
 
 TEST(HCCTest, TypesErrorTest) {
-  auto result = compile_quick("int main() {vec x; return x;}", "qproc");
+  auto result = compileQuick("int main() {vec x; return x;}", "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -20,7 +20,7 @@ TEST(HCCTest, TypesErrorTest) {
 }
 
 TEST(HCCTest, UndefVarErrorTest1) {
-  auto result = compile_quick("int main() {return x;}", "qproc");
+  auto result = compileQuick("int main() {return x;}", "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -29,7 +29,7 @@ TEST(HCCTest, UndefVarErrorTest1) {
 }
 
 TEST(HCCTest, UndefVarErrorTest2) {
-  auto result = compile_quick("int main() {int z; z = y + 1;}", "qproc");
+  auto result = compileQuick("int main() {int z; z = y + 1;}", "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {

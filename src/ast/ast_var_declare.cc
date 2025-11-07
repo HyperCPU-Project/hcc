@@ -19,7 +19,7 @@ void AstVarDeclare::print(int indent) const {
 }
 
 bool AstVarDeclare::compile(HCC* hcc) {
-  TypeMetadata* var_type = hcc->backend->get_type_from_name(type);
+  TypeMetadata* var_type = hcc->backend->getTypeFromName(type);
   if (!var_type)
     return false;
 

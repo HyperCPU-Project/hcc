@@ -3,13 +3,13 @@
 #include <gtest/gtest.h>
 
 TEST(HCCTest, LineErrorTest) {
-  auto result = compile_quick(R"(int
+  auto result = compileQuick(R"(int
 main
 (
 ){
 return
 })",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -19,12 +19,12 @@ return
 }
 
 TEST(HCCTest, SyntaxErrorTest1) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main({
   return 0;
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -33,11 +33,11 @@ int main({
 }
 
 TEST(HCCTest, SyntaxErrorTest2) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main() return 0;
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -46,12 +46,12 @@ int main() return 0;
 }
 
 TEST(HCCTest, SyntaxErrorTest3) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){
 return (;
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -60,13 +60,13 @@ return (;
 }
 
 TEST(HCCTest, SyntaxErrorTest4) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){
 
 int 1;
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -75,7 +75,7 @@ int 1;
 }
 
 TEST(HCCTest, SyntaxErrorTest5) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){
 
 return;
@@ -83,7 +83,7 @@ int x;
 x = (;
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -92,10 +92,10 @@ x = (;
 }
 
 TEST(HCCTest, SyntaxErrorTest6) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 main(){}
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -104,12 +104,12 @@ main(){}
 }
 
 TEST(HCCTest, SyntaxErrorTest7) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){
 a b c d e f g
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -118,11 +118,11 @@ a b c d e f g
 }
 
 TEST(HCCTest, SyntaxErrorTest8) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){ int x;
 x = 2 + 2 2; }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -131,12 +131,12 @@ x = 2 + 2 2; }
 }
 
 TEST(HCCTest, SyntaxErrorTest9) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){ int x;
 
 x = 2 + 2 * 2 ); }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -145,10 +145,10 @@ x = 2 + 2 * 2 ); }
 }
 
 TEST(HCCTest, SyntaxErrorTest10) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 asm(123)
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {
@@ -157,12 +157,12 @@ asm(123)
 }
 
 TEST(HCCTest, SyntaxErrorTest11) {
-  auto result = compile_quick(R"(
+  auto result = compileQuick(R"(
 int main(){
 asm();
 }
 )",
-                              "qproc");
+                             "qproc");
 
   EXPECT_EQ(result.is_error(), true);
   if (result.is_error()) {

@@ -4,78 +4,78 @@
 using namespace hcc;
 
 Value::Value() {
-  reg_name = "";
-  is_compile_time = false;
-  compile_time_value = 0;
+  regName = "";
+  isCompileTime = false;
+  compileTimeValue = 0;
 }
 
 Value::~Value() {
 }
 
 bool Value::isRegister() {
-  return (reg_name != "");
+  return (regName != "");
 }
 
-Value* Value::createAsRegister(HCC* hcc, uint64_t _value, std::string reg_name) {
+Value* Value::createAsRegister(HCC* hcc, uint64_t _value, std::string regName) {
   Value* value = new Value();
-  value->reg_name = hcc->backend->emit_mov_const(_value, reg_name);
+  value->regName = hcc->backend->emitMovConst(_value, regName);
   return value;
 }
 
 Value* Value::createAsCompileTimeValue([[maybe_unused]] HCC* hcc, uint64_t _value) {
   Value* value = new Value();
-  value->is_compile_time = true;
-  value->compile_time_value = _value;
+  value->isCompileTime = true;
+  value->compileTimeValue = _value;
   return value;
 }
 
 Value* Value::createAsStackVar(HCC* hcc, TypeMetadata type, bool reserve) {
   Value* value = new Value();
 
-  value->var_stack_align = hcc->current_function.align + type.size;
-  value->var_type = type;
+  value->varStackAlign = hcc->currentFunction.align + type.size;
+  value->varType = type;
 
   if (reserve)
-    hcc->backend->emit_reserve_stack_space(type.size);
+    hcc->backend->emitReserveStackSpae(type.size);
 
-  hcc->current_function.align += type.size;
+  hcc->currentFunction.align += type.size;
 
   return value;
 }
 
 Value* Value::use(HCC* hcc) {
-  if (!is_compile_time)
+  if (!isCompileTime)
     return this;
 
-  Value* value = Value::createAsRegister(hcc, compile_time_value);
+  Value* value = Value::createAsRegister(hcc, compileTimeValue);
   return value;
 }
 
 Value* Value::doCondLod(HCC* hcc, std::string load_reg) {
-  if (isRegister() && !is_compile_time)
+  if (isRegister() && !isCompileTime)
     return this;
-  if (is_compile_time) {
+  if (isCompileTime) {
     return use(hcc);
   }
 
   auto value = new Value();
-  value->reg_name = hcc->backend->emit_load_from_stack(this->var_stack_align, var_type.size, load_reg);
+  value->regName = hcc->backend->emitLoadFromStack(this->varStackAlign, varType.size, load_reg);
   return value;
 }
 
 void Value::add(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value += other->compile_time_value;
+  if (isCompileTime && other->isCompileTime) {
+    compileTimeValue += other->compileTimeValue;
     return;
   }
 
   Value* LHS = doCondLod(hcc);
   Value* RHS = other->doCondLod(hcc);
 
-  hcc->backend->emit_add(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->emitAdd(LHS->regName, LHS->regName, RHS->regName);
 
   if (!isRegister()) {
-    hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->emitStoreToStack(varStackAlign, varType.size, LHS->regName);
   }
 
   if (LHS != this)
@@ -85,18 +85,18 @@ void Value::add(HCC* hcc, Value* other) {
 }
 
 void Value::sub(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value -= other->compile_time_value;
+  if (isCompileTime && other->isCompileTime) {
+    compileTimeValue -= other->compileTimeValue;
     return;
   }
 
   Value* LHS = doCondLod(hcc);
   Value* RHS = other->doCondLod(hcc);
 
-  hcc->backend->emit_sub(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->emitSub(LHS->regName, LHS->regName, RHS->regName);
 
   if (!isRegister()) {
-    hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->emitStoreToStack(varStackAlign, varType.size, LHS->regName);
   }
 
   if (LHS != this)
@@ -106,18 +106,18 @@ void Value::sub(HCC* hcc, Value* other) {
 }
 
 void Value::mul(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value *= other->compile_time_value;
+  if (isCompileTime && other->isCompileTime) {
+    compileTimeValue *= other->compileTimeValue;
     return;
   }
 
   Value* LHS = doCondLod(hcc);
   Value* RHS = other->doCondLod(hcc);
 
-  hcc->backend->emit_mul(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->emitMul(LHS->regName, LHS->regName, RHS->regName);
 
   if (!isRegister()) {
-    hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->emitStoreToStack(varStackAlign, varType.size, LHS->regName);
   }
 
   if (LHS != this)
@@ -127,18 +127,18 @@ void Value::mul(HCC* hcc, Value* other) {
 }
 
 void Value::div(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value /= other->compile_time_value;
+  if (isCompileTime && other->isCompileTime) {
+    compileTimeValue /= other->compileTimeValue;
     return;
   }
 
   Value* LHS = doCondLod(hcc);
   Value* RHS = other->doCondLod(hcc);
 
-  hcc->backend->emit_div(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->emitDiv(LHS->regName, LHS->regName, RHS->regName);
 
   if (!isRegister()) {
-    hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->emitStoreToStack(varStackAlign, varType.size, LHS->regName);
   }
 
   if (LHS != this)
@@ -148,28 +148,28 @@ void Value::div(HCC* hcc, Value* other) {
 }
 
 void Value::setto(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value = other->compile_time_value;
+  if (isCompileTime && other->isCompileTime) {
+    compileTimeValue = other->compileTimeValue;
     return;
   }
 
-  if (!is_compile_time && other->is_compile_time) {
+  if (!isCompileTime && other->isCompileTime) {
     Value* v = other->use(hcc);
     if (isRegister()) {
-      hcc->backend->emit_move(this->reg_name, v->reg_name);
+      hcc->backend->emitMove(this->regName, v->regName);
     } else {
-      hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, v->reg_name);
+      hcc->backend->emitStoreToStack(varStackAlign, varType.size, v->regName);
     }
     delete v;
   } else if (!isRegister() && other->isRegister()) {
-    hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, other->reg_name);
+    hcc->backend->emitStoreToStack(varStackAlign, varType.size, other->regName);
   } else if (isRegister() && other->isRegister()) {
-    hcc->backend->emit_move(this->reg_name, other->reg_name);
+    hcc->backend->emitMove(this->regName, other->regName);
   } else if (!isRegister() && !other->isRegister()) {
     Value* LHS = doCondLod(hcc);
     Value* RHS = other->doCondLod(hcc);
 
-    hcc->backend->emit_store_from_stack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->emitStoreToStack(varStackAlign, varType.size, LHS->regName);
 
     if (LHS != this)
       delete LHS;
@@ -178,7 +178,7 @@ void Value::setto(HCC* hcc, Value* other) {
   } else if (isRegister() && !other->isRegister()) {
     Value* RHS = other->doCondLod(hcc);
 
-    hcc->backend->emit_move(this->reg_name, RHS->reg_name);
+    hcc->backend->emitMove(this->regName, RHS->regName);
 
     if (RHS != other)
       delete RHS;

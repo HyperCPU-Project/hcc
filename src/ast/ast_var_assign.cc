@@ -19,8 +19,8 @@ AstVarAssign::~AstVarAssign() {
 }
 
 bool AstVarAssign::compile(HCC* hcc) {
-  hcc->ir.add_reset();
-  hcc->ir.add_line();
+  hcc->ir.addReset();
+  hcc->ir.addLine();
 
   if (!expr->compile(hcc))
     return false;

@@ -7,14 +7,14 @@ namespace hcc {
 
   class Value {
   public:
-    std::string reg_name;
+    std::string regName;
 
-    bool is_compile_time;
-    uint64_t compile_time_value;
+    bool isCompileTime;
+    uint64_t compileTimeValue;
 
-    uint64_t var_stack_align;
-    std::string var_name;
-    TypeMetadata var_type;
+    uint64_t varStackAlign;
+    std::string varName;
+    TypeMetadata varType;
 
     Value();
     ~Value();

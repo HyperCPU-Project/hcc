@@ -5,7 +5,7 @@
 using namespace hcc;
 
 Backend::Backend() {
-  reg_index = 0;
+  regIndex = 0;
 }
 
 Backend::~Backend() {
@@ -14,70 +14,70 @@ Backend::~Backend() {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-uint64_t Backend::increment_reg_index() {
+uint64_t Backend::incrementRegIndex() {
   return 0;
 }
 
-void Backend::reset_reg_index() {
-  reg_index = 0;
+void Backend::resetRegIndex() {
+  regIndex = 0;
 }
 
-void Backend::emit_function_prologue(std::string name) {
+void Backend::emitFunctionPrologue(std::string name) {
 }
 
-void Backend::emit_function_epilogue() {
+void Backend::emitFunctionEpilogue() {
 }
 
-std::string Backend::emit_mov_const(uint64_t value, std::string reg_name) {
+std::string Backend::emitMovConst(uint64_t value, std::string reg_name) {
   return "";
 }
 
-void Backend::emit_add(std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emitAdd(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emitSub(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emitMul(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
+void Backend::emitDiv(std::string ROUT, std::string RLHS, std::string RRHS) {
 }
 
-void Backend::emit_move(std::string rdest, std::string rsrc) {
+void Backend::emitMove(std::string rdest, std::string rsrc) {
 }
 
-void Backend::emit_reserve_stack_space(uint64_t size) {
+void Backend::emitReserveStackSpae(uint64_t size) {
 }
 
-std::string Backend::emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg) {
+std::string Backend::emitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg) {
   return "";
 }
 
-void Backend::emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) {
+void Backend::emitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) {
 }
 
-std::string Backend::emit_loadaddr_from_stack(uint64_t align, std::string load_reg) {
+std::string Backend::emitLoadaddrFromStack(uint64_t align, std::string load_reg) {
   return "";
 }
 
-void Backend::emit_call(std::string name) {
+void Backend::emitCall(std::string name) {
 }
 
-void Backend::emit_push(std::string reg) {
+void Backend::emitPush(std::string reg) {
 }
-void Backend::emit_pop(std::string reg) {
-}
-
-void Backend::emit_single_ret() {
+void Backend::emitPop(std::string reg) {
 }
 
-void Backend::emit_label(std::string name) {
+void Backend::emitSingleRet() {
 }
 
-TypeMetadata* Backend::get_type_from_name(std::string name) {
+void Backend::emitLabel(std::string name) {
+}
+
+TypeMetadata* Backend::getTypeFromName(std::string name) {
   if (!types.contains(name)) {
-    hcc_compile_error = fmt::sprintf("unknown type %s", name);
+    hccCompileError = fmt::sprintf("unknown type %s", name);
     return nullptr;
   }
 

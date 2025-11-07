@@ -34,7 +34,7 @@ backends:
     } else if (arg == "-o") {
       hcc.openOutput(argsShift());
     } else if (arg == "--ast") {
-      hcc.print_ast = true;
+      hcc.printAst = true;
     } else if (arg == "--backend") {
       auto result = hcc.selectBackend(argsShift());
       if (result.is_error()) {
@@ -50,8 +50,8 @@ backends:
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
-        if (hcc.optimizations.HasFlag(optimization))
-          hcc.optimizations.UnsetFlag(optimization);
+        if (hcc.optimizations.hasFlag(optimization))
+          hcc.optimizations.unsetFlag(optimization);
       }
     } else if (arg.starts_with("-f")) {
       std::string optimization_name = arg;
@@ -62,7 +62,7 @@ backends:
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
-        hcc.optimizations.SetFlag(optimization);
+        hcc.optimizations.setFlag(optimization);
       }
     } else if (arg.starts_with("-")) {
       fmt::print("[hcc] unknown flag: {}\n", arg);

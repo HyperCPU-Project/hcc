@@ -17,7 +17,7 @@ AstReturn::~AstReturn() {
 }
 
 bool AstReturn::compile(HCC* hcc) {
-  hcc->ir.add_reset();
+  hcc->ir.addReset();
 
   if (expr) {
     if (!expr->compile(hcc))

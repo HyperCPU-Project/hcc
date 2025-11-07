@@ -6,8 +6,8 @@ namespace hcc {
   class Value;
 
   typedef struct ABIMetadata {
-    std::string return_register;
-    std::vector<std::string> args_registers;
+    std::string returnRegister;
+    std::vector<std::string> argsRegisters;
   } ABIMetadata;
 
   typedef struct TypeMetadata {

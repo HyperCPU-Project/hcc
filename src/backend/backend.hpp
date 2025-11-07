@@ -6,48 +6,48 @@
 namespace hcc {
   class Backend {
   protected:
-    uint64_t reg_index;
+    uint64_t regIndex;
 
   public:
     std::string output;
     ABIMetadata abi;
 
-    bool codegen_comments = false;
+    bool codegenComments = false;
 
     std::map<std::string, TypeMetadata> types;
 
     Backend();
     virtual ~Backend() = 0;
 
-    uint64_t increment_reg_index();
-    void reset_reg_index();
+    virtual uint64_t incrementRegIndex();
+    virtual void resetRegIndex();
 
-    virtual void emit_function_prologue(std::string name);
-    virtual void emit_function_epilogue();
+    virtual void emitFunctionPrologue(std::string name);
+    virtual void emitFunctionEpilogue();
 
-    virtual std::string emit_mov_const(uint64_t value, std::string reg_name = "");
+    virtual std::string emitMovConst(uint64_t value, std::string reg_name = "");
 
-    virtual void emit_add(std::string ROUT, std::string RLHS, std::string RRHS);
-    virtual void emit_sub(std::string ROUT, std::string RLHS, std::string RRHS);
-    virtual void emit_mul(std::string ROUT, std::string RLHS, std::string RRHS);
-    virtual void emit_div(std::string ROUT, std::string RLHS, std::string RRHS);
+    virtual void emitAdd(std::string ROUT, std::string RLHS, std::string RRHS);
+    virtual void emitSub(std::string ROUT, std::string RLHS, std::string RRHS);
+    virtual void emitMul(std::string ROUT, std::string RLHS, std::string RRHS);
+    virtual void emitDiv(std::string ROUT, std::string RLHS, std::string RRHS);
 
-    virtual void emit_move(std::string rdest, std::string rsrc);
+    virtual void emitMove(std::string rdest, std::string rsrc);
 
-    virtual void emit_reserve_stack_space(uint64_t size);
+    virtual void emitReserveStackSpae(uint64_t size);
 
-    virtual std::string emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg = "");
-    virtual void emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc);
-    virtual std::string emit_loadaddr_from_stack(uint64_t align, std::string load_reg = "");
+    virtual std::string emitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg = "");
+    virtual void emitStoreToStack(uint64_t align, uint64_t size, std::string rsrc);
+    virtual std::string emitLoadaddrFromStack(uint64_t align, std::string load_reg = "");
 
-    virtual void emit_call(std::string name);
+    virtual void emitCall(std::string name);
 
-    virtual void emit_push(std::string reg);
-    virtual void emit_pop(std::string reg);
+    virtual void emitPush(std::string reg);
+    virtual void emitPop(std::string reg);
 
-    virtual void emit_single_ret();
-    virtual void emit_label(std::string name);
+    virtual void emitSingleRet();
+    virtual void emitLabel(std::string name);
 
-    virtual TypeMetadata* get_type_from_name(std::string name);
+    virtual TypeMetadata* getTypeFromName(std::string name);
   };
 } // namespace hcc

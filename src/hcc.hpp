@@ -12,18 +12,18 @@
 #define hccprivate private:
 #endif
 
-extern std::string hcc_compile_error;
+extern std::string hccCompileError;
 
 namespace hcc {
   class Value;
 
   class HCC {
     hccprivate Parser* parser;
-    FILE* outfd;
+    FILE* outFd;
 
   public:
     std::vector<std::string> sources;
-    bool print_ast;
+    bool printAst;
 
     Backend* backend;
     IR ir;
@@ -36,7 +36,7 @@ namespace hcc {
                         OPT_CONSTANT_PROPAGATION };
     Flags<Optimization> optimizations;
 
-    FunctionMetadata current_function;
+    FunctionMetadata currentFunction;
     std::stack<std::unique_ptr<Value>> values;
 
     HCC();

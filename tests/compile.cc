@@ -6,10 +6,10 @@
 #include <string>
 #include <util.hpp>
 
-std::string compile_output = "";
+std::string compileOutput = "";
 
-Result<void, std::string> compile_quick(std::string code, std::string backend) {
-  compile_output.clear();
+Result<void, std::string> compileQuick(std::string code, std::string backend) {
+  compileOutput.clear();
 
   hcc::HCC hcc;
 
@@ -38,8 +38,8 @@ Result<void, std::string> compile_quick(std::string code, std::string backend) {
     if (result.is_error())
       return result;
 
-    compile_output = readFile("tests_tmp/a.out").get_success().value();
-    compile_output = hcc.backend->output;
+    compileOutput = readFile("tests_tmp/a.out").getSuccess().value();
+    compileOutput = hcc.backend->output;
     /*
     fmt::println("-------");
     fmt::println("{}", hcc.backend->output);

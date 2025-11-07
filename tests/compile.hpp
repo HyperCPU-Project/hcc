@@ -2,6 +2,6 @@
 #define HCC_NOPRIVATE
 #include <hcc.hpp>
 
-extern std::string compile_output;
+extern std::string compileOutput;
 
-Result<void, std::string> compile_quick(std::string code, std::string backend);
+Result<void, std::string> compileQuick(std::string code, std::string backend);
