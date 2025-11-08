@@ -94,7 +94,7 @@ Result<void, std::string> HCC::ParseAndCompile() {
     return Result<void, std::string>::Error("ir compile error: " + hcc_compile_error);
   }
 
-  backend->peephole_optimize();
+  backend->PeepholeOptimize();
   asm_output = backend->CompileCalls();
 
   fmt::fprintf(out_fd, "%s", asm_output);

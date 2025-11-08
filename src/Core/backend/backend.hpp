@@ -111,7 +111,7 @@ namespace hcc {
     Backend();
     virtual ~Backend() = 0;
 
-    virtual void peephole_optimize();
+    virtual void PeepholeOptimize();
 
     virtual std::string CompileCalls();
 

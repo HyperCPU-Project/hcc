@@ -2,7 +2,7 @@
 
 using namespace hcc;
 
-void Backend::peephole_optimize() {
+void Backend::PeepholeOptimize() {
   // useless push pop
   for (size_t i = 0; i < emitcalls.size(); i++) {
     struct EmitCall& ec = emitcalls.at(i);
