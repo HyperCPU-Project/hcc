@@ -6,7 +6,7 @@
 using namespace hcc;
 
 void AstAddrof::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "&" + name << std::endl;
 }
 

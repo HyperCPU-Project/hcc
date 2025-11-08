@@ -5,14 +5,14 @@
 using namespace hcc;
 
 void AstBinaryOp::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstBinaryOp" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "op: " << op << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "left:" << std::endl;
   left->Print(indent + 2);
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "right:" << std::endl;
   right->Print(indent + 2);
 }

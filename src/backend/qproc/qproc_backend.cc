@@ -4,7 +4,7 @@
 using namespace hcc;
 
 QprocBackend::QprocBackend() {
-  reg_idex = 0;
+  reg_index = 0;
   types["void"] = TypeMetadata{"void", 0};
   types["char"] = TypeMetadata{"char", 1};
   types["short"] = TypeMetadata{"short", 2};
@@ -17,9 +17,9 @@ QprocBackend::QprocBackend() {
 }
 
 uint64_t QprocBackend::IncrementRegIndex() {
-  uint64_t res = reg_idex++;
-  if (reg_idex > 12) {
-    reg_idex = 0;
+  uint64_t res = reg_index++;
+  if (reg_index > 12) {
+    reg_index = 0;
   }
   return res;
 }

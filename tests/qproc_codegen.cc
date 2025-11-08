@@ -6,7 +6,7 @@ TEST(HCCTest, FunctionQprocCodegenTest) {
 
   EXPECT_EQ(result.IsSuccess(), true);
 
-  EXPECT_EQ(compileOutput, R"(main:
+  EXPECT_EQ(compile_output, R"(main:
 movi r0 0
 pop ip
 )");

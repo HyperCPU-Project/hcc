@@ -5,16 +5,16 @@
 using namespace hcc;
 
 void AstVarDeclare::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstVarDeclare" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "names: ";
   for (std::string name : names) {
     std::cout << name << " ";
   }
   std::cout << std::endl;
 
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "type: " << type << std::endl;
 }
 

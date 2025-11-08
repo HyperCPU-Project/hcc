@@ -9,11 +9,11 @@ public:
   struct SuccessTag {};
   struct ErrorTag {};
 
-  static Result success(const T& value) {
+  static Result Success(const T& value) {
     return Result(SuccessTag{}, value);
   }
 
-  static Result error(const E& error) {
+  static Result Error(const E& error) {
     return Result(ErrorTag{}, error);
   }
 

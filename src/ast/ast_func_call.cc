@@ -5,9 +5,9 @@
 using namespace hcc;
 
 void AstFuncCall::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstFuncCall" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
   for (AstNode* arg : args) {
     arg->Print(indent + 1);

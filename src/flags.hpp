@@ -10,11 +10,11 @@ namespace hcc {
   public:
     Flags() = default;
 
-    void setFlag(T v) {
+    void SetFlag(T v) {
       flags.push_back(v);
     }
 
-    bool unsetFlag(T v) {
+    bool UnsetFlag(T v) {
       for (size_t i = 0; i < flags.size(); i++) {
         if (flags[i] == v) {
           flags.erase(flags.begin() + i);
@@ -24,9 +24,9 @@ namespace hcc {
       return false;
     }
 
-    void flipFlag(T v) {
-      if (!unsetFlag(v))
-        setFlag(v);
+    void FlipFlag(T v) {
+      if (!UnsetFlag(v))
+        SetFlag(v);
     }
 
     bool HasFlag(T v) {

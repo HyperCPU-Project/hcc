@@ -6,7 +6,7 @@
 namespace hcc {
   class Backend {
   protected:
-    uint64_t reg_idex;
+    uint64_t reg_index;
 
   public:
     std::string output;

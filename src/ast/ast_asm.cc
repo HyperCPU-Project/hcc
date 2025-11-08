@@ -5,7 +5,7 @@
 using namespace hcc;
 
 void AstAsm::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstAsm" << std::endl;
 }
 

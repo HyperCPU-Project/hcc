@@ -51,7 +51,7 @@ backends:
         return 1;
       } else {
         if (hcc.optimizations.HasFlag(optimization))
-          hcc.optimizations.unsetFlag(optimization);
+          hcc.optimizations.UnsetFlag(optimization);
       }
     } else if (arg.starts_with("-f")) {
       std::string optimization_name = arg;
@@ -62,7 +62,7 @@ backends:
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
-        hcc.optimizations.setFlag(optimization);
+        hcc.optimizations.SetFlag(optimization);
       }
     } else if (arg.starts_with("-")) {
       fmt::print("[hcc] unknown flag: {}\n", arg);

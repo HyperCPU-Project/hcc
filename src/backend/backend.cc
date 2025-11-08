@@ -5,7 +5,7 @@
 using namespace hcc;
 
 Backend::Backend() {
-  reg_idex = 0;
+  reg_index = 0;
 }
 
 Backend::~Backend() {
@@ -19,7 +19,7 @@ uint64_t Backend::IncrementRegIndex() {
 }
 
 void Backend::ResetRegIndex() {
-  reg_idex = 0;
+  reg_index = 0;
 }
 
 void Backend::EmitFunctionPrologue(std::string name) {

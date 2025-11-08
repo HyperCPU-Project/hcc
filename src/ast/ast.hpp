@@ -12,7 +12,7 @@ namespace hcc {
     std::vector<AstNode*> children;
 
   protected:
-    void printIndent(int indent) const;
+    void PrintIndent(int indent) const;
   };
 
   class AstRootNode : public AstNode {

@@ -6,15 +6,15 @@
 using namespace hcc;
 
 void AstFuncDef::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstFuncDef" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "args:" << std::endl;
   for (auto& [arg_name, arg_type] : args) {
-    printIndent(indent + 2);
+    PrintIndent(indent + 2);
     std::cout << arg_name << ": " << arg_type << std::endl;
   }
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
   for (const auto& stmt : children) {
     stmt->Print(indent + 1);

@@ -22,12 +22,12 @@ HCC::HCC()
   parser = new Parser();
 
   current_function.align = 0;
-  optimizations.setFlag(OPT_CONSTANT_FOLDING);
-  optimizations.setFlag(OPT_FUNCTION_BODY_ELIMINATION);
-  optimizations.setFlag(OPT_DCE);
-  optimizations.setFlag(OPT_FP_OMISSION);
-  optimizations.setFlag(OPT_STACK_RESERVE);
-  optimizations.setFlag(OPT_CONSTANT_PROPAGATION);
+  optimizations.SetFlag(OPT_CONSTANT_FOLDING);
+  optimizations.SetFlag(OPT_FUNCTION_BODY_ELIMINATION);
+  optimizations.SetFlag(OPT_DCE);
+  optimizations.SetFlag(OPT_FP_OMISSION);
+  optimizations.SetFlag(OPT_STACK_RESERVE);
+  optimizations.SetFlag(OPT_CONSTANT_PROPAGATION);
 }
 
 HCC::~HCC() {

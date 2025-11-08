@@ -5,7 +5,7 @@
 using namespace hcc;
 
 void AstReturn::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstReturn" << std::endl;
   if (expr) {
     expr->Print(indent + 1);

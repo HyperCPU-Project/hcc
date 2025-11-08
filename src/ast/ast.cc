@@ -18,7 +18,7 @@ bool AstNode::Compile(HCC* hcc) {
   return true;
 }
 
-void AstNode::printIndent(int indent) const {
+void AstNode::PrintIndent(int indent) const {
   for (int i = 0; i < indent; ++i) {
     std::cout << "  ";
   }

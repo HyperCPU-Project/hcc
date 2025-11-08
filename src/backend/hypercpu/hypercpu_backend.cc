@@ -3,7 +3,7 @@
 using namespace hcc;
 
 HyperCPUBackend::HyperCPUBackend() {
-  reg_idex = 0;
+  reg_index = 0;
   types["void"] = TypeMetadata{"void", 0};
   types["char"] = TypeMetadata{"char", 1};
   types["short"] = TypeMetadata{"short", 2};
@@ -16,9 +16,9 @@ HyperCPUBackend::HyperCPUBackend() {
 }
 
 uint64_t HyperCPUBackend::IncrementRegIndex() {
-  uint64_t res = reg_idex++;
-  if (reg_idex > 7) {
-    reg_idex = 0;
+  uint64_t res = reg_index++;
+  if (reg_index > 7) {
+    reg_index = 0;
   }
   return res;
 }

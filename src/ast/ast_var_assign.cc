@@ -5,11 +5,11 @@
 using namespace hcc;
 
 void AstVarAssign::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << "AstVarAssign" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "expr:" << std::endl;
   expr->Print(indent + 2);
 }

@@ -5,7 +5,7 @@
 using namespace hcc;
 
 void AstVarRef::Print(int indent) const {
-  printIndent(indent);
+  PrintIndent(indent);
   std::cout << name << std::endl;
 }
 
