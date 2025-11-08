@@ -4,16 +4,16 @@
 
 using namespace hcc;
 
-void AstAsm::print(int indent) const {
-  printIndent(indent);
+void AstAsm::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << "AstAsm" << std::endl;
 }
 
-bool AstAsm::compile(HCC* hcc) {
+bool AstAsm::Compile(HCC* hcc) {
   IrOpcode op;
   op.type = IrOpcode::IR_ASM;
   op.asm_.code = code;
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
   return true;
 }

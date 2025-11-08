@@ -4,32 +4,32 @@
 
 using namespace hcc;
 
-void AstVarAssign::print(int indent) const {
-  printIndent(indent);
+void AstVarAssign::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << "AstVarAssign" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "expr:" << std::endl;
-  expr->print(indent + 2);
+  expr->Print(indent + 2);
 }
 
 AstVarAssign::~AstVarAssign() {
   delete expr;
 }
 
-bool AstVarAssign::compile(HCC* hcc) {
-  hcc->ir.add_reset();
-  hcc->ir.add_line();
+bool AstVarAssign::Compile(HCC* hcc) {
+  hcc->ir.AddReset();
+  hcc->ir.AddLine();
 
-  if (!expr->compile(hcc))
+  if (!expr->Compile(hcc))
     return false;
 
   IrOpcode op;
   op.type = IrOpcode::IR_ASSIGN;
   op.assign.name = name;
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
   return true;
 }

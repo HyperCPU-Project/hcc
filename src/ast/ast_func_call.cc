@@ -4,13 +4,13 @@
 
 using namespace hcc;
 
-void AstFuncCall::print(int indent) const {
-  printIndent(indent);
+void AstFuncCall::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << "AstFuncCall" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
   for (AstNode* arg : args) {
-    arg->print(indent + 1);
+    arg->Print(indent + 1);
   }
 }
 
@@ -20,7 +20,7 @@ AstFuncCall::~AstFuncCall() {
   }
 }
 
-bool AstFuncCall::compile(HCC* hcc) {
+bool AstFuncCall::Compile(HCC* hcc) {
   /*
   std::vector<std::string> pushed_regs;
   for (unsigned int i = 0; i < args.size() && i < hcc->backend->abi.args_registers.size(); i++) {
@@ -54,7 +54,7 @@ bool AstFuncCall::compile(HCC* hcc) {
   op.type = IrOpcode::IR_CALL;
   op.call.name = name;
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
   return true;
 }

@@ -4,11 +4,11 @@
 
 using namespace hcc;
 
-void AstReturn::print(int indent) const {
-  printIndent(indent);
+void AstReturn::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << "AstReturn" << std::endl;
   if (expr) {
-    expr->print(indent + 1);
+    expr->Print(indent + 1);
   }
 }
 
@@ -16,18 +16,18 @@ AstReturn::~AstReturn() {
   delete expr;
 }
 
-bool AstReturn::compile(HCC* hcc) {
-  hcc->ir.add_reset();
+bool AstReturn::Compile(HCC* hcc) {
+  hcc->ir.AddReset();
 
   if (expr) {
-    if (!expr->compile(hcc))
+    if (!expr->Compile(hcc))
       return false;
   }
 
   IrOpcode op;
   op.type = IrOpcode::IR_RET;
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
   return true;
 }

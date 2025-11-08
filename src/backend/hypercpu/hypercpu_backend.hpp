@@ -7,32 +7,32 @@ namespace hcc {
   public:
     HyperCPUBackend();
 
-    uint64_t increment_reg_index();
+    uint64_t IncrementRegIndex() override;
 
-    void emit_function_prologue(std::string name) override;
-    void emit_function_epilogue() override;
+    void EmitFunctionPrologue(std::string name) override;
+    void EmitFunctionEpilogue() override;
 
-    std::string emit_mov_const(uint64_t value, std::string reg_name = "") override;
+    std::string EmitMovConst(uint64_t value, std::string reg_name = "") override;
 
-    void emit_add(std::string ROUT, std::string RLHS, std::string RRHS) override;
-    void emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) override;
-    void emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) override;
-    void emit_div(std::string ROUT, std::string RLHS, std::string RRHS) override;
+    void EmitAdd(std::string ROUT, std::string RLHS, std::string RRHS) override;
+    void EmitSub(std::string ROUT, std::string RLHS, std::string RRHS) override;
+    void EmitMul(std::string ROUT, std::string RLHS, std::string RRHS) override;
+    void EmitDiv(std::string ROUT, std::string RLHS, std::string RRHS) override;
 
-    void emit_move(std::string rdest, std::string rsrc) override;
+    void EmitMove(std::string rdest, std::string rsrc) override;
 
-    void emit_reserve_stack_space(uint64_t size) override;
-    void emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) override;
+    void EmitReserveStackSpace(uint64_t size) override;
+    void EmitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) override;
 
-    std::string emit_load_from_stack(uint64_t align, uint64_t size, std::string load_reg = "") override;
-    std::string emit_loadaddr_from_stack(uint64_t align, std::string load_reg = "") override;
+    std::string EmitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg = "") override;
+    std::string EmitLoadaddrFromStack(uint64_t align, std::string load_reg = "") override;
 
-    void emit_call(std::string name) override;
+    void EmitCall(std::string name) override;
 
-    void emit_push(std::string reg) override;
-    void emit_pop(std::string reg) override;
+    void EmitPush(std::string reg) override;
+    void EmitPop(std::string reg) override;
 
-    void emit_single_ret() override;
-    void emit_label(std::string name) override;
+    void EmitSingleRet() override;
+    void EmitLabel(std::string name) override;
   };
 } // namespace hcc

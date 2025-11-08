@@ -15,7 +15,7 @@ HyperCPUBackend::HyperCPUBackend() {
   }
 }
 
-uint64_t HyperCPUBackend::increment_reg_index() {
+uint64_t HyperCPUBackend::IncrementRegIndex() {
   uint64_t res = reg_index++;
   if (reg_index > 7) {
     reg_index = 0;
@@ -23,24 +23,24 @@ uint64_t HyperCPUBackend::increment_reg_index() {
   return res;
 }
 
-void HyperCPUBackend::emit_function_prologue(std::string name) {
+void HyperCPUBackend::EmitFunctionPrologue(std::string name) {
   if (codegen_comments)
     output += "// emit_function_prologue\n";
   output += fmt::sprintf("%s:\n", name);
   output += fmt::sprintf("push xbp;\nmov xbp, xsp;\n");
 }
 
-void HyperCPUBackend::emit_function_epilogue() {
+void HyperCPUBackend::EmitFunctionEpilogue() {
   if (codegen_comments)
     output += "// emit_function_epilogue\n";
   output += fmt::sprintf("mov xsp, xbp;\npop xbp;\nret;\n");
 }
 
-std::string HyperCPUBackend::emit_mov_const(uint64_t value, std::string reg_name) {
+std::string HyperCPUBackend::EmitMovConst(uint64_t value, std::string reg_name) {
   if (codegen_comments)
     output += "// emit_mov_const\n";
   if (reg_name == "") {
-    reg_name = fmt::format("x{}", increment_reg_index());
+    reg_name = fmt::format("x{}", IncrementRegIndex());
   }
 
   output += fmt::sprintf("mov %s, 0u%ld;\n", reg_name, value);
@@ -48,7 +48,7 @@ std::string HyperCPUBackend::emit_mov_const(uint64_t value, std::string reg_name
   return reg_name;
 }
 
-void HyperCPUBackend::emit_add(std::string ROUT, std::string RLHS, std::string RRHS) {
+void HyperCPUBackend::EmitAdd(std::string ROUT, std::string RLHS, std::string RRHS) {
   if (codegen_comments)
     output += "// emit_add\n";
   if (ROUT != RLHS) {
@@ -58,7 +58,7 @@ void HyperCPUBackend::emit_add(std::string ROUT, std::string RLHS, std::string R
   output += fmt::sprintf("add %s, %s;\n", RLHS, RRHS);
 }
 
-void HyperCPUBackend::emit_sub(std::string ROUT, std::string RLHS, std::string RRHS) {
+void HyperCPUBackend::EmitSub(std::string ROUT, std::string RLHS, std::string RRHS) {
   if (codegen_comments)
     output += "// emit_sub\n";
   if (ROUT != RLHS) {
@@ -68,7 +68,7 @@ void HyperCPUBackend::emit_sub(std::string ROUT, std::string RLHS, std::string R
   output += fmt::sprintf("sub %s, %s;\n", RLHS, RRHS);
 }
 
-void HyperCPUBackend::emit_mul(std::string ROUT, std::string RLHS, std::string RRHS) {
+void HyperCPUBackend::EmitMul(std::string ROUT, std::string RLHS, std::string RRHS) {
   if (codegen_comments)
     output += "// emit_mul\n";
   if (ROUT != RLHS) {
@@ -78,7 +78,7 @@ void HyperCPUBackend::emit_mul(std::string ROUT, std::string RLHS, std::string R
   output += fmt::sprintf("mul %s, %s;\n", RLHS, RRHS);
 }
 
-void HyperCPUBackend::emit_div(std::string ROUT, std::string RLHS, std::string RRHS) {
+void HyperCPUBackend::EmitDiv(std::string ROUT, std::string RLHS, std::string RRHS) {
   if (codegen_comments)
     output += "// emit_div\n";
   // RLHS - x0
@@ -93,7 +93,7 @@ void HyperCPUBackend::emit_div(std::string ROUT, std::string RLHS, std::string R
   }
 }
 
-void HyperCPUBackend::emit_move(std::string rdest, std::string rsrc) {
+void HyperCPUBackend::EmitMove(std::string rdest, std::string rsrc) {
   if (rdest != rsrc) {
     if (codegen_comments)
       output += "// emit_move\n";
@@ -101,35 +101,35 @@ void HyperCPUBackend::emit_move(std::string rdest, std::string rsrc) {
   }
 }
 
-void HyperCPUBackend::emit_reserve_stack_space(uint64_t size) {
+void HyperCPUBackend::EmitReserveStackSpace(uint64_t size) {
   if (codegen_comments)
     output += "// emit_reserve_stack_space\n";
   output += fmt::sprintf("sub xsp, 0u%ld;\n", size);
 }
 
-std::string HyperCPUBackend::emit_load_from_stack(uint64_t align, uint64_t size, std::string reg) {
+std::string HyperCPUBackend::EmitLoadFromStack(uint64_t align, uint64_t size, std::string reg) {
   if (codegen_comments)
     output += "// emit_load_from_stack\n";
   if (reg.empty()) {
-    reg = "x" + std::to_string(increment_reg_index());
+    reg = "x" + std::to_string(IncrementRegIndex());
   }
   output += fmt::sprintf("mov %s, b%d ptr [xbp+0u%d];\n", reg, size * 8, (0xff - align + 1));
   return reg;
 }
 
-void HyperCPUBackend::emit_store_from_stack(uint64_t align, uint64_t size, std::string rsrc) {
+void HyperCPUBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) {
   if (codegen_comments)
     output += "// emit_store_from_stack\n";
   output += fmt::sprintf("mov b%d ptr [xbp+0u%d], %s;\n", size * 8, (0xff - align + 1), rsrc);
 }
 
-std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::string reg) {
+std::string HyperCPUBackend::EmitLoadaddrFromStack(uint64_t align, std::string reg) {
   if (codegen_comments)
     output += "// emit_loadaddr_from_stack\n";
   if (reg.empty())
-    reg = std::to_string(increment_reg_index());
+    reg = std::to_string(IncrementRegIndex());
   if (reg == "r0")
-    reg = std::to_string(increment_reg_index());
+    reg = std::to_string(IncrementRegIndex());
   reg = "r" + reg;
 
   output += fmt::sprintf("mov %s, xbp;\n", reg);
@@ -137,31 +137,31 @@ std::string HyperCPUBackend::emit_loadaddr_from_stack(uint64_t align, std::strin
   return reg;
 }
 
-void HyperCPUBackend::emit_call(std::string name) {
+void HyperCPUBackend::EmitCall(std::string name) {
   if (codegen_comments)
     output += "// emit_call\n";
   output += fmt::sprintf("call %s;\n", name);
 }
 
-void HyperCPUBackend::emit_push(std::string reg) {
+void HyperCPUBackend::EmitPush(std::string reg) {
   if (codegen_comments)
     output += "// emit_push\n";
   output += fmt::sprintf("push %s;\n", reg);
 }
 
-void HyperCPUBackend::emit_pop(std::string reg) {
+void HyperCPUBackend::EmitPop(std::string reg) {
   if (codegen_comments)
     output += "// emit_pop\n";
   output += fmt::sprintf("pop %s;\n", reg);
 }
 
-void HyperCPUBackend::emit_single_ret() {
+void HyperCPUBackend::EmitSingleRet() {
   if (codegen_comments)
     output += "// emit_single_ret\n";
   output += "ret;\n";
 }
 
-void HyperCPUBackend::emit_label(std::string name) {
+void HyperCPUBackend::EmitLabel(std::string name) {
   if (codegen_comments)
     output += "// emit_label\n";
   output += name + ":\n";
