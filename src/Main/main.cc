@@ -9,12 +9,12 @@ using namespace hcc;
 int main(int argc, char** argv) {
   HCC hcc;
 
-  hcc.openOutput("a.s");
-  hcc.selectBackend("hypercpu");
+  hcc.OpenOutput("a.s");
+  hcc.SelectBackend("hypercpu");
 
-  argsShift();
+  ArgsShift();
   for ([[maybe_unused]] int i = 0; argc; ++i) {
-    std::string arg = argsShift();
+    std::string arg = ArgsShift();
 
     if (arg == "--help" || arg == "-h") {
       fmt::print(R"(usage: hcc [OPTION]... [INPUT]
@@ -31,20 +31,20 @@ backends:
 )");
       return 0;
     } else if (arg == "-o") {
-      hcc.openOutput(argsShift());
+      hcc.OpenOutput(ArgsShift());
     } else if (arg == "--ast") {
       hcc.print_ast = true;
     } else if (arg == "--backend") {
-      auto result = hcc.selectBackend(argsShift());
-      if (result.is_error()) {
-        fmt::print("[hcc] failed to select a backend: {}\n", result.get_error().value());
+      auto result = hcc.SelectBackend(ArgsShift());
+      if (result.IsError()) {
+        fmt::print("[hcc] failed to select a backend: {}\n", result.GetError().value());
         return 1;
       }
     } else if (arg.starts_with("-fno-")) {
       std::string optimization_name = arg;
       optimization_name.erase(optimization_name.begin(), optimization_name.begin() + 5);
 
-      std::optional<Optimization> optimization_opt = hcc.getOptimizationFromName(optimization_name);
+      std::optional<Optimization> optimization_opt = hcc.GetOptimizationFromName(optimization_name);
       if (!optimization_opt.has_value()) {
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
@@ -57,7 +57,7 @@ backends:
       std::string optimization_name = arg;
       optimization_name.erase(optimization_name.begin(), optimization_name.begin() + 2);
 
-      std::optional<Optimization> optimization_opt = hcc.getOptimizationFromName(optimization_name);
+      std::optional<Optimization> optimization_opt = hcc.GetOptimizationFromName(optimization_name);
       if (!optimization_opt.has_value()) {
         fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
@@ -74,9 +74,9 @@ backends:
   }
 
   {
-    auto result = hcc.parseAndCompile();
-    if (result.is_error()) {
-      fmt::print("[hcc] error: {}\n", result.get_error().value());
+    auto result = hcc.ParseAndCompile();
+    if (result.IsError()) {
+      fmt::print("[hcc] error: {}\n", result.GetError().value());
     }
   }
 

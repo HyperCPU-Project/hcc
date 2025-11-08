@@ -1,7 +1,7 @@
 #include "../ir.hpp"
 using namespace hcc;
 
-void IR::optimize_constant_propagation(HCC* hcc) {
+void IR::OptimizeConstantPropagation(HCC* hcc) {
   (void)hcc;
   for (size_t passes = passes_for_each_optimization; passes > 0; passes--) {
     for (size_t i = 0; i < ir.size(); i++) {

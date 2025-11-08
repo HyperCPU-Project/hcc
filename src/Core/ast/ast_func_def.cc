@@ -4,23 +4,23 @@
 
 using namespace hcc;
 
-void AstFuncDef::print(int indent) const {
-  printIndent(indent);
+void AstFuncDef::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << "AstFuncDef" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "args:" << std::endl;
   for (auto& [arg_name, arg_type] : args) {
-    printIndent(indent + 2);
+    PrintIndent(indent + 2);
     std::cout << arg_name << ": " << arg_type << std::endl;
   }
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
   for (const auto& stmt : children) {
-    stmt->print(indent + 1);
+    stmt->Print(indent + 1);
   }
 }
 
-bool AstFuncDef::compile(HCC* hcc) {
+bool AstFuncDef::Compile(HCC* hcc) {
   IrOpcode op;
   op.type = IrOpcode::IR_FUNCDEF;
   op.funcdef.name = name;
@@ -28,15 +28,15 @@ bool AstFuncDef::compile(HCC* hcc) {
   for (auto& [arg_name, arg_type] : args) {
     op.funcdef.arg_names.push_back(arg_name);
 
-    TypeMetadata* md = hcc->backend->get_type_from_name(arg_type);
+    TypeMetadata* md = hcc->backend->GetTypeFromName(arg_type);
     if (!md)
       return false;
     op.funcdef.arg_types.push_back(*md);
   }
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
-  if (!AstNode::compile(hcc))
+  if (!AstNode::Compile(hcc))
     return false;
 
   return true;

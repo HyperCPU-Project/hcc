@@ -2,9 +2,9 @@
 
 using namespace hcc;
 
-std::string HyperCPUBackend::compile_calls() {
+std::string HyperCPUBackend::CompileCalls() {
   std::string output;
-  for (EmitCall ec : emitcalls) {
+  for (struct EmitCall ec : emitcalls) {
     switch (ec.type) {
     case Backend::EmitCall::FUNCTION_PROLOGUE:
       if (codegen_comments)

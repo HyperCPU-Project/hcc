@@ -9,27 +9,27 @@ public:
   struct SuccessTag {};
   struct ErrorTag {};
 
-  static Result success(const T& value) {
+  static Result Success(const T& value) {
     return Result(SuccessTag{}, value);
   }
 
-  static Result error(const E& error) {
+  static Result Error(const E& error) {
     return Result(ErrorTag{}, error);
   }
 
-  bool is_success() const {
+  bool IsSuccess() const {
     return success_value.has_value();
   }
 
-  bool is_error() const {
+  bool IsError() const {
     return error_value.has_value();
   }
 
-  std::optional<T> get_success() const {
+  std::optional<T> GetSuccess() const {
     return success_value;
   }
 
-  std::optional<E> get_error() const {
+  std::optional<E> GetError() const {
     return error_value;
   }
 
@@ -50,24 +50,24 @@ public:
   struct SuccessTag {};
   struct ErrorTag {};
 
-  static Result success() {
+  static Result Success() {
     return Result(SuccessTag{});
   }
 
-  static Result error(const E& error) {
+  static Result Error(const E& error) {
     return Result(ErrorTag{}, error);
   }
 
-  bool is_success() const {
+  bool IsSuccess() const {
     return is_success_;
   }
 
-  bool is_error() const {
+  bool IsError() const {
     return !is_success_;
   }
 
-  std::optional<E> get_error() const {
-    return is_error() ? std::optional<E>(error_value) : std::nullopt;
+  std::optional<E> GetError() const {
+    return IsError() ? std::optional<E>(error_value) : std::nullopt;
   }
 
 private:

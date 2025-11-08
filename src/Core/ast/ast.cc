@@ -10,15 +10,15 @@ AstNode::~AstNode() {
   }
 }
 
-bool AstNode::compile(HCC* hcc) {
+bool AstNode::Compile(HCC* hcc) {
   for (AstNode* node : children) {
-    if (!node->compile(hcc))
+    if (!node->Compile(hcc))
       return false;
   }
   return true;
 }
 
-void AstNode::printIndent(int indent) const {
+void AstNode::PrintIndent(int indent) const {
   for (int i = 0; i < indent; ++i) {
     std::cout << "  ";
   }

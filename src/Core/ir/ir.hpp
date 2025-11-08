@@ -91,28 +91,28 @@ namespace hcc {
     unsigned long index;
     std::vector<IrOpcode> ir;
 
-    IrOpcode next();
-    IrOpcode peek(unsigned long count = 1);
+    IrOpcode Next();
+    IrOpcode Peek(unsigned long count = 1);
 
-    void optimize_constant_propagation(HCC* hcc);
-    void optimize_dce_unused(HCC* hcc);
-    void optimize_stack_setup(HCC* hcc);
-    void optimize_stack_reserve(HCC* hcc);
+    void OptimizeDceUnused(HCC* hcc);
+    void OptimizeStackSetup(HCC* hcc);
+    void OptimizeStackReserve(HCC* hcc);
+    void OptimizeConstantPropagation(HCC* hcc);
 
   public:
     size_t passes_for_each_optimization = 64;
 
     IR();
 
-    void add_line();
-    void add_reset();
-    void add(IrOpcode op);
+    void AddLine();
+    void AddReset();
+    void Add(IrOpcode op);
 
-    bool opcode_affects_stack(IrOpcode op);
+    bool OpcodeAffectsStack(IrOpcode op);
 
-    void performStaticOptimizations(HCC* hcc);
+    void PerformStaticOptimizations(HCC* hcc);
     bool compile(HCC* hcc);
 
-    bool results_in_error(HCC* hcc);
+    bool resultsInError(HCC* hcc);
   };
 } // namespace hcc

@@ -2,7 +2,7 @@
 
 using namespace hcc;
 
-void IR::optimize_dce_unused([[maybe_unused]] HCC* hcc) {
+void IR::OptimizeDceUnused([[maybe_unused]] HCC* hcc) {
   std::vector<std::string> used_vars;
   for (size_t passes = passes_for_each_optimization; passes > 0; passes--) {
     std::string var = "";

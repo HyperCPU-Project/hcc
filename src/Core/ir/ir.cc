@@ -6,23 +6,23 @@ using namespace hcc;
 
 IR::IR() = default;
 
-void IR::add_line() {
+void IR::AddLine() {
   IrOpcode op;
   op.type = IrOpcode::IR_LINE;
   ir.push_back(op);
 }
 
-void IR::add_reset() {
+void IR::AddReset() {
   IrOpcode op;
   op.type = IrOpcode::IR_RESET;
   ir.push_back(op);
 }
 
-void IR::add(IrOpcode op) {
+void IR::Add(IrOpcode op) {
   ir.push_back(op);
 }
 
-IrOpcode IR::next() {
+IrOpcode IR::Next() {
   if (index >= ir.size()) {
     IrOpcode op;
     op.type = IrOpcode::IR_END;
@@ -31,21 +31,21 @@ IrOpcode IR::next() {
   return ir[index++];
 }
 
-IrOpcode IR::peek(unsigned long count) {
-  unsigned long index_old = index;
+IrOpcode IR::Peek(unsigned long count) {
+  unsigned long indexOld = index;
   IrOpcode op;
 
   op.type = IrOpcode::IR_NULL;
   for (unsigned long i = 0; i < count; i++) {
-    op = next();
+    op = Next();
   }
 
-  index = index_old;
+  index = indexOld;
 
   return op;
 }
 
-bool IR::opcode_affects_stack(IrOpcode op) {
+bool IR::OpcodeAffectsStack(IrOpcode op) {
   switch (op.type) {
   case IrOpcode::IR_ALLOCA:
     return true;
@@ -56,31 +56,31 @@ bool IR::opcode_affects_stack(IrOpcode op) {
   }
 }
 
-void IR::performStaticOptimizations(HCC* hcc) {
+void IR::PerformStaticOptimizations(HCC* hcc) {
   {
     IrOpcode op;
     op.type = IrOpcode::IR_END;
-    add(op);
+    Add(op);
   }
 
   if (hcc->optimizations.HasFlag(Optimization::OPT_CONSTANT_PROPAGATION)) {
-    optimize_constant_propagation(hcc);
+    OptimizeConstantPropagation(hcc);
   }
   if (hcc->optimizations.HasFlag(Optimization::OPT_DCE)) {
-    optimize_dce_unused(hcc);
+    OptimizeDceUnused(hcc);
   }
   if (hcc->optimizations.HasFlag(Optimization::OPT_FP_OMISSION)) {
-    optimize_stack_setup(hcc);
+    OptimizeStackSetup(hcc);
   }
   if (hcc->optimizations.HasFlag(Optimization::OPT_STACK_RESERVE)) {
-    optimize_stack_reserve(hcc);
+    OptimizeStackReserve(hcc);
   }
 }
 
 bool IR::compile(HCC* hcc) {
-  IrOpcode currentFuncdefOp;
+  IrOpcode current_funcdef_op;
   for (;;) {
-    IrOpcode op = next();
+    IrOpcode op = Next();
     if (op.type == IrOpcode::IR_END)
       break;
 
@@ -90,32 +90,31 @@ bool IR::compile(HCC* hcc) {
       return false;
       break;
     case IrOpcode::IR_FUNCDEF:
-      if (peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(Optimization::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
-        hcc->backend->emit_label(op.funcdef.name);
-        hcc->backend->emit_single_ret();
-        next();
+      if (Peek().type == IrOpcode::IR_RET && hcc->optimizations.HasFlag(Optimization::OPT_FUNCTION_BODY_ELIMINATION)) { // function with no body that instantly returns
+        hcc->backend->EmitLabel(op.funcdef.name);
+        hcc->backend->EmitSingleRet();
+        Next();
       } else {
         if (op.funcdef.need_stack) {
-          hcc->backend->reset_reg_index();
-          hcc->backend->emit_function_prologue(op.funcdef.name);
+          hcc->backend->EmitFunctionPrologue(op.funcdef.name);
         } else {
-          hcc->backend->emit_label(op.funcdef.name);
+          hcc->backend->EmitLabel(op.funcdef.name);
         }
-        currentFuncdefOp = op;
+        current_funcdef_op = op;
       }
       break;
     case IrOpcode::IR_CCTV: {
-      hcc->backend->emit_push_imm(op.cctv.value);
+      hcc->backend->EmitPushImm(op.cctv.value);
     } break;
     case IrOpcode::IR_RET: {
       if (op.ret.has_value) {
-        hcc->backend->emit_pop(hcc->backend->abi.return_register);
+        hcc->backend->EmitPop(hcc->backend->abi.return_register);
       }
 
-      if (currentFuncdefOp.funcdef.need_stack)
-        hcc->backend->emit_function_epilogue();
+      if (current_funcdef_op.funcdef.need_stack)
+        hcc->backend->EmitFunctionEpilogue();
       else
-        hcc->backend->emit_single_ret();
+        hcc->backend->EmitSingleRet();
     } break;
     case IrOpcode::IR_ALLOCA: {
       size_t offset;
@@ -123,28 +122,28 @@ bool IR::compile(HCC* hcc) {
       hcc->current_function.variables[op.alloca.name] = VariableMetadata(offset, op.alloca.md);
     } break;
     case IrOpcode::IR_ADD: {
-      hcc->backend->emit_pop(hcc->backend->abi.registers[1]);
-      hcc->backend->emit_pop(hcc->backend->abi.registers[0]);
-      hcc->backend->emit_add(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
-      hcc->backend->emit_push(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitAdd(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPush(hcc->backend->abi.registers[0]);
     } break;
     case IrOpcode::IR_SUB: {
-      hcc->backend->emit_pop(hcc->backend->abi.registers[1]);
-      hcc->backend->emit_pop(hcc->backend->abi.registers[0]);
-      hcc->backend->emit_sub(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
-      hcc->backend->emit_push(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitSub(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPush(hcc->backend->abi.registers[0]);
     } break;
     case IrOpcode::IR_MUL: {
-      hcc->backend->emit_pop(hcc->backend->abi.registers[1]);
-      hcc->backend->emit_pop(hcc->backend->abi.registers[0]);
-      hcc->backend->emit_mul(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
-      hcc->backend->emit_push(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitMul(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPush(hcc->backend->abi.registers[0]);
     } break;
     case IrOpcode::IR_DIV: {
-      hcc->backend->emit_pop(hcc->backend->abi.registers[1]);
-      hcc->backend->emit_pop(hcc->backend->abi.registers[0]);
-      hcc->backend->emit_div(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
-      hcc->backend->emit_push(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPop(hcc->backend->abi.registers[0]);
+      hcc->backend->EmitDiv(hcc->backend->abi.registers[0], hcc->backend->abi.registers[0], hcc->backend->abi.registers[1]);
+      hcc->backend->EmitPush(hcc->backend->abi.registers[0]);
     } break;
     case IrOpcode::IR_ASSIGN: {
       if (!hcc->current_function.variables.contains(op.assign.name)) {
@@ -156,15 +155,8 @@ bool IR::compile(HCC* hcc) {
       size_t align = var.offset;
       std::string reg = hcc->backend->abi.registers[1];
 
-      hcc->backend->emit_pop(reg);
-      hcc->backend->emit_store_from_stack(align, var.type.size, reg);
-      /*
-
-      auto expr_value = std::move(hcc->values.top());
-      hcc->values.pop();
-
-      expr_var->setto(hcc, expr_value.get());
-      */
+      hcc->backend->EmitPop(reg);
+      hcc->backend->EmitStoreToStack(align, var.type.size, reg);
     } break;
     case IrOpcode::IR_ASM:
       // TODO: Add a new call in the Backend class for this since emitcalls don't allow doing this
@@ -178,34 +170,23 @@ bool IR::compile(HCC* hcc) {
 
       auto& var = hcc->current_function.variables[op.varref.name];
       std::string reg = hcc->backend->abi.registers[0];
-      hcc->backend->emit_load_from_stack(var.offset, var.type.size, reg);
-      hcc->backend->emit_push(reg);
+      hcc->backend->EmitLoadFromStack(var.offset, var.type.size, reg);
+      hcc->backend->EmitPush(reg);
     } break;
     case IrOpcode::IR_ADDROF: {
-      /*
-if (!hcc->current_function.variables.contains(op.addrof.name)) {
-hcc_compile_error = fmt::sprintf("undefined variable %s", op.addrof.name);
-return false;
-}
-
-auto out = std::unique_ptr<Value>(new Value());
-out->reg_name = hcc->backend->emit_loadaddr_from_stack(hcc->current_function.variables[op.addrof.name]->var_stack_align);
-
-hcc->values.push(std::move(out));
-*/
+      // todo
     } break;
     case IrOpcode::IR_CALL: {
-      hcc->backend->emit_call(op.call.name);
-      hcc->backend->emit_push(hcc->backend->abi.return_register);
+      hcc->backend->EmitCall(op.call.name);
+      hcc->backend->EmitPush(hcc->backend->abi.return_register);
     } break;
     case IrOpcode::IR_LINE:
       break;
     case IrOpcode::IR_RESET:
-      hcc->backend->reset_reg_index();
       break;
     case IrOpcode::IR_RESERVE:
       if (op.reserve.bytes > 0)
-        hcc->backend->emit_reserve_stack_space(op.reserve.bytes);
+        hcc->backend->EmitReserveStackSpace(op.reserve.bytes);
       break;
     default:
       break;
@@ -214,7 +195,7 @@ hcc->values.push(std::move(out));
   return true;
 }
 
-bool IR::results_in_error(HCC* hcc) {
+bool IR::resultsInError(HCC* hcc) {
   index = 0;
   bool result = !compile(hcc);
   hcc->backend->emitcalls.clear();

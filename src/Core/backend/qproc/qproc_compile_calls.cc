@@ -2,9 +2,9 @@
 
 using namespace hcc;
 
-std::string QprocBackend::compile_calls() {
+std::string QprocBackend::CompileCalls() {
   std::string output;
-  for (EmitCall ec : emitcalls) {
+  for (struct hcc::Backend::EmitCall ec : emitcalls) {
     switch (ec.type) {
     case Backend::EmitCall::FUNCTION_PROLOGUE:
       if (codegen_comments)

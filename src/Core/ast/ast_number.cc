@@ -4,19 +4,19 @@
 
 using namespace hcc;
 
-void AstNumber::print(int indent) const {
-  printIndent(indent);
+void AstNumber::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << "AstNumber" << std::endl;
-  printIndent(indent + 1);
+  PrintIndent(indent + 1);
   std::cout << "value: " << value << std::endl;
 }
 
-bool AstNumber::compile(HCC* hcc) {
+bool AstNumber::Compile(HCC* hcc) {
   IrOpcode op;
   op.type = IrOpcode::IR_CCTV;
   op.cctv.value = value;
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
   return true;
 }

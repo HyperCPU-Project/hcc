@@ -3,17 +3,17 @@
 
 using namespace hcc;
 
-void AstVarRef::print(int indent) const {
-  printIndent(indent);
+void AstVarRef::Print(int indent) const {
+  PrintIndent(indent);
   std::cout << name << std::endl;
 }
 
-bool AstVarRef::compile(HCC* hcc) {
+bool AstVarRef::Compile(HCC* hcc) {
   IrOpcode op;
   op.type = IrOpcode::IR_VARREF;
   op.varref.name = name;
 
-  hcc->ir.add(op);
+  hcc->ir.Add(op);
 
   return true;
 }
