@@ -1,6 +1,7 @@
 #pragma once
 #include <backend/backend.hpp>
 #include <flags.hpp>
+#include <function_metadata.hpp>
 #include <ir/ir.hpp>
 #include <optimization.hpp>
 #include <pch.hpp>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <metadata.hpp>
+#include <type_metadata.hpp>
 
 namespace hcc {
   class HCC;

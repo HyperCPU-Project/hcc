@@ -21,7 +21,6 @@ std::string hcc_parse_error = "";
 
 %code requires {
 #include <ast/ast.hpp>
-#include <metadata.hpp>
 
 struct ParserArgData {
 	std::string name;

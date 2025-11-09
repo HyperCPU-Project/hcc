@@ -1,7 +1,8 @@
 #pragma once
 
-#include <metadata.hpp>
+#include <abi_metadata.hpp>
 #include <pch.hpp>
+#include <type_metadata.hpp>
 
 namespace hcc {
   class Backend {
