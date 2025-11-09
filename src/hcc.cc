@@ -30,6 +30,7 @@ HCC::HCC()
   optimizations.SetFlag(Optimization::OPT_CONSTANT_PROPAGATION);
 }
 
+<<<<<<< HEAD
 HCC::~HCC() {
   if (out_fd)
     fclose(out_fd);
@@ -38,6 +39,9 @@ HCC::~HCC() {
 }
 
 Result<void, std::string> HCC::ParseAndCompile() {
+=======
+Result<void, std::string> HCC::parseAndCompile() {
+>>>>>>> 09cf2e8 (Fixes)
   yyscan_t scanner;
   YY_BUFFER_STATE buffer;
 
@@ -95,7 +99,11 @@ Result<void, std::string> HCC::ParseAndCompile() {
     return Result<void, std::string>::Error("ir compile error: " + hcc_compile_error);
   }
 
+<<<<<<< HEAD
   fmt::fprintf(out_fd, "%s", backend->output);
+=======
+  outfd << backend->output;
+>>>>>>> 09cf2e8 (Fixes)
 
   if (parser->root)
     delete parser->root;
@@ -103,6 +111,7 @@ Result<void, std::string> HCC::ParseAndCompile() {
   return Result<void, std::string>::Success();
 }
 
+<<<<<<< HEAD
 void HCC::OpenOutput(std::string filename) {
   if (out_fd)
     fclose(out_fd);
@@ -113,10 +122,20 @@ Result<void, std::string> HCC::SelectBackend(std::string name) {
   if (backend)
     delete backend;
 
+=======
+void HCC::openOutput(std::string filename) {
+  if (outfd.is_open()) {
+    outfd.close();
+  }
+  outfd = std::ofstream(filename);
+}
+
+Result<void, std::string> HCC::selectBackend(std::string name) {
+>>>>>>> 09cf2e8 (Fixes)
   if (name == "qproc") {
-    backend = new QprocBackend();
+    backend = std::make_shared<QprocBackend>();
   } else if (name == "hypercpu") {
-    backend = new HyperCPUBackend();
+    backend = std::make_shared<HyperCPUBackend>();
   } else {
     return Result<void, std::string>::Error("no such backend");
   }
@@ -138,6 +157,11 @@ std::optional<Optimization> HCC::GetOptimizationFromName(std::string name) {
   return names.at(name.c_str());
 }
 
+<<<<<<< HEAD
 FILE* HCC::GetOutFd() {
   return out_fd;
+=======
+std::ofstream& HCC::getOutFd() {
+  return outfd;
+>>>>>>> 09cf2e8 (Fixes)
 }

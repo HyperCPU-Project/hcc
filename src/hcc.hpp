@@ -21,13 +21,17 @@ namespace hcc {
 
   class HCC {
     hccprivate Parser* parser;
+<<<<<<< HEAD
     FILE* out_fd;
+=======
+    std::ofstream outfd;
+>>>>>>> 09cf2e8 (Fixes)
 
   public:
     std::vector<std::string> sources;
     bool print_ast;
 
-    Backend* backend;
+    std::shared_ptr<Backend> backend;
     IR ir;
 
     Flags<Optimization> optimizations;
@@ -36,7 +40,6 @@ namespace hcc {
     std::stack<std::unique_ptr<Value>> values;
 
     HCC();
-    ~HCC();
 
     Result<void, std::string> ParseAndCompile();
 
@@ -46,7 +49,11 @@ namespace hcc {
 
     std::optional<Optimization> GetOptimizationFromName(std::string name);
 
+<<<<<<< HEAD
     FILE* GetOutFd();
+=======
+    std::ofstream& getOutFd();
+>>>>>>> 09cf2e8 (Fixes)
   };
 
 } // namespace hcc
