@@ -105,8 +105,7 @@ std::string HyperCPUBackend::CompileCalls() {
     case Backend::EmitCall::PUSH_IMM:
       if (codegen_comments)
         output += "// emit_push_imm\n";
-      // TODO: This doesn't work since hcasm doesn't seem to support immediate values in push, altough hcemul does support immediate pushes
-      output += fmt::sprintf("push %ld;\n", ec.push_imm.val);
+      output += fmt::sprintf("push b64 0u%ld;\n", ec.push_imm.val);
       break;
     case Backend::EmitCall::POP:
       if (codegen_comments)
