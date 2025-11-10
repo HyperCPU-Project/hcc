@@ -3,7 +3,7 @@ project(hcc)
 
 include("cmake/configuration.cmake")
 
-set(WITH_TESTS OFF)
+option(WITH_TESTS "" OFF)
 add_subdirectory("foreign/eternal")
 
 include_directories("foreign/eternal/include") # prolly a bad thing to do, fix this someday
