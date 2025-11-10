@@ -4,6 +4,7 @@
 
 %{
 #include "parser.tab.hpp"
+#include <spdlog/spdlog.h>
 #include <string>
 
 typedef void* yyscan_t;
@@ -38,6 +39,6 @@ typedef void* yyscan_t;
 ";"             { return SEMICOLON; }
 "&"             { return AMPERSAND; }
 ","             { return COMMA; }
-.               { printf("[hcc] unknown token: %s\n", yytext); }
+.               { spdlog::error("[hcc] unknown token: {}\n", yytext); }
 
 %%

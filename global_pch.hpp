@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <mapbox/eternal.hpp>
 #include <filesystem>
 #include <fmt/format.h>
 #include <fmt/printf.h>
@@ -11,9 +10,11 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <mapbox/eternal.hpp>
 #include <memory>
 #include <optional>
 #include <set>
+#include <spdlog/spdlog.h>
 #include <sstream>
 #include <stack>
 #include <stdexcept>

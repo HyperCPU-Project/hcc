@@ -63,7 +63,7 @@ Result<void, std::string> HCC::ParseAndCompile() {
   for (std::string source : sources) {
     auto result = ReadFile(source);
     if (result.IsError()) {
-      fmt::print("[hcc] failed to read {}: {}\n", source, result.GetError().value());
+      spdlog::error("failed to read {}: {}\n", source, result.GetError().value());
     }
 
     code += result.GetSuccess().value() + "\n";

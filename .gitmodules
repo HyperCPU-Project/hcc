@@ -4,3 +4,6 @@
 [submodule "foreign/googletest"]
 	path = foreign/googletest
 	url = https://github.com/google/googletest
+[submodule "foreign/spdlog"]
+	path = foreign/spdlog
+	url = https://github.com/gabime/spdlog
