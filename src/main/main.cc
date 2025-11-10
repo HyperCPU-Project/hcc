@@ -38,7 +38,7 @@ backends:
     } else if (arg == "--backend") {
       auto result = hcc.SelectBackend(ArgsShift());
       if (result.has_value()) {
-        fmt::println("[hcc] failed to select a backend: {}", result.value());
+        fmt::print("[hcc] failed to select a backend: {}\n", result.value());
         return 1;
       }
     } else if (arg.starts_with("-fno-")) {
@@ -47,7 +47,7 @@ backends:
 
       std::optional<Optimization> optimization_opt = hcc.GetOptimizationFromName(optimization_name);
       if (!optimization_opt.has_value()) {
-        fmt::println("[hcc] no such optimization: {}", optimization_name);
+        fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
         Optimization optimization = optimization_opt.value();
@@ -60,19 +60,19 @@ backends:
 
       std::optional<Optimization> optimization_opt = hcc.GetOptimizationFromName(optimization_name);
       if (!optimization_opt.has_value()) {
-        fmt::println("[hcc] no such optimization: {}", optimization_name);
+        fmt::print("[hcc] no such optimization: {}\n", optimization_name);
         return 1;
       } else {
         Optimization optimization = optimization_opt.value();
         hcc.optimizations.SetFlag(optimization);
       }
     } else if (arg.starts_with("-")) {
-      fmt::println("[hcc] unknown flag: {}", arg);
+      fmt::print("[hcc] unknown flag: {}\n", arg);
       return 1;
     } else {
       auto result = ReadFile(arg);
       if (!result.has_value()) {
-        fmt::println("failed to read {}: {}", arg, result.error());
+        fmt::print("failed to read {}: {}\n", arg, result.error());
         return 1;
       } else
         hcc.source += result.value() + "\n";
