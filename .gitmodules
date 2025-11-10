@@ -4,3 +4,6 @@
 [submodule "foreign/googletest"]
 	path = foreign/googletest
 	url = https://github.com/google/googletest
+[submodule "foreign/expected"]
+	path = foreign/expected
+	url = https://github.com/TartanLlama/expected

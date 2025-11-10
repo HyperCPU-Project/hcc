@@ -8,7 +8,7 @@
 
 std::string compile_output = "";
 
-Result<void, std::string> compileQuick(std::string code, std::string backend) {
+std::optional<std::string> compileQuick(std::string code, std::string backend) {
   compile_output.clear();
 
   hcc::HCC hcc;
@@ -29,16 +29,16 @@ Result<void, std::string> compileQuick(std::string code, std::string backend) {
 
   {
     auto result = hcc.SelectBackend(backend);
-    if (result.IsError())
-      return result;
+    if (result.has_value())
+      return result.value();
   }
 
   {
     auto result = hcc.ParseAndCompile();
-    if (result.IsError())
-      return result;
+    if (result.has_value())
+      return result.value();
 
-    compile_output = ReadFile("tests_tmp/a.out").GetSuccess().value();
+    compile_output = ReadFile("tests_tmp/a.out").value();
     compile_output = hcc.backend->output;
     /*
     fmt::println("-------");
@@ -46,6 +46,6 @@ Result<void, std::string> compileQuick(std::string code, std::string backend) {
     fmt::println("-------");
     */
 
-    return result;
+    return {};
   }
 }

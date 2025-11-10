@@ -4,4 +4,4 @@
 
 extern std::string compile_output;
 
-Result<void, std::string> compileQuick(std::string code, std::string backend);
+std::optional<std::string> compileQuick(std::string code, std::string backend);
