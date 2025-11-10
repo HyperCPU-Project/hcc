@@ -13,7 +13,7 @@ std::optional<std::string> compileQuick(std::string code, std::string backend) {
   hcc.source = code;
   hcc.OpenOutput("a.out");
 
-  fmt::println("[hcctest] compiling...");
+  fmt::print("[hcctest] compiling...\n");
 
   {
     auto result = hcc.SelectBackend(backend);
