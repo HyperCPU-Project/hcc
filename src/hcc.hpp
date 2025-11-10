@@ -21,11 +21,7 @@ namespace hcc {
 
   class HCC {
     hccprivate Parser* parser;
-<<<<<<< HEAD
-    FILE* out_fd;
-=======
     std::ofstream outfd;
->>>>>>> 09cf2e8 (Fixes)
 
   public:
     std::vector<std::string> sources;
@@ -49,11 +45,7 @@ namespace hcc {
 
     std::optional<Optimization> GetOptimizationFromName(std::string name);
 
-<<<<<<< HEAD
-    FILE* GetOutFd();
-=======
-    std::ofstream& getOutFd();
->>>>>>> 09cf2e8 (Fixes)
+    std::ofstream& GetOutFd();
   };
 
 } // namespace hcc

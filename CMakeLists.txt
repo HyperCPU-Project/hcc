@@ -9,18 +9,16 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(WITH_TESTS OFF)
 
-include(findBISON)
+#include(findBISON)
 
-find_package(BISON CONFIG REQUIRED)
-find_package(FLEX REQUIRED)
+find_package(BISON MODULE REQUIRED)
+find_package(FLEX MODULE REQUIRED)
 find_package(fmt REQUIRED)
 find_package(eternal REQUIRED)
 
 if(LINUX)
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
-
-add_subdirectory(src)
 
 if(HCC_NO_TESTS EQUAL 0 OR NOT DEFINED HCC_NO_TESTS)
   find_package(GTest REQUIRED)
