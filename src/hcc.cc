@@ -47,10 +47,6 @@ std::optional<std::string> HCC::ParseAndCompile() {
   hcc_parse_error.clear();
   hcc_compile_error.clear();
 
-  if (sources.empty()) {
-    return "no sources provided";
-  }
-
   if (!out_fd) {
     return "outFd == nullptr";
   }
@@ -59,16 +55,7 @@ std::optional<std::string> HCC::ParseAndCompile() {
     return "no backend selected";
   }
 
-  std::string code = "";
-  for (std::string source : sources) {
-    auto result = ReadFile(source);
-    if (result.has_value()) {
-      return fmt::format("failed to read {}: {}\n", source, result.error());
-    } else
-      code += result.value() + "\n";
-  }
-
-  buffer = yy_scan_string(code.c_str(), scanner);
+  buffer = yy_scan_string(source.c_str(), scanner);
   yyparse(scanner, this->parser);
 
   yy_delete_buffer(buffer, scanner);

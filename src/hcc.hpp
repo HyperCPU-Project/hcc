@@ -23,7 +23,7 @@ namespace hcc {
     FILE* out_fd;
 
   public:
-    std::vector<std::string> sources;
+    std::string source;
     bool print_ast;
 
     Backend* backend;

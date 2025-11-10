@@ -35,7 +35,7 @@ target("hcc")
 	set_pcxxheader("global_pch.hpp")
 
 	add_deps("hcc_core")
-	add_packages("fmt", "tl_expected", "mapbox_eternal")
+	add_packages("fmt", "mapbox_eternal", "tl_expected")
 target_end()
 
 
@@ -46,7 +46,7 @@ target("hcc_test")
 	)
 
 	add_deps("hcc_core")
-	add_packages("gtest", "fmt", "mapbox_eternal")
+	add_packages("gtest", "fmt", "mapbox_eternal", "tl_expected")
 
 	set_default(false)
 target_end()
