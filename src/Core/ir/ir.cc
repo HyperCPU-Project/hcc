@@ -118,7 +118,8 @@ bool IR::compile(HCC* hcc) {
     } break;
     case IrOpcode::IR_ALLOCA: {
       size_t offset;
-      offset = hcc->current_function.align + op.alloca.md.size;
+      hcc->current_function.align += op.alloca.md.size;
+      offset = hcc->current_function.align;
       hcc->current_function.variables[op.alloca.name] = VariableMetadata(offset, op.alloca.md);
     } break;
     case IrOpcode::IR_ADD: {
@@ -193,12 +194,4 @@ bool IR::compile(HCC* hcc) {
     }
   }
   return true;
-}
-
-bool IR::resultsInError(HCC* hcc) {
-  index = 0;
-  bool result = !compile(hcc);
-  hcc->backend->emitcalls.clear();
-  index = 0;
-  return result;
 }
