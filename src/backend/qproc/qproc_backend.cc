@@ -132,7 +132,6 @@ void QprocBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::string r
   output += fmt::sprintf("movi r1 %d\n", align);
   output += fmt::sprintf("sub r0 r1\n");
   if (rsrc == "r0") {
-    output += fmt::sprintf("  ");
     is_used_reg = true;
     rsrc = "r1";
   }
