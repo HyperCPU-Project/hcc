@@ -2,7 +2,7 @@ add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "build"}) -- generate compile commands
 add_rules("lex", "yacc")
 
-add_requires("fmt", "bison", "gtest", "mapbox_eternal") -- libs
+add_requires("fmt", "bison", "gtest", "mapbox_eternal", "tl_expected") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
@@ -24,7 +24,7 @@ target("hcc_core")
 
 	set_pcxxheader("global_pch.hpp")
 
-	add_packages("fmt", "mapbox_eternal")
+	add_packages("fmt", "mapbox_eternal", "tl_expected")
 target_end()
 
 
@@ -35,7 +35,7 @@ target("hcc")
 	set_pcxxheader("global_pch.hpp")
 
 	add_deps("hcc_core")
-	add_packages("fmt", "mapbox_eternal")
+	add_packages("fmt", "tl_expected", "mapbox_eternal")
 target_end()
 
 

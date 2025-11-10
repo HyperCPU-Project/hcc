@@ -37,8 +37,8 @@ backends:
       hcc.print_ast = true;
     } else if (arg == "--backend") {
       auto result = hcc.SelectBackend(ArgsShift());
-      if (result.IsError()) {
-        fmt::print("[hcc] failed to select a backend: {}\n", result.GetError().value());
+      if (result.has_value()) {
+        fmt::print("[hcc] failed to select a backend: {}\n", result.value());
         return 1;
       }
     } else if (arg.starts_with("-fno-")) {
@@ -76,8 +76,8 @@ backends:
 
   {
     auto result = hcc.ParseAndCompile();
-    if (result.IsError()) {
-      fmt::print("[hcc] error: {}\n", result.GetError().value());
+    if (result.has_value()) {
+      fmt::print("[hcc] error: {}\n", result.value());
     }
   }
 
