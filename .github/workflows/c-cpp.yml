@@ -44,7 +44,7 @@ jobs:
 
       - name: Build
         run: |
-          xrepo install -y mapbox_eternal
+          xrepo install -y mapbox_eternal tl_expected
           xmake build
           mv $(find build/linux -name "hcc") ./hcc-x86_64
 
