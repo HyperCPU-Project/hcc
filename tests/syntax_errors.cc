@@ -11,11 +11,8 @@ return
 })",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    // The bison parser expects a semicolon at the next token (which is on the 6th line), that's why we check for an error on line 6
-    EXPECT_EQ(hcc_parse_error, "error at line 6: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 6: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest1) {
@@ -26,10 +23,8 @@ int main({
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest2) {
@@ -39,10 +34,8 @@ int main() return 0;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest3) {
@@ -53,10 +46,8 @@ return (;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest4) {
@@ -68,10 +59,8 @@ int 1;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 4: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 4: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest5) {
@@ -85,10 +74,8 @@ x = (;
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 6: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 6: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest6) {
@@ -97,10 +84,8 @@ main(){}
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest7) {
@@ -111,10 +96,8 @@ a b c d e f g
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest8) {
@@ -124,10 +107,8 @@ x = 2 + 2 2; }
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest9) {
@@ -138,10 +119,8 @@ x = 2 + 2 * 2 ); }
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 4: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 4: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest10) {
@@ -150,10 +129,8 @@ asm(123)
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 2: syntax error");
 }
 
 TEST(HCCTest, SyntaxErrorTest11) {
@@ -164,8 +141,6 @@ asm();
 )",
                              "qproc");
 
-  EXPECT_EQ(result.IsError(), true);
-  if (result.IsError()) {
-    EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
-  }
+  ASSERT_FALSE(result.has_value());
+  EXPECT_EQ(hcc_parse_error, "error at line 3: syntax error");
 }

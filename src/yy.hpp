@@ -1,6 +1,6 @@
 #pragma once
 #include <ast/ast.hpp>
-#include <pch.hpp>
+#include <cstd_pch.hpp>
 
 namespace hcc {
   struct Parser;

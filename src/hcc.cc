@@ -1,6 +1,6 @@
 #include <backend/hypercpu/hypercpu_backend.hpp>
 #include <backend/qproc/qproc_backend.hpp>
-#include <fmt/printf.h>
+#include "dep_pch.hpp"
 #include <hcc.hpp>
 #include <parser.tab.hpp>
 #include <util.hpp>
@@ -30,7 +30,7 @@ HCC::HCC()
   optimizations.SetFlag(Optimization::OPT_CONSTANT_PROPAGATION);
 }
 
-Result<void, std::string> HCC::ParseAndCompile() {
+tl::expected<void, std::string> HCC::ParseAndCompile() {
   yyscan_t scanner;
   YY_BUFFER_STATE buffer;
 
@@ -41,25 +41,25 @@ Result<void, std::string> HCC::ParseAndCompile() {
   hcc_compile_error.clear();
 
   if (sources.empty()) {
-    return Result<void, std::string>::Error("no sources provided");
+    return tl::unexpected<std::string>("no sources provided");
   }
 
   if (!outfd) {
-    return Result<void, std::string>::Error("outFd == nullptr");
+    return tl::unexpected<std::string>("outFd == nullptr");
   }
 
   if (!backend) {
-    return Result<void, std::string>::Error("no backend selected");
+    return tl::unexpected<std::string>("no backend selected");
   }
 
   std::string code = "";
   for (std::string source : sources) {
     auto result = ReadFile(source);
-    if (result.IsError()) {
-      fmt::print("[hcc] failed to read {}: {}\n", source, result.GetError().value());
+    if (!result.has_value()) {
+      fmt::print("[hcc] failed to read {}: {}\n", source, result.value());
     }
 
-    code += result.GetSuccess().value() + "\n";
+    code += result.value() + "\n";
   }
 
   buffer = yy_scan_string(code.c_str(), scanner);
@@ -69,7 +69,7 @@ Result<void, std::string> HCC::ParseAndCompile() {
   yylex_destroy(scanner);
 
   if (!parser->root) {
-    return Result<void, std::string>::Error(fmt::format("root == nullptr (parse error: {})", hcc_parse_error));
+    return tl::unexpected<std::string>("root == nullptr (parse error: {})");
   }
 
   if (print_ast) {
@@ -77,15 +77,15 @@ Result<void, std::string> HCC::ParseAndCompile() {
   }
 
   if (!parser->root->Compile(this)) {
-    return Result<void, std::string>::Error("compile error: " + hcc_compile_error);
+    return tl::unexpected<std::string>("compile error: " + hcc_compile_error);
   }
 
   if (ir.resultsInError(this)) {
-    return Result<void, std::string>::Error("ir compile error: " + hcc_compile_error);
+    return tl::unexpected<std::string>("ir compile error: " + hcc_compile_error);
   }
   ir.PerformStaticOptimizations(this);
   if (!ir.compile(this)) {
-    return Result<void, std::string>::Error("ir compile error: " + hcc_compile_error);
+    return tl::unexpected<std::string>("ir compile error: " + hcc_compile_error);
   }
 
   outfd << backend->output;
@@ -93,7 +93,7 @@ Result<void, std::string> HCC::ParseAndCompile() {
   if (parser->root)
     delete parser->root;
 
-  return Result<void, std::string>::Success();
+  return {};
 }
 
 void HCC::OpenOutput(std::string filename) {
@@ -103,16 +103,16 @@ void HCC::OpenOutput(std::string filename) {
   outfd = std::ofstream(filename);
 }
 
-Result<void, std::string> HCC::SelectBackend(std::string name) {
+tl::expected<void, std::string> HCC::SelectBackend(std::string name) {
   if (name == "qproc") {
     backend = std::make_shared<QprocBackend>();
   } else if (name == "hypercpu") {
     backend = std::make_shared<HyperCPUBackend>();
   } else {
-    return Result<void, std::string>::Error("no such backend");
+    return tl::unexpected<std::string>("no such backend");
   }
 
-  return Result<void, std::string>::Success();
+  return {};
 }
 
 std::optional<Optimization> HCC::GetOptimizationFromName(std::string name) {

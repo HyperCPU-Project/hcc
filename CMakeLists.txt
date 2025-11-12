@@ -15,6 +15,7 @@ find_package(BISON MODULE REQUIRED)
 find_package(FLEX MODULE REQUIRED)
 find_package(fmt REQUIRED)
 find_package(eternal REQUIRED)
+find_package(tl-expected REQUIRED)
 
 if(LINUX)
   add_compile_options(-Wall -Wextra -Wpedantic)

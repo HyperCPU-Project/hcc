@@ -1,6 +1,6 @@
 #include "ast.hpp"
+#include <cstd_pch.hpp>
 #include <hcc.hpp>
-#include <pch.hpp>
 
 using namespace hcc;
 

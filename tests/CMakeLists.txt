@@ -1,4 +1,4 @@
-add_library(tests-pch INTERFACE pch.hpp)
+add_library(tests-pch INTERFACE cstd_pch.hpp)
 target_link_libraries(tests-pch INTERFACE eternal::eternal)
 
 add_executable(hcctest
@@ -10,4 +10,4 @@ add_executable(hcctest
 )
 target_link_libraries(hcctest gtest::gtest hcc_core tests-pch)
 target_include_directories(hcctest PRIVATE "." "${PROJECT_SOURCE_DIR}/src")
-target_precompile_headers(hcctest PRIVATE pch.hpp)
+target_precompile_headers(hcctest PRIVATE cstd_pch.hpp)

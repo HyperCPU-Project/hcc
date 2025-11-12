@@ -12,7 +12,8 @@ class HCC(ConanFile):
         "fmt/11.0.2",
         "flex/2.6.4",
         "bison/3.8.2",
-        "eternal/1.0.1"
+        "eternal/1.0.1",
+        "tl-expected/20190710"
     ]
     generators = ["CMakeToolchain", "CMakeDeps"]
 

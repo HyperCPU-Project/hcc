@@ -1,11 +1,11 @@
 #pragma once
 #include <backend/backend.hpp>
+#include "cstd_pch.hpp"
+#include "dep_pch.hpp"
 #include <flags.hpp>
 #include <function_metadata.hpp>
 #include <ir/ir.hpp>
 #include <optimization.hpp>
-#include <pch.hpp>
-#include <result.hpp>
 #include <yy.hpp>
 
 #ifdef HCC_NOPRIVATE
@@ -37,11 +37,11 @@ namespace hcc {
 
     HCC();
 
-    Result<void, std::string> ParseAndCompile();
+    tl::expected<void, std::string> ParseAndCompile();
 
     void OpenOutput(std::string filename);
 
-    Result<void, std::string> SelectBackend(std::string name);
+    tl::expected<void, std::string> SelectBackend(std::string name);
 
     std::optional<Optimization> GetOptimizationFromName(std::string name);
 
