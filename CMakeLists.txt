@@ -27,3 +27,15 @@ if(HCC_NO_TESTS EQUAL 0 OR NOT DEFINED HCC_NO_TESTS)
 endif()
 
 add_subdirectory(src)
+
+find_program(CLANG_FORMAT NAMES clang-format REQUIRED)
+
+file(GLOB_RECURSE CPP_SOURCES CONFIGURE_DEPENDS
+        src/**.cpp src/**.hpp tests/**.cpp tests/**.hpp
+)
+
+add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i ${CPP_SOURCES}
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Formatting code with clang-format and cmake-format"
+)

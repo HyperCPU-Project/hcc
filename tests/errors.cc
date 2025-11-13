@@ -12,19 +12,19 @@ TEST(HCCTest, TypesErrorTest) {
   auto result = compileQuick("int main() {vec x; return x;}", "qproc");
 
   ASSERT_FALSE(result.has_value());
-  EXPECT_EQ(result.error(), "unknown type vec");
+  EXPECT_EQ(result.error(), "compile error: unknown type vec");
 }
 
 TEST(HCCTest, UndefVarErrorTest1) {
   auto result = compileQuick("int main() {return x;}", "qproc");
 
   ASSERT_FALSE(result.has_value());
-  EXPECT_EQ(result.error(), "undefined variable x");
+  EXPECT_EQ(result.error(), "ir compile error: undefined variable x");
 }
 
 TEST(HCCTest, UndefVarErrorTest2) {
   auto result = compileQuick("int main() {int z; z = y + 1;}", "qproc");
 
   ASSERT_FALSE(result.has_value());
-  EXPECT_EQ(result.error(), "undefined variable y");
+  EXPECT_EQ(result.error(), "ir compile error: undefined variable y");
 }

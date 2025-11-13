@@ -1,0 +1,24 @@
+# Main workflow file. This complex workflow declares
+# primary automated jobs that are relevant to
+# building and testing HCC.
+
+name: HCC CI/CD Pipeline
+
+on:
+  push:
+
+jobs:
+  prepare:
+    uses: ./.github/workflows/mainline-prepare.yml
+
+  compile:
+    needs: prepare
+    uses: ./.github/workflows/mainline-compile.yml
+
+  format:
+    needs: prepare
+    uses: ./.github/workflows/mainline-format.yml
+
+  lint:
+    needs: prepare
+    uses: ./.github/workflows/mainline-lint.yml
