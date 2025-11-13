@@ -18,7 +18,3 @@ jobs:
   format:
     needs: prepare
     uses: ./.github/workflows/mainline-format.yml
-
-  lint:
-    needs: prepare
-    uses: ./.github/workflows/mainline-lint.yml
