@@ -7,7 +7,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/hypercpu-project/hcc-builder-gcc-debian:latest
+      image: ghcr.io/HyperWinX/hcc-builder-gcc-debian:latest
       options: --init
     permissions:
       contents: read

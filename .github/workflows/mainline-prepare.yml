@@ -36,6 +36,6 @@ jobs:
           context: .
           file: .github/docker/${{ matrix.compiler }}/Dockerfile-${{ matrix.distribution }}
           push: true
-          tags: ghcr.io/hypercpu-project/hypercpu-builder-${{ matrix.compiler }}-${{ matrix.distribution }}:latest
+          tags: ghcr.io/HyperWinX/hcc-builder-${{ matrix.compiler }}-${{ matrix.distribution }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
