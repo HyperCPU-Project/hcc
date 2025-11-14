@@ -1,4 +1,5 @@
 #include <backend/qproc/qproc_backend.hpp>
+#include <dep_pch.hpp>
 #include <string>
 
 using namespace hcc;
