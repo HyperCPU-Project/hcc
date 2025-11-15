@@ -4,7 +4,7 @@
 TEST(HCCTest, FunctionQprocCodegenTest) {
   auto result = compileQuick("int main() {return 0;}", "qproc");
 
-  EXPECT_EQ(result.IsSuccess(), true);
+  ASSERT_TRUE(result.has_value());
 
   EXPECT_EQ(compile_output, R"(main:
 movi r0 0

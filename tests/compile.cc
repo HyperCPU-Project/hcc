@@ -1,14 +1,14 @@
 #include "compile.hpp"
 #include "main.hpp"
+#include <cstd_pch.hpp>
 #include <cstdio>
 #include <filesystem>
-#include <pch.hpp>
 #include <string>
 #include <util.hpp>
 
 std::string compile_output = "";
 
-Result<void, std::string> compileQuick(std::string code, std::string backend) {
+tl::expected<void, std::string> compileQuick(std::string code, std::string backend) {
   compile_output.clear();
 
   hcc::HCC hcc;
@@ -23,22 +23,22 @@ Result<void, std::string> compileQuick(std::string code, std::string backend) {
 
   hcc.sources.push_back(filename);
 
-  hcc.out_fd = fopen("tests_tmp/a.out", "w");
+  hcc.outfd.open("tests_tmp/a.out", std::ios::out | std::ios::binary);
 
   fmt::print("[hcctest] compiling temp C file {}\n", filename);
 
   {
     auto result = hcc.SelectBackend(backend);
-    if (result.IsError())
+    if (!result.has_value())
       return result;
   }
 
   {
     auto result = hcc.ParseAndCompile();
-    if (result.IsError())
+    if (!result.has_value())
       return result;
 
-    compile_output = ReadFile("tests_tmp/a.out").GetSuccess().value();
+    compile_output = ReadFile("tests_tmp/a.out").value();
     compile_output = hcc.backend->output;
     /*
     fmt::println("-------");

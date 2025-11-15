@@ -1,0 +1,50 @@
+name: HCC CI/CD Pipeline (compile project)
+
+on:
+  workflow_call:
+
+jobs:
+  testing:
+    name: Compile (${{ matrix.compiler }} on ${{ matrix.distribution }}, ${{ matrix.build-type }} profile)
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/hyperwinx/hcc-builder-${{ matrix.compiler }}-${{ matrix.distribution }}:latest
+      options: --init
+    permissions:
+      contents: read
+      packages: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+        distribution: [debian, ubuntu]
+        build-type: [Release, Debug]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Install dependencies with Conan
+        run: sudo -u ci conan profile detect
+          
+      - name: Fix permissions
+        run: chown -R ci:ci "$GITHUB_WORKSPACE"
+
+      - name: Build project (Release, with ${{ matrix.compiler }} compiler)
+        run: |
+          sudo -u ci conan install . --build=missing -s build_type=${{ matrix.build-type }}
+          if [ "${{ matrix.build-type }}" = "Release" ]; then
+            sudo -u ci cmake --preset conan-release
+          else
+            sudo -u ci cmake --preset conan-debug
+          fi
+          sudo -u ci cmake --build build/${{ matrix.build-type }} -j$(nproc)
+          sudo -u ci cmake --build build/${{ matrix.build-type }} --target hcctest
+
+      - name: Run all tests
+        run: |
+          sudo -u ci build/${{ matrix.build-type }}/hcctest

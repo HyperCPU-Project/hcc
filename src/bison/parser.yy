@@ -9,6 +9,7 @@
 #include <vector>
 #include <ast/ast.hpp>
 #include <parser.tab.hpp>
+#include <dep_pch.hpp>
 
 typedef void* yyscan_t;
 int yylex(YYSTYPE *yylval_param, yyscan_t scanner);

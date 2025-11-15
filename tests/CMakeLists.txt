@@ -1,11 +1,13 @@
-include("../cmake/configuration.cmake")
+add_library(tests-pch INTERFACE cstd_pch.hpp)
+target_link_libraries(tests-pch INTERFACE eternal::eternal)
 
-file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "*.cc")
-
-add_executable(hcctest ${TEST_SOURCES})
-target_link_libraries(hcctest gtest gtest_main hcc_core eternal)
-target_include_directories(hcctest PRIVATE "." "../src")
-target_precompile_headers(hcctest PRIVATE pch.hpp)
-
-include(GoogleTest)
-gtest_discover_tests(hcctest)
+add_executable(hcctest
+    compile.cc
+    errors.cc
+    qproc_codegen.cc
+    syntax_errors.cc
+    main.cc
+)
+target_link_libraries(hcctest gtest::gtest hcc_core tests-pch)
+target_include_directories(hcctest PRIVATE "." "${PROJECT_SOURCE_DIR}/src")
+target_precompile_headers(hcctest PRIVATE cstd_pch.hpp)

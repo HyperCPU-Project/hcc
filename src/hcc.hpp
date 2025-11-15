@@ -1,11 +1,11 @@
 #pragma once
+#include "cstd_pch.hpp"
+#include "dep_pch.hpp"
 #include <backend/backend.hpp>
 #include <flags.hpp>
 #include <function_metadata.hpp>
 #include <ir/ir.hpp>
 #include <optimization.hpp>
-#include <pch.hpp>
-#include <result.hpp>
 #include <yy.hpp>
 
 #ifdef HCC_NOPRIVATE
@@ -21,13 +21,13 @@ namespace hcc {
 
   class HCC {
     hccprivate Parser* parser;
-    FILE* out_fd;
+    std::ofstream outfd;
 
   public:
     std::vector<std::string> sources;
     bool print_ast;
 
-    Backend* backend;
+    std::shared_ptr<Backend> backend;
     IR ir;
 
     Flags<Optimization> optimizations;
@@ -36,17 +36,16 @@ namespace hcc {
     std::stack<std::unique_ptr<Value>> values;
 
     HCC();
-    ~HCC();
 
-    Result<void, std::string> ParseAndCompile();
+    tl::expected<void, std::string> ParseAndCompile();
 
     void OpenOutput(std::string filename);
 
-    Result<void, std::string> SelectBackend(std::string name);
+    tl::expected<void, std::string> SelectBackend(std::string name);
 
     std::optional<Optimization> GetOptimizationFromName(std::string name);
 
-    FILE* GetOutFd();
+    std::ofstream& GetOutFd();
   };
 
 } // namespace hcc

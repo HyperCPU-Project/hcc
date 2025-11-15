@@ -1,6 +1,0 @@
-[submodule "foreign/eternal"]
-	path = foreign/eternal
-	url = https://github.com/mapbox/eternal
-[submodule "foreign/googletest"]
-	path = foreign/googletest
-	url = https://github.com/google/googletest
