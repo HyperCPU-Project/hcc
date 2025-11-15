@@ -8,7 +8,7 @@ jobs:
     name: Compile (${{ matrix.compiler }} on ${{ matrix.distribution }}, ${{ matrix.build-type }} profile)
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/hyperwinx/hcc-builder-${{ matrix.compiler }}-${{ matrix.distribution }}:latest
+      image: ghcr.io/hypercpu-project/hcc-builder-${{ matrix.compiler }}-${{ matrix.distribution }}:latest
       options: --init
     permissions:
       contents: read
