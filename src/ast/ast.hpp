@@ -49,7 +49,8 @@ namespace hcc {
   class AstNumber : public AstNode {
   public:
     int value;
-    explicit AstNumber(int val) : value(val) {
+    explicit AstNumber(int val)
+        : value(val) {
     }
     void Print(int indent = 0) const override;
     bool Compile(HCC* hcc) override;
