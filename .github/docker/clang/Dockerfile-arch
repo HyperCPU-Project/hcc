@@ -12,8 +12,6 @@ RUN pacman -Sy && pacman -S \
 		--noconfirm \
 		&& pipx install conan \
 
-RUN pip install conan --break-system-packages
-
 RUN useradd -m ${USER} \
     && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
