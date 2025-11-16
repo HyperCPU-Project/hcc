@@ -4,36 +4,39 @@
 using namespace hcc;
 
 Value::Value() {
-  reg_name = "";
-  is_compile_time = false;
-  compile_time_value = 0;
+  value = 0ULL;
 }
 
 Value::~Value() {
 }
 
 bool Value::IsRegister() {
-  return (reg_name != "");
+  return (std::holds_alternative<std::string>(value));
+}
+
+bool Value::IsCompileTime() {
+  return (std::holds_alternative<uint64_t>(value));
 }
 
 Value* Value::CreateAsRegister(HCC* hcc, uint64_t _value, std::string regName) {
   Value* value = new Value();
-  value->reg_name = hcc->backend->EmitMovConst(_value, regName);
+  value->value = hcc->backend->EmitMovConst(_value, regName);
   return value;
 }
 
 Value* Value::CreateAsCompileTimeValue([[maybe_unused]] HCC* hcc, uint64_t _value) {
   Value* value = new Value();
-  value->is_compile_time = true;
-  value->compile_time_value = _value;
+  value->value = _value;
   return value;
 }
 
 Value* Value::CreateAsStackVar(HCC* hcc, TypeMetadata type, bool reserve) {
   Value* value = new Value();
 
-  value->var_stack_align = hcc->current_function.align + type.size;
-  value->var_type = type;
+  ValueStackVar var{};
+  var.stack_align = hcc->current_function.align + type.size;
+  var.type = type;
+  value->value = ValueStackVar();
 
   if (reserve)
     hcc->backend->EmitReserveStackSpace(type.size);
@@ -44,38 +47,44 @@ Value* Value::CreateAsStackVar(HCC* hcc, TypeMetadata type, bool reserve) {
 }
 
 Value* Value::Use(HCC* hcc) {
-  if (!is_compile_time)
+  if (!IsCompileTime())
     return this;
 
-  Value* value = Value::CreateAsRegister(hcc, compile_time_value);
+  Value* value = Value::CreateAsRegister(hcc, std::get<uint64_t>(this->value));
   return value;
 }
 
 Value* Value::DoCondLod(HCC* hcc, std::string load_reg) {
-  if (IsRegister() && !is_compile_time)
+  if (IsRegister() && !IsCompileTime())
     return this;
-  if (is_compile_time) {
+  if (!IsCompileTime()) {
     return Use(hcc);
   }
 
+  auto var = std::get<ValueStackVar>(this->value);
+
   auto value = new Value();
-  value->reg_name = hcc->backend->EmitLoadFromStack(this->var_stack_align, var_type.size, load_reg);
+  value->value = hcc->backend->EmitLoadFromStack(var.stack_align, var.type.size, load_reg);
   return value;
 }
 
 void Value::Add(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value += other->compile_time_value;
+  if (IsCompileTime() && other->IsCompileTime()) {
+    std::get<uint64_t>(value) += other->IsCompileTime();
     return;
   }
 
+  ValueStackVar var = std::get<ValueStackVar>(this->value);
+
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
+  std::string LHS_reg = std::get<std::string>(LHS->value);
+  std::string RHS_reg = std::get<std::string>(RHS->value);
 
-  hcc->backend->EmitAdd(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->EmitAdd(LHS_reg, LHS_reg, RHS_reg);
 
   if (!IsRegister()) {
-    hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
   if (LHS != this)
@@ -85,18 +94,22 @@ void Value::Add(HCC* hcc, Value* other) {
 }
 
 void Value::Sub(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value -= other->compile_time_value;
+  if (IsCompileTime() && other->IsCompileTime()) {
+    std::get<uint64_t>(this->value) -= std::get<uint64_t>(other->value);
     return;
   }
 
+  ValueStackVar var = std::get<ValueStackVar>(this->value);
+
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
+  std::string LHS_reg = std::get<std::string>(LHS->value);
+  std::string RHS_reg = std::get<std::string>(RHS->value);
 
-  hcc->backend->EmitSub(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->EmitSub(LHS_reg, LHS_reg, RHS_reg);
 
   if (!IsRegister()) {
-    hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
   if (LHS != this)
@@ -106,18 +119,22 @@ void Value::Sub(HCC* hcc, Value* other) {
 }
 
 void Value::Mul(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value *= other->compile_time_value;
+  if (IsCompileTime() && other->IsCompileTime()) {
+    std::get<uint64_t>(this->value) *= std::get<uint64_t>(other->value);
     return;
   }
 
+  ValueStackVar var = std::get<ValueStackVar>(this->value);
+
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
+  std::string LHS_reg = std::get<std::string>(LHS->value);
+  std::string RHS_reg = std::get<std::string>(RHS->value);
 
-  hcc->backend->EmitMul(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->EmitMul(LHS_reg, LHS_reg, RHS_reg);
 
   if (!IsRegister()) {
-    hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
   if (LHS != this)
@@ -127,18 +144,22 @@ void Value::Mul(HCC* hcc, Value* other) {
 }
 
 void Value::Div(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value /= other->compile_time_value;
+  if (IsCompileTime() && other->IsCompileTime()) {
+    std::get<uint64_t>(this->value) /= std::get<uint64_t>(other->value);
     return;
   }
 
+  ValueStackVar var = std::get<ValueStackVar>(this->value);
+
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
+  std::string LHS_reg = std::get<std::string>(LHS->value);
+  std::string RHS_reg = std::get<std::string>(RHS->value);
 
-  hcc->backend->EmitDiv(LHS->reg_name, LHS->reg_name, RHS->reg_name);
+  hcc->backend->EmitDiv(LHS_reg, LHS_reg, RHS_reg);
 
   if (!IsRegister()) {
-    hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, LHS->reg_name);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
   if (LHS != this)
@@ -148,28 +169,31 @@ void Value::Div(HCC* hcc, Value* other) {
 }
 
 void Value::SetTo(HCC* hcc, Value* other) {
-  if (is_compile_time && other->is_compile_time) {
-    compile_time_value = other->compile_time_value;
+  if (IsCompileTime() && other->IsCompileTime()) {
+    std::get<uint64_t>(this->value) = std::get<uint64_t>(other->value);
     return;
   }
 
-  if (!is_compile_time && other->is_compile_time) {
+  if (!IsCompileTime() && other->IsCompileTime()) {
     Value* v = other->Use(hcc);
     if (IsRegister()) {
-      hcc->backend->EmitMove(this->reg_name, v->reg_name);
+      hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(v->value));
     } else {
-      hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, v->reg_name);
+      ValueStackVar var = std::get<ValueStackVar>(this->value);
+      hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(v->value));
     }
     delete v;
   } else if (!IsRegister() && other->IsRegister()) {
-    hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, other->reg_name);
+    ValueStackVar var = std::get<ValueStackVar>(this->value);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(other->value));
   } else if (IsRegister() && other->IsRegister()) {
-    hcc->backend->EmitMove(this->reg_name, other->reg_name);
+    hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(other->value));
   } else if (!IsRegister() && !other->IsRegister()) {
     Value* LHS = DoCondLod(hcc);
     Value* RHS = other->DoCondLod(hcc);
 
-    hcc->backend->EmitStoreToStack(var_stack_align, var_type.size, LHS->reg_name);
+    ValueStackVar var = std::get<ValueStackVar>(this->value);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(LHS->value));
 
     if (LHS != this)
       delete LHS;
@@ -178,7 +202,7 @@ void Value::SetTo(HCC* hcc, Value* other) {
   } else if (IsRegister() && !other->IsRegister()) {
     Value* RHS = other->DoCondLod(hcc);
 
-    hcc->backend->EmitMove(this->reg_name, RHS->reg_name);
+    hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(RHS->value));
 
     if (RHS != other)
       delete RHS;

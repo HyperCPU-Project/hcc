@@ -1,25 +1,22 @@
 #pragma once
 
 #include <type_metadata.hpp>
+#include <value/value_stack_var.hpp>
+#include <value/value_type.hpp>
 
 namespace hcc {
   class HCC;
 
   class Value {
   public:
-    std::string reg_name;
-
-    bool is_compile_time;
-    uint64_t compile_time_value;
-
-    uint64_t var_stack_align;
-    std::string var_name;
-    TypeMetadata var_type;
+    ValueType value_type;
+    std::variant<std::string, uint64_t, ValueStackVar> value;
 
     Value();
     ~Value();
 
     bool IsRegister();
+    bool IsCompileTime();
 
     static Value* CreateAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
     static Value* CreateAsCompileTimeValue(HCC* hcc, uint64_t value);

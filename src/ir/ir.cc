@@ -127,8 +127,9 @@ bool IR::compile(HCC* hcc) {
 
         auto value = value_raw->Use(hcc);
 
-        if (value->reg_name != hcc->backend->abi.return_register) {
-          hcc->backend->EmitMove(hcc->backend->abi.return_register, value->reg_name);
+        std::string reg = std::get<std::string>(value->value);
+        if (reg != hcc->backend->abi.return_register) {
+          hcc->backend->EmitMove(hcc->backend->abi.return_register, reg);
         }
 
         if (value != value_raw.get())
@@ -220,14 +221,15 @@ bool IR::compile(HCC* hcc) {
       }
 
       auto out = std::unique_ptr<Value>(new Value());
-      out->reg_name = hcc->backend->EmitLoadaddrFromStack(hcc->current_function.variables[op.addrof.name]->var_stack_align);
+      auto var = std::get<ValueStackVar>(hcc->current_function.variables[op.addrof.name]->value);
+      out->value = hcc->backend->EmitLoadaddrFromStack(var.stack_align);
 
       hcc->values.push(std::move(out));
     } break;
     case IrOpcode::IR_CALL: {
       hcc->backend->EmitCall(op.call.name);
       auto value = std::make_unique<Value>();
-      value->reg_name = hcc->backend->abi.return_register;
+      value->value = hcc->backend->abi.return_register;
 
       hcc->values.push(std::move(value));
     } break;
