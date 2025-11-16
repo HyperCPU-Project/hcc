@@ -10,7 +10,8 @@ RUN pacman -Sy && pacman -S \
 		--noconfirm \
 		&& pipx install conan \ 
  		&& echo 'export PATH=$PATH:/root/.local/bin' >> ~/.bashrc \
-		&& source ~/.bashrc
+		&& source ~/.bashrc \
+		&& conan
 
 RUN useradd -m ${USER} \
     && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
