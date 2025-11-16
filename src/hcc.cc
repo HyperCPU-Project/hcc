@@ -1,26 +1,15 @@
 #include <backend/hypercpu/hypercpu_backend.hpp>
 #include <backend/qproc/qproc_backend.hpp>
-#include "dep_pch.hpp"
+#include <dep_pch.hpp>
 #include <hcc.hpp>
-#include <parser.tab.hpp>
 #include <util.hpp>
 #include <value/value.hpp>
-#include <yy.hpp>
 
 using namespace hcc;
 
-typedef void* yyscan_t;
-
-void yylex_init(yyscan_t*);
-void yylex_destroy(yyscan_t);
-void yyset_extra(hcc::Parser* user_defined, void* yyscanner);
-
 std::string hcc_compile_error = "";
 
-HCC::HCC()
-    : print_ast(false), backend(nullptr), values() {
-  parser = new Parser();
-
+HCC::HCC() : print_ast(false), backend(nullptr), values() {
   current_function.align = 0;
   optimizations.SetFlag(Optimization::OPT_CONSTANT_FOLDING);
   optimizations.SetFlag(Optimization::OPT_FUNCTION_BODY_ELIMINATION);
@@ -31,13 +20,6 @@ HCC::HCC()
 }
 
 tl::expected<void, std::string> HCC::ParseAndCompile() {
-  yyscan_t scanner;
-  YY_BUFFER_STATE buffer;
-
-  yylex_init(&scanner);
-  yyset_extra(this->parser, scanner);
-
-  hcc_parse_error.clear();
   hcc_compile_error.clear();
 
   if (sources.empty()) {
@@ -62,6 +44,9 @@ tl::expected<void, std::string> HCC::ParseAndCompile() {
     code += result.value() + "\n";
   }
 
+  throw std::runtime_error("unimplemented");
+
+  /*
   buffer = yy_scan_string(code.c_str(), scanner);
   yyparse(scanner, this->parser);
 
@@ -81,17 +66,20 @@ tl::expected<void, std::string> HCC::ParseAndCompile() {
   }
 
   if (ir.resultsInError(this)) {
-    return tl::unexpected<std::string>("ir compile error: " + hcc_compile_error);
+    return tl::unexpected<std::string>("ir compile error: " +
+                                       hcc_compile_error);
   }
   ir.PerformStaticOptimizations(this);
   if (!ir.compile(this)) {
-    return tl::unexpected<std::string>("ir compile error: " + hcc_compile_error);
+    return tl::unexpected<std::string>("ir compile error: " +
+                                       hcc_compile_error);
   }
 
   outfd << backend->output;
 
   if (parser->root)
     delete parser->root;
+    */
 
   return {};
 }
@@ -116,12 +104,14 @@ tl::expected<void, std::string> HCC::SelectBackend(std::string name) {
 }
 
 std::optional<Optimization> HCC::GetOptimizationFromName(std::string name) {
-  auto names = mapbox::eternal::map<mapbox::eternal::string, Optimization>({{"constant-folding", Optimization::OPT_CONSTANT_FOLDING},
-                                                                            {"emit-frame-pointer", Optimization::OPT_FP_OMISSION},
-                                                                            {"function-body-elimination", Optimization::OPT_FUNCTION_BODY_ELIMINATION},
-                                                                            {"dce", Optimization::OPT_DCE},
-                                                                            {"stack-reserve", Optimization::OPT_STACK_RESERVE},
-                                                                            {"constant-propagation", Optimization::OPT_CONSTANT_PROPAGATION}});
+  auto names = mapbox::eternal::map<mapbox::eternal::string, Optimization>(
+      {{"constant-folding", Optimization::OPT_CONSTANT_FOLDING},
+       {"emit-frame-pointer", Optimization::OPT_FP_OMISSION},
+       {"function-body-elimination",
+        Optimization::OPT_FUNCTION_BODY_ELIMINATION},
+       {"dce", Optimization::OPT_DCE},
+       {"stack-reserve", Optimization::OPT_STACK_RESERVE},
+       {"constant-propagation", Optimization::OPT_CONSTANT_PROPAGATION}});
 
   if (!names.contains(name.c_str()))
     return {};

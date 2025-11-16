@@ -1,12 +1,11 @@
 #pragma once
-#include "cstd_pch.hpp"
-#include "dep_pch.hpp"
 #include <backend/backend.hpp>
+#include <cstd_pch.hpp>
+#include <dep_pch.hpp>
 #include <flags.hpp>
 #include <function_metadata.hpp>
 #include <ir/ir.hpp>
 #include <optimization.hpp>
-#include <yy.hpp>
 
 #ifdef HCC_NOPRIVATE
 #define hccprivate public:
@@ -20,7 +19,6 @@ namespace hcc {
   class Value;
 
   class HCC {
-    hccprivate Parser* parser;
     std::ofstream outfd;
 
   public:

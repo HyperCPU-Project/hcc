@@ -8,7 +8,10 @@
 
 std::string compile_output = "";
 
-tl::expected<void, std::string> compileQuick(std::string code, std::string backend) {
+tl::expected<void, std::string> compileQuick(std::string code,
+                                             std::string backend) {
+  throw std::runtime_error("unimplemented");
+#if 0
   compile_output.clear();
 
   hcc::HCC hcc;
@@ -48,4 +51,5 @@ tl::expected<void, std::string> compileQuick(std::string code, std::string backe
 
     return result;
   }
+#endif
 }

@@ -2,7 +2,7 @@ add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "build"}) -- generate compile commands
 add_rules("lex", "yacc")
 
-add_requires("fmt", "bison", "gtest", "mapbox_eternal", "tl_expected") -- libs
+add_requires("fmt", "gtest", "mapbox_eternal", "tl_expected") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
@@ -16,11 +16,10 @@ target("hcc_core")
 		"src/backend/*/*.cc",
 		"src/backend/*.cc",
 		"src/value/*.cc",
-		"src/ir/*.cc"
+		"src/lexer/*.cc",
+		"src/parser/*.cc",
+		"src/ir/optimizations/*.cc", "src/ir/*.cc"
 	)
-	add_files("src/ir/optimizations/*.cc")
-
-	add_files("src/bison/*.ll", "src/bison/*.yy")
 
 	add_packages("fmt", "mapbox_eternal", "tl_expected")
 target_end()

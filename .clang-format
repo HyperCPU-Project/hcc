@@ -51,7 +51,7 @@ SpaceAfterTemplateKeyword: true
 
 # Line length
 # ColumnLimit: 0 disables automatic wrapping; allows unlimited line length.
-ColumnLimit: 0
+ColumnLimit: 80
 
 # Pointer alignment
 # DerivePointerAlignment: ignore inference, use PointerAlignment setting.
