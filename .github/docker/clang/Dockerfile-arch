@@ -2,18 +2,17 @@ FROM archlinux
 
 ARG USER=ci
 
+RUN useradd -m ${USER} \
+    && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 RUN pacman -Sy && pacman -S \
 		base-devel curl git \
 		make gcc unzip \
 		clang lld ninja sudo \
 		python python-pipx \
 		--noconfirm \
-		&& pipx install conan \
- 		&& echo 'export PATH=$PATH:/root/.local/bin' >> ~/.bashrc \
-		&& source ~/.bashrc \
-		&& conan
-
-RUN useradd -m ${USER} \
-    && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+		&& pipx install conan \ 
+ 		&& sudo -u ci echo 'export PATH=$PATH:/root/.local/bin' >> ~/.bashrc \
+		&& sudo -u ci conan
 
 WORKDIR /home/${USER}/workspace
