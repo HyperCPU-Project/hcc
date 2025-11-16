@@ -9,6 +9,7 @@ RUN pacman -Sy && pacman -S \
 		python python-pipx \
 		--noconfirm \
 		&& pipx install conan && pipx ensurepath
+ 		&& echo 'export PATH=$PATH:/root/.local/bin' >> ~/.bashrc
 
 RUN useradd -m ${USER} \
     && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
