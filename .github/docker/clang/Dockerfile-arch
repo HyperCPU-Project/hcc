@@ -9,6 +9,7 @@ RUN pacman -Sy && pacman -S \
 		make gcc unzip \
 		clang lld ninja sudo \
 		python \
+		--noconfirm \
 		&& git clone https://aur.archlinux.org/yay.git . && makepkg -si --noconfirm \
 		&& yay -S conan-bin
 
