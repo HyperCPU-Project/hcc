@@ -8,7 +8,7 @@ RUN pacman -Sy && pacman -S \
 		clang lld ninja sudo \
 		python python-pipx \
 		--noconfirm \
-		&& pipx install conan && pipx ensurepath
+		&& pipx install conan \ 
  		&& echo 'export PATH=$PATH:/root/.local/bin' >> ~/.bashrc
 
 RUN useradd -m ${USER} \
