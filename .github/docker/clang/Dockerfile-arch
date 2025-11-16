@@ -8,8 +8,9 @@ RUN pacman -Sy && pacman -S \
 		base-devel curl git \
 		make gcc unzip \
 		clang lld ninja sudo \
-		python python-conan \
-		&& git clone https://aur.archlinux.org/yay.git . && makepkg -si --noconfirm
+		python \
+		&& git clone https://aur.archlinux.org/yay.git . && makepkg -si --noconfirm \
+		&& yay -S conan-bin
 
 RUN pip install conan --break-system-packages
 
