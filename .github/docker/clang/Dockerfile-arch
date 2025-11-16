@@ -2,15 +2,13 @@ FROM archlinux
 
 ARG USER=ci
 
-RUN useradd -m aur
-
 RUN pacman -Sy && pacman -S \
 		base-devel curl git \
 		make gcc unzip \
 		clang lld ninja sudo \
 		python python-pipx \
 		--noconfirm \
-		&& pipx install conan
+		&& pipx install conan && pipx ensurepath
 
 RUN useradd -m ${USER} \
     && echo "${USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
