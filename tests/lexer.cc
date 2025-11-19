@@ -1,6 +1,6 @@
+#include "lexer/lexer.hpp"
 #include "lexer/token.hpp"
 #include <gtest/gtest.h>
-#include <lexer/lexer.hpp>
 
 template <typename Tv>
 static void __impl_assert_token_val(hcc::Token token, hcc::TokenType type,
