@@ -90,7 +90,7 @@ bool IR::compile(HCC* hcc) {
 
     switch (op.type) {
     case IrOpcode::IR_NULL:
-      hcc_compile_error = "IR_NULL opcode encountered";
+      hcc->compile_error = "IR_NULL opcode encountered";
       return false;
       break;
     case IrOpcode::IR_FUNCDEF:
@@ -189,7 +189,7 @@ bool IR::compile(HCC* hcc) {
     } break;
     case IrOpcode::IR_ASSIGN: {
       if (!hcc->current_function.variables.contains(op.assign.name)) {
-        hcc_compile_error = fmt::sprintf("undefined variable %s", op.assign.name);
+        hcc->compile_error = fmt::sprintf("undefined variable %s", op.assign.name);
         return false;
       }
 
@@ -205,7 +205,7 @@ bool IR::compile(HCC* hcc) {
       break;
     case IrOpcode::IR_VARREF: {
       if (!hcc->current_function.variables.contains(op.varref.name)) {
-        hcc_compile_error = fmt::sprintf("undefined variable %s", op.varref.name);
+        hcc->compile_error = fmt::sprintf("undefined variable %s", op.varref.name);
         return false;
       }
 
@@ -215,7 +215,7 @@ bool IR::compile(HCC* hcc) {
     } break;
     case IrOpcode::IR_ADDROF: {
       if (!hcc->current_function.variables.contains(op.addrof.name)) {
-        hcc_compile_error = fmt::sprintf("undefined variable %s", op.addrof.name);
+        hcc->compile_error = fmt::sprintf("undefined variable %s", op.addrof.name);
         return false;
       }
 

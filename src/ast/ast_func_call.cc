@@ -9,15 +9,12 @@ void AstFuncCall::Print(int indent) const {
   std::cout << "AstFuncCall" << std::endl;
   PrintIndent(indent + 1);
   std::cout << "name: " << name << std::endl;
-  for (AstNode* arg : args) {
+  for (const std::unique_ptr<AstNode>& arg : args) {
     arg->Print(indent + 1);
   }
 }
 
 AstFuncCall::~AstFuncCall() {
-  for (AstNode* arg : args) {
-    delete arg;
-  }
 }
 
 bool AstFuncCall::Compile(HCC* hcc) {

@@ -5,8 +5,11 @@
 #include <type_metadata.hpp>
 
 namespace hcc {
+  class HCC;
+
   class Backend {
   protected:
+    HCC* hcc;
     uint64_t reg_index;
 
   public:
@@ -17,7 +20,7 @@ namespace hcc {
 
     std::map<std::string, TypeMetadata> types;
 
-    Backend();
+    Backend(HCC* hcc);
     virtual ~Backend() = 0;
 
     virtual uint64_t IncrementRegIndex();
@@ -50,5 +53,8 @@ namespace hcc {
     virtual void EmitLabel(std::string name);
 
     virtual TypeMetadata* GetTypeFromName(std::string name);
+
+  protected:
+    void CompileError(std::string error);
   };
 } // namespace hcc

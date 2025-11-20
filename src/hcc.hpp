@@ -1,30 +1,28 @@
 #pragma once
 #include "cstd_pch.hpp"
 #include "dep_pch.hpp"
+#include "driver/driver.hpp"
+#include "lexer/lexer.hpp"
 #include <backend/backend.hpp>
 #include <flags.hpp>
 #include <function_metadata.hpp>
 #include <ir/ir.hpp>
 #include <optimization.hpp>
-#include <yy.hpp>
-
-#ifdef HCC_NOPRIVATE
-#define hccprivate public:
-#else
-#define hccprivate private:
-#endif
-
-extern std::string hcc_compile_error;
 
 namespace hcc {
   class Value;
+  class Parser;
 
   class HCC {
-    hccprivate Parser* parser;
+  private:
+    Driver driver;
+    Parser* parser; // This is a pointer because we can't include parser.tab.hpp. The reason why we can't include this is because other sources may not have include dirs setup properly (with xmake, you just can't even include generated dirs!)
     std::ofstream outfd;
 
+    std::string compile_error;
+
   public:
-    std::vector<std::string> sources;
+    std::string source;
     bool print_ast;
 
     std::shared_ptr<Backend> backend;
@@ -36,6 +34,7 @@ namespace hcc {
     std::stack<std::unique_ptr<Value>> values;
 
     HCC();
+    ~HCC();
 
     tl::expected<void, std::string> ParseAndCompile();
 
@@ -46,6 +45,8 @@ namespace hcc {
     std::optional<Optimization> GetOptimizationFromName(std::string name);
 
     std::ofstream& GetOutFd();
-  };
 
+    friend class Backend;
+    friend class IR;
+  };
 } // namespace hcc

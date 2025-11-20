@@ -5,13 +5,10 @@
 using namespace hcc;
 
 AstNode::~AstNode() {
-  for (AstNode* node : children) {
-    delete node;
-  }
 }
 
 bool AstNode::Compile(HCC* hcc) {
-  for (AstNode* node : children) {
+  for (std::unique_ptr<AstNode>& node : children) {
     if (!node->Compile(hcc))
       return false;
   }

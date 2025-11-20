@@ -3,7 +3,7 @@
 
 using namespace hcc;
 
-HyperCPUBackend::HyperCPUBackend() {
+HyperCPUBackend::HyperCPUBackend(HCC* hcc) : Backend(hcc) {
   reg_index = 0;
   types["void"] = TypeMetadata{"void", 0};
   types["char"] = TypeMetadata{"char", 1};

@@ -9,7 +9,7 @@ namespace hcc {
     virtual void Print(int indent = 0) const = 0;
     virtual bool Compile(HCC* hcc);
 
-    std::vector<AstNode*> children;
+    std::vector<std::unique_ptr<AstNode>> children;
 
   protected:
     void PrintIndent(int indent) const;
@@ -100,7 +100,7 @@ namespace hcc {
 
   class AstFuncCall : public AstNode {
   public:
-    std::vector<AstNode*> args;
+    std::vector<std::unique_ptr<AstNode>> args;
     std::string name;
 
     void Print(int indent = 0) const override;

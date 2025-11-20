@@ -6,7 +6,7 @@
 #include <string>
 #include <util.hpp>
 
-std::string compile_output = "";
+std::string compile_output;
 
 tl::expected<void, std::string> compileQuick(std::string code, std::string backend) {
   compile_output.clear();
@@ -21,9 +21,8 @@ tl::expected<void, std::string> compileQuick(std::string code, std::string backe
   file << code;
   file.close();
 
-  hcc.sources.push_back(filename);
-
-  hcc.outfd.open("tests_tmp/a.out", std::ios::out | std::ios::binary);
+  hcc.source = code;
+  hcc.OpenOutput("tests_tmp/a.out");
 
   fmt::print("[hcctest] compiling temp C file {}\n", filename);
 
@@ -40,11 +39,6 @@ tl::expected<void, std::string> compileQuick(std::string code, std::string backe
 
     compile_output = ReadFile("tests_tmp/a.out").value();
     compile_output = hcc.backend->output;
-    /*
-    fmt::println("-------");
-    fmt::println("{}", hcc.backend->output);
-    fmt::println("-------");
-    */
 
     return result;
   }
