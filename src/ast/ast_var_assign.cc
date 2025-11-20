@@ -15,7 +15,6 @@ void AstVarAssign::Print(int indent) const {
 }
 
 AstVarAssign::~AstVarAssign() {
-  delete expr;
 }
 
 bool AstVarAssign::Compile(HCC* hcc) {

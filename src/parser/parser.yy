@@ -71,9 +71,10 @@ type:
 
 function_definition:
 	IDENTIFIER IDENTIFIER LPAREN RPAREN block {
-		$$ = std::make_unique<hcc::AstFuncDef>();
-		$$->name = $2;
-		$$->children = std::move($5);
+		auto node = std::make_unique<hcc::AstFuncDef>();
+		node->name = $2;
+		node->children = std::move($5);
+		$$ = std::move(node);
 	}
 	;
 
@@ -90,16 +91,18 @@ declaration_names:
 
 declaration:
 	IDENTIFIER declaration_names SEMICOLON {
-		$$ = std::make_unique<hcc::AstVarDeclare>();
-		$$->names = $2;
-		$$->type = $1;
+		auto node = std::make_unique<hcc::AstVarDeclare>();
+		node->names = $2;
+		node->type = $1;
+		$$ = std::move(node);
 	}
 	;
 
 return_statement:
 	RETURN expression SEMICOLON {
-		$$ = std::make_unique<hcc::AstReturn>();
-		$$->expr = std::move($2);
+		auto node = std::make_unique<hcc::AstReturn>();
+		node->expr = std::move($2);
+		$$ = std::move(node);
 	}
 	| RETURN SEMICOLON {
 		$$ = std::make_unique<hcc::AstReturn>();
@@ -134,15 +137,15 @@ block:
 	;
 
 expression:
-	term
-	| expression PLUS term {
+	term {
+		$$ = std::move($1);
+	} | expression PLUS term {
 		auto node = std::make_unique<hcc::AstBinaryOp>();
 		node->left = std::move($1);
 		node->right = std::move($3);
 		node->op = "add";
 		$$ = std::move(node);
-	}
-	| expression MINUS term {
+	} | expression MINUS term {
 		auto node = std::make_unique<hcc::AstBinaryOp>();
 		node->left = std::move($1);
 		node->right = std::move($3);
@@ -152,15 +155,15 @@ expression:
 	;
 
 term:
-	factor
-	| term MULTIPLY factor {
+	factor {
+		$$ = std::move($1);
+	} | term MULTIPLY factor {
 		auto node = std::make_unique<hcc::AstBinaryOp>();
 		node->left = std::move($1);
 		node->right = std::move($3);
 		node->op = "mul";
 		$$ = std::move(node);
-	}
-	| term DIVIDE factor {
+	} | term DIVIDE factor {
 		auto node = std::make_unique<hcc::AstBinaryOp>();
 		node->left = std::move($1);
 		node->right = std::move($3);
