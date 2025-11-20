@@ -1,3 +1,4 @@
+#include <fmt/base.h>
 #include <lexer/lexer.hpp>
 
 hcc::Lexer::Lexer(std::string _input) : input(_input), ch(0), pos(0) {
@@ -12,6 +13,7 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
   auto keywordMapping =
       std::map<std::string, TokenType>({
           {"return", TokenType::Return},
+          {"asm", TokenType::Asm},
       });
   auto charMapping = std::map<char, TokenType>({{';', TokenType::Semicolon},
                                                 {',', TokenType::Comma},
@@ -20,6 +22,7 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
                                                 {'-', TokenType::Sub},
                                                 {'*', TokenType::Mul},
                                                 {'/', TokenType::Div},
+                                                {'=', TokenType::Assign},
                                                 {'(', TokenType::Lparen},
                                                 {')', TokenType::Rparen},
                                                 {'{', TokenType::Lsquirly},
@@ -69,6 +72,10 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
     else {
       return tl::unexpected(fmt::format("unknown char: {}", ch));
     }
+  }
+
+  for (const Token& token : tokens) {
+    fmt::print("{}\n", (uint8_t)token.type);
   }
 
   return tokens;

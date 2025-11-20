@@ -20,7 +20,7 @@ namespace hcc { class Driver; }
 
 %code {
 	namespace hcc {
-		Parser::symbol_type yylex(Driver& driver);
+		static Parser::symbol_type yylex(Driver& driver);
 	}
 }
 
@@ -28,14 +28,17 @@ namespace hcc { class Driver; }
 %token <long> NUMBER
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL
-%token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA PLUS MINUS MULTIPLY DIVIDE AMPERSAND
-%token RETURN INT CHAR
+%token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA PLUS MINUS MULTIPLY DIVIDE AMPERSAND ASSIGN
+%token RETURN ASM
 
-%type <std::unique_ptr<hcc::AstNode>> topstatement statement expression term factor
+%type <std::unique_ptr<hcc::AstNode>> topstatement statement expression term factor call_arg
 %type <std::unique_ptr<hcc::AstVarDeclare>> declaration
 %type <std::unique_ptr<hcc::AstFuncDef>> function_definition 
 %type <std::unique_ptr<hcc::AstReturn>> return_statement
-%type <std::vector<std::unique_ptr<hcc::AstNode>>> topstatements block statements
+%type <std::unique_ptr<hcc::AstVarAssign>> assignment
+%type <std::unique_ptr<hcc::AstFuncCall>> fncall 
+%type <std::unique_ptr<hcc::AstAsm>> asm_statement 
+%type <std::vector<std::unique_ptr<hcc::AstNode>>> topstatements block statements call_arg_list
 %type <std::vector<std::string>> declaration_names
 
 %%
@@ -67,11 +70,6 @@ topstatement:
 	}
 	;
 
-type:
-	INT
-	| CHAR
-	;
-
 function_definition:
 	IDENTIFIER IDENTIFIER LPAREN RPAREN block {
 		$$ = std::make_unique<hcc::AstFuncDef>();
@@ -79,6 +77,32 @@ function_definition:
 		$$->children = std::move($5);
 	}
 	;
+
+call_arg_list:
+  call_arg {
+		$$.clear();
+    $$.push_back(std::move($1));
+  } | call_arg_list call_arg {
+    $1.push_back(std::move($2));
+    $$ = std::move($1);
+  } | RPAREN {
+		$$.clear();
+  }
+
+call_arg:
+  expression COMMA {
+    $$ = std::move($1);
+  }
+  | expression RPAREN {
+    $$ = std::move($1);
+  }
+
+fncall:
+  IDENTIFIER LPAREN call_arg_list {
+    $$ = std::make_unique<hcc::AstFuncCall>();
+    $$->name = $1;
+    $$->args = std::move($3);
+  }
 
 declaration_names:
 	IDENTIFIER {
@@ -109,10 +133,31 @@ return_statement:
 	}
 	;
 
+assignment:
+	IDENTIFIER ASSIGN expression SEMICOLON {
+		$$ = std::make_unique<hcc::AstVarAssign>();
+		$$->name = $1;
+		$$->expr = std::move($3);
+	}
+	;
+
+asm_statement:
+	ASM LPAREN STRING_LITERAL RPAREN SEMICOLON {
+		$$ = std::make_unique<hcc::AstAsm>();
+		$$->code = $3;
+	}
+	;
+
 statement:
 	declaration {
 		$$ = std::move($1);
 	} | return_statement {
+		$$ = std::move($1);
+	} | assignment {
+		$$ = std::move($1);
+	} | fncall {
+		$$ = std::move($1);
+	} | asm_statement {
 		$$ = std::move($1);
 	}
 	;
@@ -189,7 +234,7 @@ factor:
 	| LPAREN expression RPAREN {
 		$$ = std::move($2);
 	}
-	//| fncall
+	| fncall
 	;
 
 %%
@@ -230,15 +275,19 @@ namespace hcc {
 				return Parser::make_DIVIDE(loc);
 			case TokenType::Ampersand:
 				return Parser::make_AMPERSAND(loc);
+			case TokenType::Assign:
+				return Parser::make_ASSIGN(loc);
 			case TokenType::Return:
 				return Parser::make_RETURN(loc);
+			case TokenType::Asm:
+				return Parser::make_ASM(loc);
 			default:
 				std::abort();
 		}
 	}
 
 	void Parser::error(const Parser::location_type& loc, const std::string& msg){
-		fmt::println("{}", msg);
+		fmt::print("{}\n", msg);
 		std::abort();
 	}
 } // namespace hcc

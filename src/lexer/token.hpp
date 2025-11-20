@@ -19,9 +19,11 @@ namespace hcc {
     Sub,
     Mul,
     Div,
+    Assign,
 
     /* keywords */
     Return,
+    Asm,
   };
   struct Token {
     TokenType type;

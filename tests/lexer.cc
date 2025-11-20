@@ -46,7 +46,7 @@ static std::vector<hcc::Token> tokenize(std::string s) {
 TEST(HCCTest, LexerMainTest) {
   auto tokens = tokenize("int main(){return 0;}");
 
-  assert_token(tokens[0], hcc::TokenType::Int);
+  assert_token(tokens[0], hcc::TokenType::Identifier, "int");
   assert_token(tokens[1], hcc::TokenType::Identifier, "main");
   assert_token(tokens[2], hcc::TokenType::Lparen);
   assert_token(tokens[3], hcc::TokenType::Rparen);
@@ -57,8 +57,8 @@ TEST(HCCTest, LexerMainTest) {
   assert_token(tokens[8], hcc::TokenType::Rsquirly);
 }
 
-EMIT_TOKEN_TEST(Int, Int, "int main {int", 3);
-EMIT_TOKEN_TEST(Char, Char, "int main {char", 3);
+EMIT_TOKEN_TEST_VALUE(Int, Identifier, "int", "int main {int", 3);
+EMIT_TOKEN_TEST_VALUE(Char, Identifier, "char", "int main {char", 3);
 EMIT_TOKEN_TEST(Return, Return, "int main {return", 3);
 EMIT_TOKEN_TEST_VALUE(Num, Number, 12345, "int main {12345; ", 3);
 EMIT_TOKEN_TEST_VALUE(NegNum, Number, -12345, "int main {-12345; ", 3);

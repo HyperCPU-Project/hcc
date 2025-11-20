@@ -12,19 +12,16 @@ tl::expected<void, std::string> compileQuick(std::string code, std::string backe
   compile_output.clear();
 
   hcc::HCC hcc;
+  hcc.print_ast = true;
 
   std::filesystem::create_directory("tests_tmp");
-  std::string filename = fmt::format("tests_tmp/test{}.c", ++test_counter);
-
-  std::ofstream file;
-  file.open(filename);
-  file << code;
-  file.close();
 
   hcc.source = code;
   hcc.OpenOutput("tests_tmp/a.out");
 
-  fmt::print("[hcctest] compiling temp C file {}\n", filename);
+  fmt::print("[hcctest] compiling temp C\n");
+  fmt::print("[hcctest] code:\n");
+  fmt::print("{}\n", code);
 
   {
     auto result = hcc.SelectBackend(backend);
