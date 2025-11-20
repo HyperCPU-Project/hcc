@@ -28,10 +28,10 @@ namespace hcc { class Driver; }
 %token <long> NUMBER
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL
-%token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA
+%token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA PLUS MINUS MULTIPLY DIVIDE AMPERSAND
 %token RETURN INT CHAR
 
-%type <std::unique_ptr<hcc::AstNode>> topstatement function_definition statement declaration
+%type <std::unique_ptr<hcc::AstNode>> topstatement function_definition statement declaration expression term factor return_statement
 %type <std::vector<std::unique_ptr<hcc::AstNode>>> topstatements block statements
 %type <std::vector<std::string>> declaration_names
 
@@ -71,10 +71,9 @@ type:
 
 function_definition:
 	IDENTIFIER IDENTIFIER LPAREN RPAREN block {
-		auto func = std::make_unique<hcc::AstFuncDef>();
-		func->name = $2;
-		func->children = std::move($5);
-		$$ = std::move(func);
+		$$ = std::make_unique<hcc::AstFuncDef>();
+		$$->name = $2;
+		$$->children = std::move($5);
 	}
 	;
 
@@ -87,17 +86,30 @@ declaration_names:
 		$1.push_back($3);
 		$$ = $1;
 	}
+	;
 
 declaration:
 	IDENTIFIER declaration_names SEMICOLON {
-		auto decl = std::make_unique<hcc::AstVarDeclare>();
-		decl->names = $2;
-		decl->type = $1;
-		$$ = std::move(decl);
+		$$ = std::make_unique<hcc::AstVarDeclare>();
+		$$->names = $2;
+		$$->type = $1;
 	}
+	;
+
+return_statement:
+	RETURN expression SEMICOLON {
+		$$ = std::make_unique<hcc::AstReturn>();
+		$$->expr = std::move($2);
+	}
+	| RETURN SEMICOLON {
+		$$ = std::make_unique<hcc::AstReturn>();
+	}
+	;
 
 statement:
 	declaration {
+		$$ = std::move($1);
+	} | return_statement {
 		$$ = std::move($1);
 	}
 	;
@@ -119,6 +131,63 @@ block:
 	} | LSQUIRLY statements RSQUIRLY {
 		$$ = std::move($2);
 	}
+	;
+
+expression:
+	term
+	| expression PLUS term {
+		auto node = std::make_unique<hcc::AstBinaryOp>();
+		node->left = std::move($1);
+		node->right = std::move($3);
+		node->op = "add";
+		$$ = std::move(node);
+	}
+	| expression MINUS term {
+		auto node = std::make_unique<hcc::AstBinaryOp>();
+		node->left = std::move($1);
+		node->right = std::move($3);
+		node->op = "sub";
+		$$ = std::move(node);
+	}
+	;
+
+term:
+	factor
+	| term MULTIPLY factor {
+		auto node = std::make_unique<hcc::AstBinaryOp>();
+		node->left = std::move($1);
+		node->right = std::move($3);
+		node->op = "mul";
+		$$ = std::move(node);
+	}
+	| term DIVIDE factor {
+		auto node = std::make_unique<hcc::AstBinaryOp>();
+		node->left = std::move($1);
+		node->right = std::move($3);
+		node->op = "div";
+		$$ = std::move(node);
+	}
+	;
+
+factor:
+	NUMBER {
+		$$ = std::make_unique<hcc::AstNumber>($1);
+	}
+	| IDENTIFIER {
+		auto node = std::make_unique<hcc::AstVarRef>();
+		node->name = $1;
+		$$ = std::move(node);
+	}
+	| AMPERSAND IDENTIFIER {
+		auto node = std::make_unique<hcc::AstAddrof>();
+		node->name = $2;
+		$$ = std::move(node);
+	}
+	| LPAREN expression RPAREN {
+		$$ = std::move($2);
+	}
+	//| fncall
+	;
 
 %%
 
@@ -148,6 +217,16 @@ namespace hcc {
 				return Parser::make_SEMICOLON(loc);
 			case TokenType::Comma:
 				return Parser::make_COMMA(loc);
+			case TokenType::Add:
+				return Parser::make_PLUS(loc);
+			case TokenType::Sub:
+				return Parser::make_MINUS(loc);
+			case TokenType::Mul:
+				return Parser::make_MULTIPLY(loc);
+			case TokenType::Div:
+				return Parser::make_DIVIDE(loc);
+			case TokenType::Ampersand:
+				return Parser::make_AMPERSAND(loc);
 			case TokenType::Return:
 				return Parser::make_RETURN(loc);
 			default:

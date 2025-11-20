@@ -15,6 +15,11 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
       });
   auto charMapping = std::map<char, TokenType>({{';', TokenType::Semicolon},
                                                 {',', TokenType::Comma},
+                                                {'&', TokenType::Ampersand},
+                                                {'+', TokenType::Add},
+                                                {'-', TokenType::Sub},
+                                                {'*', TokenType::Mul},
+                                                {'/', TokenType::Div},
                                                 {'(', TokenType::Lparen},
                                                 {')', TokenType::Rparen},
                                                 {'{', TokenType::Lsquirly},

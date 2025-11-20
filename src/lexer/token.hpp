@@ -14,6 +14,11 @@ namespace hcc {
     Rsquirly,
     Semicolon,
     Comma,
+    Ampersand,
+    Add,
+    Sub,
+    Mul,
+    Div,
 
     /* keywords */
     Return,
