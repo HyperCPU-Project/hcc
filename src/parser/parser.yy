@@ -31,7 +31,10 @@ namespace hcc { class Driver; }
 %token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA PLUS MINUS MULTIPLY DIVIDE AMPERSAND
 %token RETURN INT CHAR
 
-%type <std::unique_ptr<hcc::AstNode>> topstatement function_definition statement declaration expression term factor return_statement
+%type <std::unique_ptr<hcc::AstNode>> topstatement statement expression term factor
+%type <std::unique_ptr<hcc::AstVarDeclare>> declaration
+%type <std::unique_ptr<hcc::AstFuncDef>> function_definition 
+%type <std::unique_ptr<hcc::AstReturn>> return_statement
 %type <std::vector<std::unique_ptr<hcc::AstNode>>> topstatements block statements
 %type <std::vector<std::string>> declaration_names
 
@@ -71,10 +74,9 @@ type:
 
 function_definition:
 	IDENTIFIER IDENTIFIER LPAREN RPAREN block {
-		auto node = std::make_unique<hcc::AstFuncDef>();
-		node->name = $2;
-		node->children = std::move($5);
-		$$ = std::move(node);
+		$$ = std::make_unique<hcc::AstFuncDef>();
+		$$->name = $2;
+		$$->children = std::move($5);
 	}
 	;
 
@@ -91,18 +93,16 @@ declaration_names:
 
 declaration:
 	IDENTIFIER declaration_names SEMICOLON {
-		auto node = std::make_unique<hcc::AstVarDeclare>();
-		node->names = $2;
-		node->type = $1;
-		$$ = std::move(node);
+		$$ = std::make_unique<hcc::AstVarDeclare>();
+		$$->names = $2;
+		$$->type = $1;
 	}
 	;
 
 return_statement:
 	RETURN expression SEMICOLON {
-		auto node = std::make_unique<hcc::AstReturn>();
-		node->expr = std::move($2);
-		$$ = std::move(node);
+		$$ = std::make_unique<hcc::AstReturn>();
+		$$->expr = std::move($2);
 	}
 	| RETURN SEMICOLON {
 		$$ = std::make_unique<hcc::AstReturn>();
