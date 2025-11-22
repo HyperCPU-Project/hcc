@@ -26,7 +26,6 @@ HCC::~HCC() {
 }
 
 tl::expected<void, std::string> HCC::ParseAndCompile() {
-
   compile_error.clear();
 
   if (!backend) {
@@ -65,7 +64,8 @@ tl::expected<void, std::string> HCC::ParseAndCompile() {
     return tl::unexpected<std::string>("ir compile error: " + compile_error);
   }
 
-  outfd << backend->output;
+  if (outfd.is_open())
+    outfd << backend->output;
 
   return {};
 }

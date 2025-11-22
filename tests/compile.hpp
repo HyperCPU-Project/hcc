@@ -3,6 +3,4 @@
 #include "dep_pch.hpp"
 #include <hcc.hpp>
 
-extern std::string compile_output;
-
-tl::expected<void, std::string> compileQuick(std::string code, std::string backend);
+tl::expected<std::string, std::string> compileQuick(std::string code, std::string backend);
