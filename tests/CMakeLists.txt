@@ -3,9 +3,7 @@ target_link_libraries(tests-pch INTERFACE eternal::eternal)
 
 add_executable(hcctest
     compile.cc
-    errors.cc
-    qproc_codegen.cc
-    syntax_errors.cc
+		lexer.cc
     main.cc
 )
 target_link_libraries(hcctest gtest::gtest hcc_core tests-pch)

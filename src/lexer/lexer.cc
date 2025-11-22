@@ -33,7 +33,7 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
       if (ch == '-') {
         Consume();
         if (!IsDigit(ch))
-          return tl::unexpected("expected a digit after -");
+          return tl::unexpected(std::string("expected a digit after -"));
       }
 
       long num = 0;
