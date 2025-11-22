@@ -8,16 +8,16 @@ class HCC(ConanFile):
     settings = ["os", "compiler", "build_type", "arch"]
     author = "HyperCPU Project"
     requires = [
-				"gtest/1.14.0",
+        "gtest/1.14.0",
         "fmt/11.0.2",
-				"bison/3.8.2",
+        "bison/3.8.2",
         "eternal/1.0.1",
         "tl-expected/20190710"
     ]
     generators = ["CMakeToolchain", "CMakeDeps"]
 
     def build_requirements(self):
-				self.tool_requires("bison/3.8.2")
+        self.tool_requires("bison/3.8.2")
         pass
 
     def layout(self) -> None:
