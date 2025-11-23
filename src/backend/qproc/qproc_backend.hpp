@@ -7,12 +7,10 @@ namespace hcc {
   public:
     QprocBackend(HCC* hcc);
 
-    uint64_t IncrementRegIndex() override;
-
     void EmitFunctionPrologue(std::string name) override;
     void EmitFunctionEpilogue() override;
 
-    std::string EmitMovConst(uint64_t value, std::string reg_name = "") override;
+    std::string EmitMovConst(uint64_t value, std::string reg_name) override;
 
     void EmitAdd(std::string ROUT, std::string RLHS, std::string RRHS) override;
     void EmitSub(std::string ROUT, std::string RLHS, std::string RRHS) override;

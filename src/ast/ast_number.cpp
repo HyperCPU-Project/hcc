@@ -20,7 +20,6 @@ bool AstNumber::Compile(HCC* hcc) {
   } else {
     op.type = IrOpcode::IR_CREG;
     op.creg.value = value;
-    op.creg.reg_name = "";
   }
 
   hcc->ir.Add(op);

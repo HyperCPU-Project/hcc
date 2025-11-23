@@ -18,13 +18,13 @@ namespace hcc {
     bool IsCompileTime();
     bool IsStackVar();
 
-    static std::shared_ptr<Value> CreateAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
+    static std::shared_ptr<Value> CreateAsRegister(HCC* hcc, uint64_t value);
     static std::shared_ptr<Value> CreateAsCompileTimeValue(HCC* hcc, uint64_t value);
     static std::shared_ptr<Value> CreateAsStackVar(HCC* hcc, TypeMetadata type, bool reserve = true);
 
     std::shared_ptr<Value> Use(HCC* hcc);
 
-    std::shared_ptr<Value> DoCondLod(HCC* hcc, std::string load_reg = "");
+    std::shared_ptr<Value> DoCondLod(HCC* hcc);
 
   private:
     void DoCondStr(HCC* hcc);

@@ -5,24 +5,19 @@
 using namespace hcc;
 
 QprocBackend::QprocBackend(HCC* hcc) : Backend(hcc) {
-  reg_index = 0;
   types["void"] = TypeMetadata{"void", 0};
   types["char"] = TypeMetadata{"char", 1};
   types["short"] = TypeMetadata{"short", 2};
   types["int"] = TypeMetadata{"int", 4};
   types["long"] = TypeMetadata{"long", 4}; // size of 4 is intentional here
   abi.return_register = "r0";
+  for (int i = 0; i <= 12; i++) {
+    abi.args_registers.push_back(fmt::format("r{}", i));
+  }
   for (int i = 2; i <= 12; i++) {
     abi.args_registers.push_back(fmt::format("r{}", i));
   }
-}
-
-uint64_t QprocBackend::IncrementRegIndex() {
-  uint64_t res = reg_index++;
-  if (reg_index > 12) {
-    reg_index = 0;
-  }
-  return res;
+  register_allocator = RegisterAllocator(abi);
 }
 
 void QprocBackend::EmitFunctionPrologue(std::string name) {
@@ -41,9 +36,6 @@ void QprocBackend::EmitFunctionEpilogue() {
 std::string QprocBackend::EmitMovConst(uint64_t value, std::string reg_name) {
   if (codegen_comments)
     output += "; emit_mov_const\n";
-  if (reg_name == "") {
-    reg_name = fmt::format("r{}", IncrementRegIndex());
-  }
 
   output += fmt::sprintf("movi %s %ld\n", reg_name, value);
 
@@ -105,6 +97,8 @@ void QprocBackend::EmitReserveStackSpace(uint64_t size) {
 std::string QprocBackend::EmitLoadFromStack(uint64_t align, uint64_t size, std::string reg) {
   if (codegen_comments)
     output += "; emit_load_from_stack\n";
+  output += "; not implemented\n";
+  /*
   if (reg.empty()) {
     reg = "r" + std::to_string(IncrementRegIndex());
     while (reg == "r0" || reg == "r1")
@@ -120,11 +114,14 @@ std::string QprocBackend::EmitLoadFromStack(uint64_t align, uint64_t size, std::
   else
     output += fmt::sprintf("lod %s dword r0\n", reg);
   return reg;
+  */
 }
 
 void QprocBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) {
   if (codegen_comments)
     output += "; emit_store_from_stack\n";
+  output += "; not implemented\n";
+  /*
   bool is_used_reg = (rsrc == "r0" || rsrc == "r1");
 
   if (is_used_reg)
@@ -145,11 +142,14 @@ void QprocBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::string r
     output += fmt::sprintf("str word r0 %s\n", rsrc);
   else
     output += fmt::sprintf("str dword r0 %s\n", rsrc);
+  */
 }
 
 std::string QprocBackend::EmitLoadaddrFromStack(uint64_t align, std::string reg) {
   if (codegen_comments)
     output += "; emit_loadaddr_from_stack\n";
+  output += "; not implemented\n";
+  /*
   if (reg.empty())
     reg = std::to_string(IncrementRegIndex());
   if (reg == "r0")
@@ -160,6 +160,7 @@ std::string QprocBackend::EmitLoadaddrFromStack(uint64_t align, std::string reg)
   output += fmt::sprintf("movi r0 %d\n", align);
   output += fmt::sprintf("sub %s r0\n", reg);
   return reg;
+  */
 }
 
 void QprocBackend::EmitCall(std::string name) {

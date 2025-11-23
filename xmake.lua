@@ -21,6 +21,7 @@ target("hcc_core")
 		"src/value/*.cpp",
 		"src/driver/*.cpp",
 		"src/ir/*.cpp", "src/ir/optimizations/*.cpp",
+		"src/regallocator/*.cpp",
 		"src/lexer/*.cpp",
 		"src/parser/*.yy"
 	)

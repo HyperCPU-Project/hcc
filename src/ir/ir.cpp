@@ -100,7 +100,6 @@ bool IR::Compile(HCC* hcc) {
         Next();
       } else {
         if (op.funcdef.need_stack) {
-          hcc->backend->ResetRegIndex();
           hcc->backend->EmitFunctionPrologue(op.funcdef.name);
         } else {
           hcc->backend->EmitLabel(op.funcdef.name);
@@ -109,7 +108,7 @@ bool IR::Compile(HCC* hcc) {
       }
       break;
     case IrOpcode::IR_CREG: {
-      auto value = Value::CreateAsRegister(hcc, op.creg.value, op.creg.reg_name);
+      auto value = Value::CreateAsRegister(hcc, op.creg.value);
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_CCTV: {
@@ -127,6 +126,7 @@ bool IR::Compile(HCC* hcc) {
 
         std::string reg = std::get<std::string>(value->value);
         hcc->backend->EmitMove(hcc->backend->abi.return_register, reg);
+        hcc->backend->ReleaseRegister(reg);
       }
 
       if (current_funcdef_op.funcdef.need_stack)
@@ -227,7 +227,6 @@ bool IR::Compile(HCC* hcc) {
     case IrOpcode::IR_LINE:
       break;
     case IrOpcode::IR_RESET:
-      hcc->backend->ResetRegIndex();
       break;
     case IrOpcode::IR_RESERVE:
       if (op.reserve.bytes > 0)

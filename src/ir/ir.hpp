@@ -41,7 +41,6 @@ namespace hcc {
 
     struct {
       uint64_t value;
-      std::string reg_name = "";
     } creg;
 
     struct {

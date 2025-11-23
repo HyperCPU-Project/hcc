@@ -32,6 +32,7 @@ add_library(hcc_core STATIC
 		driver/driver.cpp
 		lexer/lexer.cpp
 		lexer/token.cpp
+    regallocator/register_allocator.cpp
     ${BISON_Parser_OUTPUTS}
     ${FLEX_Lexer_OUTPUTS}
 )

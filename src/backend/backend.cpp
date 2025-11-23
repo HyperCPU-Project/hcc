@@ -1,25 +1,31 @@
+#include "abi_metadata.hpp"
+#include "regallocator/register_allocator.hpp"
 #include <backend/backend.hpp>
 #include <fmt/printf.h>
 #include <hcc.hpp>
 
 using namespace hcc;
 
-Backend::Backend(HCC* _hcc) : hcc(_hcc), reg_index(0) {
+Backend::Backend(HCC* _hcc) : hcc(_hcc), register_allocator(ABIMetadata()) {
 }
 
 Backend::~Backend() {
 }
 
+std::string Backend::AllocateRegister() {
+  return register_allocator.AllocateRegister();
+}
+
+void Backend::RetainRegister(std::string reg) {
+  register_allocator.RetainRegister(reg);
+}
+
+void Backend::ReleaseRegister(std::string reg) {
+  register_allocator.ReleaseRegister(reg);
+}
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-
-uint64_t Backend::IncrementRegIndex() {
-  return 0;
-}
-
-void Backend::ResetRegIndex() {
-  reg_index = 0;
-}
 
 void Backend::EmitFunctionPrologue(std::string name) {
 }
