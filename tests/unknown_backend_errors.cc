@@ -1,8 +1,8 @@
 #include "compile.hpp"
-#include <gtest/gtest.h>
+#include <catch2/catch_test_macros.hpp>
 
-TEST(HCCTest, UnknownBackendTest) {
+TEST_CASE("UnknownBackendTest") {
   auto result = compileQuick("", "abcdefg");
-  EXPECT_FALSE(result.has_value());
-  EXPECT_EQ(result.error(), "no such backend");
+  REQUIRE(!result.has_value());
+  REQUIRE(result.error() == "no such backend");
 }

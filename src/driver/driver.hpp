@@ -13,6 +13,8 @@ namespace hcc {
 
     std::unique_ptr<AstNode> root;
     std::vector<Token> tokens;
+    std::size_t token_i;
+    std::optional<std::string> error;
 
     friend class Parser;
   };

@@ -2,7 +2,7 @@
 #include "parser.tab.hpp"
 
 namespace hcc {
-  Driver::Driver() {
+  Driver::Driver() : root(nullptr), tokens({}), token_i(0), error() {
   }
 
   Driver::~Driver() = default;

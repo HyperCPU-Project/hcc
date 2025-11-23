@@ -1,5 +1,4 @@
 #pragma once
-#define HCC_NOPRIVATE
 #include "dep_pch.hpp"
 #include <hcc.hpp>
 

@@ -44,8 +44,8 @@ tl::expected<void, std::string> HCC::ParseAndCompile() {
 
   parser->parse();
 
-  if (!driver.root) {
-    return tl::unexpected<std::string>("root == nullptr (parse error: {})");
+  if (driver.error.has_value()) {
+    return tl::unexpected<std::string>("parse error: " + driver.error.value());
   }
 
   if (print_ast) {

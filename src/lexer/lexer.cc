@@ -74,9 +74,11 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
     }
   }
 
+  /*
   for (const Token& token : tokens) {
     fmt::print("{}\n", (uint8_t)token.type);
   }
+    */
 
   return tokens;
 }

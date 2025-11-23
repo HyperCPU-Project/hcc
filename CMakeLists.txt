@@ -19,7 +19,7 @@ if(LINUX)
 endif()
 
 if(HCC_NO_TESTS EQUAL 0 OR NOT DEFINED HCC_NO_TESTS)
-  find_package(GTest REQUIRED)
+  find_package(Catch2 REQUIRED)
   add_subdirectory(tests)
 endif()
 

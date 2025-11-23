@@ -5,7 +5,7 @@ add_rules("lex", "yacc")
 set_policy("build.sanitizer.address", true)
 set_policy("build.sanitizer.leak", true)
 
-add_requires("fmt", "bison", "gtest", "mapbox_eternal", "tl_expected") -- libs
+add_requires("fmt", "bison", "catch2", "mapbox_eternal", "tl_expected") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
@@ -45,7 +45,7 @@ target("hcc_test")
 	)
 
 	add_deps("hcc_core")
-	add_packages("gtest", "fmt", "mapbox_eternal", "tl_expected")
+	add_packages("catch2", "fmt", "mapbox_eternal", "tl_expected")
 
 	set_default(false)
 target_end()

@@ -31,7 +31,7 @@ namespace hcc { class Driver; }
 %token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA PLUS MINUS MULTIPLY DIVIDE AMPERSAND ASSIGN
 %token RETURN ASM
 
-%type <std::unique_ptr<hcc::AstNode>> topstatement statement expression term factor call_arg
+%type <std::unique_ptr<hcc::AstNode>> topstatement statement expression term factor
 %type <std::unique_ptr<hcc::AstVarDeclare>> declaration
 %type <std::unique_ptr<hcc::AstFuncDef>> function_definition 
 %type <std::unique_ptr<hcc::AstReturn>> return_statement
@@ -79,26 +79,16 @@ function_definition:
 	;
 
 call_arg_list:
-  call_arg {
-		$$.clear();
+  expression {
+	$$.clear();
     $$.push_back(std::move($1));
-  } | call_arg_list call_arg {
-    $1.push_back(std::move($2));
-    $$ = std::move($1);
-  } | RPAREN {
-		$$.clear();
-  }
-
-call_arg:
-  expression COMMA {
-    $$ = std::move($1);
-  }
-  | expression RPAREN {
-    $$ = std::move($1);
+  } | call_arg_list COMMA expression {
+    $1.push_back(std::move($3));
+	$$ = std::move($1);
   }
 
 fncall:
-  IDENTIFIER LPAREN call_arg_list {
+  IDENTIFIER LPAREN call_arg_list RPAREN {
     $$ = std::make_unique<hcc::AstFuncCall>();
     $$->name = $1;
     $$->args = std::move($3);
@@ -220,32 +210,29 @@ term:
 factor:
 	NUMBER {
 		$$ = std::make_unique<hcc::AstNumber>($1);
-	}
-	| IDENTIFIER {
+	} | IDENTIFIER {
 		auto node = std::make_unique<hcc::AstVarRef>();
 		node->name = $1;
 		$$ = std::move(node);
-	}
-	| AMPERSAND IDENTIFIER {
+	} | AMPERSAND IDENTIFIER {
 		auto node = std::make_unique<hcc::AstAddrof>();
 		node->name = $2;
 		$$ = std::move(node);
-	}
-	| LPAREN expression RPAREN {
+	} | LPAREN expression RPAREN {
 		$$ = std::move($2);
+	} | fncall {
+		$$ = std::move($1);
 	}
-	| fncall
 	;
 
 %%
 
 namespace hcc {
 	Parser::symbol_type yylex(Driver& driver){
-		static std::size_t count = 0;
 		Parser::location_type loc (nullptr, 0, 0);
-		if(count >= driver.tokens.size()) return Parser::make_END(loc);
-		Token token = driver.tokens[count];
-		++count;
+		if(driver.token_i >= driver.tokens.size()) return Parser::make_END(loc);
+		Token token = driver.tokens[driver.token_i];
+		++driver.token_i;
 		switch(token.type){
 			case TokenType::Number:
 				return Parser::make_NUMBER(std::get<long>(token.value.value()), loc);
@@ -287,7 +274,6 @@ namespace hcc {
 	}
 
 	void Parser::error(const Parser::location_type& loc, const std::string& msg){
-		fmt::print("{}\n", msg);
-		std::abort();
+		driver.error = msg;
 	}
 } // namespace hcc

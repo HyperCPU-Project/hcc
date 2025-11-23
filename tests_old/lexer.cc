@@ -1,19 +1,16 @@
 #include "lexer/lexer.hpp"
-#include <catch2/catch_test_macros.hpp>
-
-TEST_CASE("a", "[single-file]") {
-  REQUIRE(1 == 1);
-}
+#include "lexer/token.hpp"
+#include <gtest/gtest.h>
 
 template <typename Tv>
-static inline void __impl_assert_token_val(hcc::Token token, hcc::TokenType type,
-                                           Tv val) {
-  REQUIRE(token.value.has_value());
-  REQUIRE(std::holds_alternative<Tv>(token.value.value()));
+static void __impl_assert_token_val(hcc::Token token, hcc::TokenType type,
+                                    Tv val) {
+  ASSERT_TRUE(token.value.has_value());
+  ASSERT_TRUE(std::holds_alternative<Tv>(token.value.value()));
 }
 
-static inline void assert_token(hcc::Token token, hcc::TokenType type) {
-  REQUIRE(token.type == type);
+static void assert_token(hcc::Token token, hcc::TokenType type) {
+  ASSERT_EQ(token.type, type);
 }
 
 static void assert_token(hcc::Token token, hcc::TokenType type, std::string v) {
@@ -24,16 +21,14 @@ static void assert_token(hcc::Token token, hcc::TokenType type, long v) {
   __impl_assert_token_val(token, type, v);
 }
 
-#define STRINGIFY(x) #x
-
 #define EMIT_TOKEN_TEST(name, type, code, i)       \
-  TEST_CASE(STRINGIFY(Lexer##name##Test)) {        \
+  TEST(HCCTest, Lexer##name##Test) {               \
     auto tokens = tokenize(code);                  \
     assert_token(tokens[i], hcc::TokenType::type); \
   }
 
 #define EMIT_TOKEN_TEST_VALUE(name, type, value, code, i) \
-  TEST_CASE(STRINGIFY(Lexer##name##Test)) {               \
+  TEST(HCCTest, Lexer##name##Test) {                      \
     auto tokens = tokenize(code);                         \
     assert_token(tokens[i], hcc::TokenType::type, value); \
   }
@@ -48,7 +43,7 @@ static std::vector<hcc::Token> tokenize(std::string s) {
   return result.value();
 }
 
-TEST_CASE("LexerMainTest") {
+TEST(HCCTest, LexerMainTest) {
   auto tokens = tokenize("int main(){return 0;}");
 
   assert_token(tokens[0], hcc::TokenType::Identifier, "int");
