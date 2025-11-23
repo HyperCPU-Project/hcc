@@ -23,6 +23,14 @@ namespace hcc { class Driver; }
 		static Parser::symbol_type yylex(Driver& driver);
 	}
 }
+%code requires {
+	namespace hcc {
+		struct ParserArgData {
+			std::string name;
+			std::string type;
+		};
+	}
+}
 
 %token END 0 "end of file"
 %token <long> NUMBER
@@ -40,6 +48,8 @@ namespace hcc { class Driver; }
 %type <std::unique_ptr<hcc::AstAsm>> asm_statement 
 %type <std::vector<std::unique_ptr<hcc::AstNode>>> topstatements block statements call_arg_list
 %type <std::vector<std::string>> declaration_names
+%type <std::map<std::string, std::string>> arg_list
+%type <hcc::ParserArgData> arg
 
 %%
 
@@ -71,10 +81,40 @@ topstatement:
 	;
 
 function_definition:
-	IDENTIFIER IDENTIFIER LPAREN RPAREN block {
+	IDENTIFIER IDENTIFIER LPAREN arg_list block {
+		$$ = std::make_unique<hcc::AstFuncDef>();
+		$$->name = $2;
+		$$->args = $4;
+		$$->children = std::move($5);
+	} | IDENTIFIER IDENTIFIER LPAREN RPAREN block {
 		$$ = std::make_unique<hcc::AstFuncDef>();
 		$$->name = $2;
 		$$->children = std::move($5);
+	}
+	;
+
+arg_list:
+	arg {
+		$$.clear();
+		$$[$1.name] = $1.type;
+	} | arg_list arg {
+		$$[$2.name] = $2.type;
+		$$ = $1;
+	} | RPAREN {
+		$$.clear();
+	}
+	;
+
+arg:
+	IDENTIFIER IDENTIFIER COMMA {
+		$$ = hcc::ParserArgData();
+		$$.name = $2;
+		$$.type = $1;
+	}
+	| IDENTIFIER IDENTIFIER RPAREN {
+		$$ = hcc::ParserArgData();
+		$$.name = $2;
+		$$.type = $1;
 	}
 	;
 
