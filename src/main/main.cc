@@ -67,7 +67,12 @@ backends:
       fmt::print("[hcc] unknown flag: {}\n", arg);
       return 1;
     } else {
-      hcc.sources.push_back(arg);
+      auto result = ReadFile(arg);
+      if (!result.has_value()) {
+        fmt::print("[hcc] failed to read {}: {}\n", arg, result.error());
+        return 1;
+      }
+      hcc.source += result.value() + "\n";
     }
   }
 
@@ -77,6 +82,5 @@ backends:
       fmt::print("[hcc] error: {}\n", result.error());
     }
   }
-
   return 0;
 }

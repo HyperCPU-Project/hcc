@@ -13,7 +13,6 @@ void AstReturn::Print(int indent) const {
 }
 
 AstReturn::~AstReturn() {
-  delete expr;
 }
 
 bool AstReturn::Compile(HCC* hcc) {

@@ -1,6 +1,5 @@
-bison_target(Parser bison/parser.yy ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.hpp)
-flex_target(Lexer bison/lexer.ll ${CMAKE_CURRENT_BINARY_DIR}/lexer.cpp)
-add_flex_bison_dependency(Lexer Parser)
+bison_target(Parser parser/parser.yy ${CMAKE_CURRENT_BINARY_DIR}/parser.cpp DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.hpp)
+#add__bison_dependency(Parser)
 
 add_library(pch INTERFACE)
 target_precompile_headers(pch INTERFACE cstd_pch.hpp dep_pch.hpp)
@@ -30,6 +29,9 @@ add_library(hcc_core STATIC
     ir/optimizations/stack_reserve.cc
     ir/optimizations/stack_setup.cc
     value/value.cc
+		driver/driver.cc
+		lexer/lexer.cc
+		lexer/token.cc
     ${BISON_Parser_OUTPUTS}
     ${FLEX_Lexer_OUTPUTS}
 )

@@ -18,8 +18,6 @@ void AstBinaryOp::Print(int indent) const {
 }
 
 AstBinaryOp::~AstBinaryOp() {
-  delete left;
-  delete right;
 }
 
 bool AstBinaryOp::Compile(HCC* hcc) {

@@ -5,7 +5,7 @@
 namespace hcc {
   class HyperCPUBackend : public Backend {
   public:
-    HyperCPUBackend();
+    HyperCPUBackend(HCC* hcc);
 
     uint64_t IncrementRegIndex() override;
 

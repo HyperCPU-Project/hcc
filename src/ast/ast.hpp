@@ -9,7 +9,7 @@ namespace hcc {
     virtual void Print(int indent = 0) const = 0;
     virtual bool Compile(HCC* hcc);
 
-    std::vector<AstNode*> children;
+    std::vector<std::unique_ptr<AstNode>> children;
 
   protected:
     void PrintIndent(int indent) const;
@@ -40,7 +40,7 @@ namespace hcc {
   class AstVarAssign : public AstNode {
   public:
     std::string name;
-    AstNode* expr;
+    std::unique_ptr<AstNode> expr;
     void Print(int indent = 0) const override;
     bool Compile(HCC* hcc) override;
     ~AstVarAssign();
@@ -58,8 +58,8 @@ namespace hcc {
 
   class AstBinaryOp : public AstNode {
   public:
-    AstNode* left;
-    AstNode* right;
+    std::unique_ptr<AstNode> left;
+    std::unique_ptr<AstNode> right;
     std::string op;
 
     void Print(int indent = 0) const override;
@@ -70,7 +70,7 @@ namespace hcc {
 
   class AstReturn : public AstNode {
   public:
-    AstNode* expr;
+    std::unique_ptr<AstNode> expr;
     void Print(int indent = 0) const override;
     bool Compile(HCC* hcc) override;
 
@@ -100,7 +100,7 @@ namespace hcc {
 
   class AstFuncCall : public AstNode {
   public:
-    std::vector<AstNode*> args;
+    std::vector<std::unique_ptr<AstNode>> args;
     std::string name;
 
     void Print(int indent = 0) const override;

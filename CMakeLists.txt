@@ -10,7 +10,6 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(WITH_TESTS OFF)
 
 find_package(BISON MODULE REQUIRED)
-find_package(FLEX MODULE REQUIRED)
 find_package(fmt REQUIRED)
 find_package(eternal REQUIRED)
 find_package(tl-expected REQUIRED)
@@ -20,7 +19,7 @@ if(LINUX)
 endif()
 
 if(HCC_NO_TESTS EQUAL 0 OR NOT DEFINED HCC_NO_TESTS)
-  find_package(GTest REQUIRED)
+  find_package(Catch2 REQUIRED)
   add_subdirectory(tests)
 endif()
 

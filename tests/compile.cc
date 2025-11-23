@@ -1,51 +1,28 @@
 #include "compile.hpp"
-#include "main.hpp"
 #include <cstd_pch.hpp>
-#include <cstdio>
-#include <filesystem>
 #include <string>
 #include <util.hpp>
 
-std::string compile_output = "";
-
-tl::expected<void, std::string> compileQuick(std::string code, std::string backend) {
-  compile_output.clear();
-
+tl::expected<std::string, std::string> compileQuick(std::string code, std::string backend) {
   hcc::HCC hcc;
+  hcc.print_ast = true;
+  hcc.source = code;
 
-  std::filesystem::create_directory("tests_tmp");
-  std::string filename = fmt::format("tests_tmp/test{}.c", ++test_counter);
-
-  std::ofstream file;
-  file.open(filename);
-  file << code;
-  file.close();
-
-  hcc.sources.push_back(filename);
-
-  hcc.outfd.open("tests_tmp/a.out", std::ios::out | std::ios::binary);
-
-  fmt::print("[hcctest] compiling temp C file {}\n", filename);
+  fmt::print("[hcctest] compiling temp C\n");
+  fmt::print("[hcctest] code:\n");
+  fmt::print("{}\n", code);
 
   {
     auto result = hcc.SelectBackend(backend);
     if (!result.has_value())
-      return result;
+      return tl::unexpected(result.error());
   }
 
   {
     auto result = hcc.ParseAndCompile();
     if (!result.has_value())
-      return result;
+      return tl::unexpected(result.error());
 
-    compile_output = ReadFile("tests_tmp/a.out").value();
-    compile_output = hcc.backend->output;
-    /*
-    fmt::println("-------");
-    fmt::println("{}", hcc.backend->output);
-    fmt::println("-------");
-    */
-
-    return result;
+    return hcc.backend->output;
   }
 }

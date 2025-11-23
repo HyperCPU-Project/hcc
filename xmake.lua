@@ -2,7 +2,10 @@ add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "build"}) -- generate compile commands
 add_rules("lex", "yacc")
 
-add_requires("fmt", "bison", "gtest", "mapbox_eternal", "tl_expected") -- libs
+set_policy("build.sanitizer.address", true)
+set_policy("build.sanitizer.leak", true)
+
+add_requires("fmt", "bison", "catch2", "mapbox_eternal", "tl_expected") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
@@ -16,11 +19,11 @@ target("hcc_core")
 		"src/backend/*/*.cc",
 		"src/backend/*.cc",
 		"src/value/*.cc",
-		"src/ir/*.cc"
+		"src/driver/*.cc",
+		"src/ir/*.cc", "src/ir/optimizations/*.cc",
+		"src/lexer/*.cc",
+		"src/parser/*.yy"
 	)
-	add_files("src/ir/optimizations/*.cc")
-
-	add_files("src/bison/*.ll", "src/bison/*.yy")
 
 	add_packages("fmt", "mapbox_eternal", "tl_expected")
 target_end()
@@ -42,7 +45,7 @@ target("hcc_test")
 	)
 
 	add_deps("hcc_core")
-	add_packages("gtest", "fmt", "mapbox_eternal", "tl_expected")
+	add_packages("catch2", "fmt", "mapbox_eternal", "tl_expected")
 
 	set_default(false)
 target_end()

@@ -5,7 +5,7 @@
 namespace hcc {
   class QprocBackend : public Backend {
   public:
-    QprocBackend();
+    QprocBackend(HCC* hcc);
 
     uint64_t IncrementRegIndex() override;
 

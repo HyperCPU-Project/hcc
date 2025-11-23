@@ -4,8 +4,7 @@
 
 using namespace hcc;
 
-Backend::Backend() {
-  reg_index = 0;
+Backend::Backend(HCC* _hcc) : hcc(_hcc), reg_index(0) {
 }
 
 Backend::~Backend() {
@@ -77,11 +76,15 @@ void Backend::EmitLabel(std::string name) {
 
 TypeMetadata* Backend::GetTypeFromName(std::string name) {
   if (!types.contains(name)) {
-    hcc_compile_error = fmt::sprintf("unknown type %s", name);
+    CompileError(fmt::sprintf("unknown type %s", name));
     return nullptr;
   }
 
   return &types[name];
+}
+
+void Backend::CompileError(std::string error) {
+  hcc->compile_error = error;
 }
 
 #pragma GCC diagnostic pop
