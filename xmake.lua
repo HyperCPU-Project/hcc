@@ -14,14 +14,14 @@ add_includedirs("src") -- includes for all targets
 target("hcc_core")
 	set_kind("static")
 	add_files(
-		"src/*.cc",
-		"src/ast/*.cc",
-		"src/backend/*/*.cc",
-		"src/backend/*.cc",
-		"src/value/*.cc",
-		"src/driver/*.cc",
-		"src/ir/*.cc", "src/ir/optimizations/*.cc",
-		"src/lexer/*.cc",
+		"src/*.cpp",
+		"src/ast/*.cpp",
+		"src/backend/*/*.cpp",
+		"src/backend/*.cpp",
+		"src/value/*.cpp",
+		"src/driver/*.cpp",
+		"src/ir/*.cpp", "src/ir/optimizations/*.cpp",
+		"src/lexer/*.cpp",
 		"src/parser/*.yy"
 	)
 
@@ -31,7 +31,7 @@ target_end()
 
 target("hcc")
 	set_kind("binary")
-	add_files("src/main/main.cc")
+	add_files("src/main/main.cpp")
 
 	add_deps("hcc_core")
 	add_packages("fmt", "mapbox_eternal", "tl_expected")
@@ -41,7 +41,7 @@ target_end()
 target("hcc_test")
 	set_kind("binary")
 	add_files(
-		"tests/*.cc"
+		"tests/*.cpp"
 	)
 
 	add_deps("hcc_core")
