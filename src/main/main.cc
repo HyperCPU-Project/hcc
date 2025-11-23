@@ -69,7 +69,7 @@ backends:
     } else {
       auto result = ReadFile(arg);
       if (!result.has_value()) {
-        fmt::print("[hcc] failed to read {}: {}\n", result.error(), arg);
+        fmt::print("[hcc] failed to read {}: {}\n", arg, result.error());
         return 1;
       }
       hcc.source += result.value() + "\n";
