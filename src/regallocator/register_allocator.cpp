@@ -2,7 +2,6 @@
 #include "util.hpp"
 #include <cassert>
 #include <fmt/base.h>
-#include <locale>
 
 hcc::RegisterAllocator::Register::Register(std::string _name)
     : name(_name), count(0) {
