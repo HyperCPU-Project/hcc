@@ -10,3 +10,13 @@ TEST_CASE("ParseErrorTest2") {
   auto result = compileQuick("int ({ return 0; }", "hypercpu");
   REQUIRE(result.error() == "parse error: syntax error, unexpected LPAREN, expecting IDENTIFIER");
 }
+
+TEST_CASE("ParseErrorTest3") {
+  auto result = compileQuick("int main(){ return +; }", "hypercpu");
+  REQUIRE(result.error() == "parse error: syntax error, unexpected PLUS");
+}
+
+TEST_CASE("ParseErrorTest4") {
+  auto result = compileQuick("int main(){ int 1; }", "hypercpu");
+  REQUIRE(result.error() == "parse error: syntax error, unexpected NUMBER, expecting IDENTIFIER or LPAREN or ASSIGN");
+}
