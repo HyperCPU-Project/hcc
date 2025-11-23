@@ -5,7 +5,8 @@
 
 using namespace hcc;
 
-IR::IR() : index(0) {};
+IR::IR()
+    : index(0) {};
 
 void IR::AddLine() {
   IrOpcode op;

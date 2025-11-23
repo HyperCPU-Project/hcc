@@ -6,7 +6,8 @@
 
 using namespace hcc;
 
-Value::Value() : value(0ULL) {
+Value::Value()
+    : value(0ULL) {
 }
 
 Value::~Value() {

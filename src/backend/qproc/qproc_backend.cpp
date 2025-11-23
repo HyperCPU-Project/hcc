@@ -4,7 +4,8 @@
 
 using namespace hcc;
 
-QprocBackend::QprocBackend(HCC* hcc) : Backend(hcc) {
+QprocBackend::QprocBackend(HCC* hcc)
+    : Backend(hcc) {
   types["void"] = TypeMetadata{"void", 0};
   types["char"] = TypeMetadata{"char", 1};
   types["short"] = TypeMetadata{"short", 2};

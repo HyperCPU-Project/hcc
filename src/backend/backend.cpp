@@ -6,7 +6,8 @@
 
 using namespace hcc;
 
-Backend::Backend(HCC* _hcc) : hcc(_hcc), register_allocator(ABIMetadata()) {
+Backend::Backend(HCC* _hcc)
+    : hcc(_hcc), register_allocator(ABIMetadata()) {
 }
 
 Backend::~Backend() {
