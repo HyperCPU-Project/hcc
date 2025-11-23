@@ -1,3 +1,4 @@
+#include "ir/ir.hpp"
 #include <ast/ast.hpp>
 #include <hcc.hpp>
 #include <value/value.hpp>
@@ -19,14 +20,25 @@ void AstBinaryOp::Print(int indent) const {
 
 AstBinaryOp::~AstBinaryOp() {
 }
+/*
+static size_t GetNodeLength(AstNode* node) {
+  if (auto num = dynamic_cast<AstNumber*>(node)) {
+    return 1;
+  } else if (auto binop = dynamic_cast<AstBinaryOp*>(node)) {
+    size_t len = 0;
+    len = GetNodeLength(binop->left);
+    len = GetNodeLength(binop->right);
+  }
+}*/
 
 bool AstBinaryOp::Compile(HCC* hcc) {
-  if (!left->Compile(hcc))
-    return false;
   if (!right->Compile(hcc))
+    return false;
+  if (!left->Compile(hcc))
     return false;
 
   IrOpcode ir_op;
+  ir_op.stack_pop_mode = StackPopMode::LHS_FIRST;
 
   if (op == "add") {
     ir_op.type = IrOpcode::IR_ADD;

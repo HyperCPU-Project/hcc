@@ -146,6 +146,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Add(hcc, RHS);
 
@@ -156,6 +159,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Sub(hcc, RHS);
 
@@ -166,6 +172,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Mul(hcc, RHS);
 
@@ -176,6 +185,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Div(hcc, RHS);
 

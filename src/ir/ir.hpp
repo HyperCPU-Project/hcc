@@ -6,6 +6,11 @@ namespace hcc {
   class Backend;
   class HCC;
 
+  enum class StackPopMode {
+    RHS_FIRST,
+    LHS_FIRST,
+  };
+
   struct IrOpcode {
     enum {
       IR_NULL,
@@ -29,6 +34,8 @@ namespace hcc {
       IR_RESET, // resets register counter
       IR_RESERVE,
     } type;
+
+    StackPopMode stack_pop_mode = StackPopMode::RHS_FIRST;
 
     struct {
       std::string name;
