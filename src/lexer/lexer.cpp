@@ -1,7 +1,8 @@
 #include <fmt/base.h>
 #include <lexer/lexer.hpp>
 
-hcc::Lexer::Lexer(std::string _input) : input(_input), ch(0), pos(0) {
+hcc::Lexer::Lexer(std::string _input)
+    : input(_input), ch(0), pos(0) {
   if (!input.empty()) {
     ch = input[0];
   }

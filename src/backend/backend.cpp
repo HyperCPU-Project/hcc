@@ -4,7 +4,8 @@
 
 using namespace hcc;
 
-Backend::Backend(HCC* _hcc) : hcc(_hcc), reg_index(0) {
+Backend::Backend(HCC* _hcc)
+    : hcc(_hcc), reg_index(0) {
 }
 
 Backend::~Backend() {
