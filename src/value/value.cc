@@ -53,24 +53,25 @@ std::shared_ptr<Value> Value::CreateAsStackVar(HCC* hcc, TypeMetadata type, bool
 
 std::shared_ptr<Value> Value::Use(HCC* hcc) {
   if (!IsCompileTime())
-    return std::shared_ptr<Value>(this);
+    return std::make_shared<Value>(*this);
 
   auto value = Value::CreateAsRegister(hcc, std::get<uint64_t>(this->value));
   return value;
 }
 
 std::shared_ptr<Value> Value::DoCondLod(HCC* hcc, std::string load_reg) {
-  if (IsRegister() && !IsCompileTime())
-    return std::shared_ptr<Value>(this);
-  if (!IsCompileTime()) {
+  if (IsStackVar()) {
+    auto var = std::get<ValueStackVar>(this->value);
+
+    auto value = std::make_shared<Value>();
+    value->value = hcc->backend->EmitLoadFromStack(var.stack_align, var.type.size, load_reg);
+    return value;
+  } else if (IsCompileTime()) {
+    return std::make_shared<Value>(*this);
+  } else if (IsRegister()) {
     return Use(hcc);
   }
-
-  auto var = std::get<ValueStackVar>(this->value);
-
-  auto value = std::make_shared<Value>();
-  value->value = hcc->backend->EmitLoadFromStack(var.stack_align, var.type.size, load_reg);
-  return value;
+  std::abort();
 }
 
 void Value::Add(HCC* hcc, std::shared_ptr<Value> other) {

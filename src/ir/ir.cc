@@ -122,15 +122,11 @@ bool IR::compile(HCC* hcc) {
     } break;
     case IrOpcode::IR_RET: {
       if (!hcc->values.empty()) {
-        auto value_raw = std::move(hcc->values.top());
+        auto value = hcc->values.top()->Use(hcc);
         hcc->values.pop();
 
-        auto value = value_raw->Use(hcc);
-
         std::string reg = std::get<std::string>(value->value);
-        if (reg != hcc->backend->abi.return_register) {
-          hcc->backend->EmitMove(hcc->backend->abi.return_register, reg);
-        }
+        hcc->backend->EmitMove(hcc->backend->abi.return_register, reg);
       }
 
       if (current_funcdef_op.funcdef.need_stack)
