@@ -93,6 +93,7 @@ void Value::Add(HCC* hcc, std::shared_ptr<Value> other) {
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -113,7 +114,7 @@ void Value::Sub(HCC* hcc, std::shared_ptr<Value> other) {
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
-    // todo
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -134,7 +135,7 @@ void Value::Mul(HCC* hcc, std::shared_ptr<Value> other) {
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
-    // todo
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -155,7 +156,7 @@ void Value::Div(HCC* hcc, std::shared_ptr<Value> other) {
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
-    // todo
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
