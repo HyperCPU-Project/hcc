@@ -25,9 +25,11 @@ AstBinaryOp::~AstBinaryOp() {
 static size_t GetNodeLength(AstNode* node) {
   if ([[maybe_unused]] auto num = dynamic_cast<AstNumber*>(node)) {
     return 1;
+  } else if ([[maybe_unused]] auto varref = dynamic_cast<AstVarRef*>(node)) {
+    return 1;
   } else if (auto funccall = dynamic_cast<AstFuncCall*>(node)) {
     size_t len = 0;
-    for (auto& child : funccall->children) {
+    for (auto& child : funccall->args) {
       len += GetNodeLength(child.get());
     }
     return len;
