@@ -109,15 +109,15 @@ bool IR::compile(HCC* hcc) {
       }
       break;
     case IrOpcode::IR_CREG: {
-      auto value = std::unique_ptr<Value>(Value::CreateAsRegister(hcc, op.creg.value, op.creg.reg_name));
+      auto value = Value::CreateAsRegister(hcc, op.creg.value, op.creg.reg_name);
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_CCTV: {
-      auto value = std::unique_ptr<Value>(Value::CreateAsCompileTimeValue(hcc, op.cctv.value));
+      auto value = Value::CreateAsCompileTimeValue(hcc, op.cctv.value);
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_CSV: {
-      auto value = std::unique_ptr<Value>(Value::CreateAsStackVar(hcc, op.csv.md));
+      auto value = Value::CreateAsStackVar(hcc, op.csv.md);
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_RET: {
@@ -131,9 +131,6 @@ bool IR::compile(HCC* hcc) {
         if (reg != hcc->backend->abi.return_register) {
           hcc->backend->EmitMove(hcc->backend->abi.return_register, reg);
         }
-
-        if (value != value_raw.get())
-          delete value;
       }
 
       if (current_funcdef_op.funcdef.need_stack)
@@ -145,8 +142,8 @@ bool IR::compile(HCC* hcc) {
         hcc->values.pop();
     } break;
     case IrOpcode::IR_ALLOCA: {
-      std::unique_ptr<Value> value(Value::CreateAsStackVar(hcc, op.alloca.md, false));
-      hcc->current_function.variables[op.alloca.name] = std::move(value);
+      auto value = Value::CreateAsStackVar(hcc, op.alloca.md, false);
+      hcc->current_function.variables[op.alloca.name] = value;
     } break;
     case IrOpcode::IR_ADD: {
       auto RHS = std::move(hcc->values.top());
@@ -154,7 +151,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->Add(hcc, RHS.get());
+      LHS->Add(hcc, RHS);
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -164,7 +161,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->Sub(hcc, RHS.get());
+      LHS->Sub(hcc, RHS);
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -174,7 +171,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->Mul(hcc, RHS.get());
+      LHS->Mul(hcc, RHS);
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -184,7 +181,7 @@ bool IR::compile(HCC* hcc) {
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
 
-      LHS->Div(hcc, RHS.get());
+      LHS->Div(hcc, RHS);
 
       hcc->values.push(std::move(LHS));
     } break;
@@ -194,12 +191,10 @@ bool IR::compile(HCC* hcc) {
         return false;
       }
 
-      auto& expr_var = hcc->current_function.variables[op.assign.name];
-
       auto expr_value = std::move(hcc->values.top());
       hcc->values.pop();
 
-      expr_var->SetTo(hcc, expr_value.get());
+      hcc->current_function.variables[op.assign.name]->SetTo(hcc, expr_value);
     } break;
     case IrOpcode::IR_ASM:
       hcc->backend->output += op.asm_.code + "\n";
@@ -210,7 +205,7 @@ bool IR::compile(HCC* hcc) {
         return false;
       }
 
-      std::unique_ptr<Value> out(hcc->current_function.variables[op.varref.name]->DoCondLod(hcc));
+      auto out = hcc->current_function.variables[op.varref.name]->DoCondLod(hcc);
 
       hcc->values.push(std::move(out));
     } break;

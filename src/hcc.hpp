@@ -31,7 +31,7 @@ namespace hcc {
     Flags<Optimization> optimizations;
 
     FunctionMetadata current_function;
-    std::stack<std::unique_ptr<Value>> values;
+    std::stack<std::shared_ptr<Value>> values;
 
     HCC();
     ~HCC();
