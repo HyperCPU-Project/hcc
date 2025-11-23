@@ -22,8 +22,8 @@ namespace hcc {
     void EmitReserveStackSpace(uint64_t size) override;
     void EmitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) override;
 
-    std::string EmitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg = "") override;
-    std::string EmitLoadaddrFromStack(uint64_t align, std::string load_reg = "") override;
+    std::string EmitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg) override;
+    std::string EmitLoadaddrFromStack(uint64_t align, std::string load_reg) override;
 
     void EmitCall(std::string name) override;
 

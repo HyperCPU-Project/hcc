@@ -149,6 +149,8 @@ statement:
 		$$ = std::move($1);
 	} | asm_statement {
 		$$ = std::move($1);
+	} | assignment {
+		$$ = std::move($1);
 	}
 	;
 

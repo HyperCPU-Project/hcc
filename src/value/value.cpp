@@ -168,25 +168,43 @@ void Value::SetTo(HCC* hcc, std::shared_ptr<Value> other) {
   if (!IsCompileTime() && other->IsCompileTime()) {
     auto v = other->Use(hcc);
     if (IsRegister()) {
-      hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(v->value));
+      std::string reg = std::get<std::string>(v->value);
+      hcc->backend->EmitMove(std::get<std::string>(this->value), reg);
+
+      hcc->backend->ReleaseRegister(reg);
     } else {
       ValueStackVar var = std::get<ValueStackVar>(this->value);
-      hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(v->value));
+      std::string reg = std::get<std::string>(v->value);
+      hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, reg);
+
+      hcc->backend->ReleaseRegister(reg);
     }
   } else if (!IsRegister() && other->IsRegister()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
-    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(other->value));
+    std::string reg = std::get<std::string>(other->value);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, reg);
+
+    hcc->backend->ReleaseRegister(reg);
   } else if (IsRegister() && other->IsRegister()) {
-    hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(other->value));
+    std::string reg = std::get<std::string>(other->value);
+    hcc->backend->EmitMove(std::get<std::string>(this->value), reg);
+
+    hcc->backend->ReleaseRegister(reg);
   } else if (!IsRegister() && !other->IsRegister()) {
     auto LHS = DoCondLod(hcc);
     auto RHS = other->DoCondLod(hcc);
 
     ValueStackVar var = std::get<ValueStackVar>(this->value);
-    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(LHS->value));
+    std::string reg = std::get<std::string>(LHS->value);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, reg);
+
+    hcc->backend->ReleaseRegister(reg);
   } else if (IsRegister() && !other->IsRegister()) {
     auto RHS = other->DoCondLod(hcc);
 
-    hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(RHS->value));
+    std::string reg = std::get<std::string>(RHS->value);
+    hcc->backend->EmitMove(std::get<std::string>(this->value), reg);
+
+    hcc->backend->ReleaseRegister(reg);
   }
 }

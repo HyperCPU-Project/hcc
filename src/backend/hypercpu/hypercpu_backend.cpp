@@ -1,4 +1,3 @@
-#include "regallocator/register_allocator.hpp"
 #include <backend/hypercpu/hypercpu_backend.hpp>
 #include <dep_pch.hpp>
 
@@ -117,17 +116,9 @@ void HyperCPUBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::strin
 std::string HyperCPUBackend::EmitLoadaddrFromStack(uint64_t align, std::string reg) {
   if (codegen_comments)
     output += "// emit_loadaddr_from_stack\n";
-  output += "; not implemented\n";
-  /*
-  if (reg.empty())
-    reg = std::to_string(IncrementRegIndex());
-  if (reg == "r0")
-    reg = std::to_string(IncrementRegIndex());
-  reg = "r" + reg;
 
   output += fmt::sprintf("mov %s, xbp;\n", reg);
   output += fmt::sprintf("sub %s, %d;\n", reg, align);
-  */
   return reg;
 }
 

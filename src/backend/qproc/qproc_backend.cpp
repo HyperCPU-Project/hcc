@@ -97,13 +97,6 @@ void QprocBackend::EmitReserveStackSpace(uint64_t size) {
 std::string QprocBackend::EmitLoadFromStack(uint64_t align, uint64_t size, std::string reg) {
   if (codegen_comments)
     output += "; emit_load_from_stack\n";
-  output += "; not implemented\n";
-  /*
-  if (reg.empty()) {
-    reg = "r" + std::to_string(IncrementRegIndex());
-    while (reg == "r0" || reg == "r1")
-      reg = "r" + std::to_string(IncrementRegIndex());
-  }
   output += fmt::sprintf("mov r0 bp\n");
   output += fmt::sprintf("movi r1 %d\n", align);
   output += fmt::sprintf("sub r0 r1\n");
@@ -114,27 +107,14 @@ std::string QprocBackend::EmitLoadFromStack(uint64_t align, uint64_t size, std::
   else
     output += fmt::sprintf("lod %s dword r0\n", reg);
   return reg;
-  */
 }
 
 void QprocBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) {
   if (codegen_comments)
     output += "; emit_store_from_stack\n";
-  output += "; not implemented\n";
-  /*
-  bool is_used_reg = (rsrc == "r0" || rsrc == "r1");
-
-  if (is_used_reg)
-    output += fmt::sprintf("push %s\n", rsrc);
   output += fmt::sprintf("mov r0 bp\n");
   output += fmt::sprintf("movi r1 %d\n", align);
   output += fmt::sprintf("sub r0 r1\n");
-  if (rsrc == "r0") {
-    is_used_reg = true;
-    rsrc = "r1";
-  }
-  if (is_used_reg)
-    output += fmt::sprintf("pop %s\n", rsrc);
 
   if (size == 1)
     output += fmt::sprintf("str byte r0 %s\n", rsrc);
@@ -142,25 +122,15 @@ void QprocBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::string r
     output += fmt::sprintf("str word r0 %s\n", rsrc);
   else
     output += fmt::sprintf("str dword r0 %s\n", rsrc);
-  */
 }
 
 std::string QprocBackend::EmitLoadaddrFromStack(uint64_t align, std::string reg) {
   if (codegen_comments)
     output += "; emit_loadaddr_from_stack\n";
-  output += "; not implemented\n";
-  /*
-  if (reg.empty())
-    reg = std::to_string(IncrementRegIndex());
-  if (reg == "r0")
-    reg = std::to_string(IncrementRegIndex());
-  reg = "r" + reg;
-
   output += fmt::sprintf("mov %s bp\n", reg);
   output += fmt::sprintf("movi r0 %d\n", align);
   output += fmt::sprintf("sub %s r0\n", reg);
   return reg;
-  */
 }
 
 void QprocBackend::EmitCall(std::string name) {
