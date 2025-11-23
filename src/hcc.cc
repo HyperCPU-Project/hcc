@@ -56,11 +56,11 @@ tl::expected<void, std::string> HCC::ParseAndCompile() {
     return tl::unexpected<std::string>("compile error: " + compile_error);
   }
 
-  if (ir.resultsInError(this)) {
+  if (ir.ResultsInError(this)) {
     return tl::unexpected<std::string>("ir compile error: " + compile_error);
   }
   ir.PerformStaticOptimizations(this);
-  if (!ir.compile(this)) {
+  if (!ir.Compile(this)) {
     return tl::unexpected<std::string>("ir compile error: " + compile_error);
   }
 

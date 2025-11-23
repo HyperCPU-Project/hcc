@@ -107,8 +107,8 @@ namespace hcc {
     bool OpcodeAffectsStack(IrOpcode op);
 
     void PerformStaticOptimizations(HCC* hcc);
-    bool compile(HCC* hcc);
+    bool Compile(HCC* hcc);
 
-    bool resultsInError(HCC* hcc);
+    bool ResultsInError(HCC* hcc);
   };
 } // namespace hcc

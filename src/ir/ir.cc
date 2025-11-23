@@ -78,7 +78,7 @@ void IR::PerformStaticOptimizations(HCC* hcc) {
   }
 }
 
-bool IR::compile(HCC* hcc) {
+bool IR::Compile(HCC* hcc) {
   /*for (IrOpcode& op : ir) {
     fmt::println("{}", (int)op.type);
   }*/
@@ -247,9 +247,9 @@ bool IR::compile(HCC* hcc) {
   return true;
 }
 
-bool IR::resultsInError(HCC* hcc) {
+bool IR::ResultsInError(HCC* hcc) {
   index = 0;
-  bool result = !compile(hcc);
+  bool result = !Compile(hcc);
   hcc->backend->output.clear();
   index = 0;
   return result;
