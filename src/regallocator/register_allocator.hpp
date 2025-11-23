@@ -24,6 +24,10 @@ namespace hcc {
     RegisterAllocator(ABIMetadata abi, std::vector<std::string> blacklisted_registers = {});
     ~RegisterAllocator();
 
+  protected:
+    Register& FindRegisterByName(std::string reg);
+
+  public:
     std::string AllocateRegister();
     void RetainRegister(std::string reg);
     void ReleaseRegister(std::string reg);

@@ -45,22 +45,19 @@ std::string hcc::RegisterAllocator::AllocateRegister() {
   return "";
 }
 
-void hcc::RegisterAllocator::RetainRegister(std::string reg_name) {
+hcc::RegisterAllocator::Register& hcc::RegisterAllocator::FindRegisterByName(std::string reg_name) {
   for (auto& reg : registers) {
     if (reg.name == reg_name) {
-      reg.Retain();
-      return;
+      return reg;
     }
   }
-  assert(0 && "RetainRegister failed: no such register");
+  assert(0 && "FindRegisterByName failed: no such register");
+}
+
+void hcc::RegisterAllocator::RetainRegister(std::string reg_name) {
+  FindRegisterByName(reg_name).Retain();
 }
 
 void hcc::RegisterAllocator::ReleaseRegister(std::string reg_name) {
-  for (auto& reg : registers) {
-    if (reg.name == reg_name) {
-      reg.Release();
-      return;
-    }
-  }
-  assert(0 && "RetainRegister failed: no such register");
+  FindRegisterByName(reg_name).Release();
 }
