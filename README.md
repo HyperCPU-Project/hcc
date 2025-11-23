@@ -11,7 +11,7 @@
 
 Hyper C Compiler (hcc) is a C compiler developed for HyperCPU and qproc. It's very extensible and allows easily create backends for it.
 
-Hyper C Compiler uses `bison`, `flex` and `fmt` libraries. Although it may be not very optimized in code generation, it's a good choice to develop software for above referenced processors.
+Hyper C Compiler uses `bison` and `fmt` libraries. Although it may be not very optimized in code generation, it's a good choice to develop software for above referenced processors.
 
 > [!WARNING]
 > The compiler is intended for use with HyperCPU and qproc only. It can't compile for architectures like x86_32, x86_64, ARM64, etc.
@@ -50,7 +50,7 @@ Building Hyper C Compiler requires these dependencies to be installed:
 
 * GCC `>=12` or Clang `>=14`;
 * GNU make, CMake `>=3.25`;
-* `bison`, `flex` and `fmt` libraries.
+* `bison`, and `fmt` libraries.
 
 After installing dependencies build the project by executing these commands:
 
