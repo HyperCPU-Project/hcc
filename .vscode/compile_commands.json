@@ -1,0 +1,176 @@
+[
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/bison", "-d", "-o", "build/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc/parser.tab.cpp", "src/parser/parser.yy"],
+  "file": "build/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc/parser.tab.cpp"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/gens/rules/yacc_yacc/parser.tab.cpp.o", "build/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc/parser.tab.cpp"],
+  "file": "build/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc/parser.tab.cpp"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_test/linux/x86_64/debug/tests/lexer.cc.o", "tests/lexer.cc"],
+  "file": "tests/lexer.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_test/linux/x86_64/debug/tests/hcpu_codegen.cc.o", "tests/hcpu_codegen.cc"],
+  "file": "tests/hcpu_codegen.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_test/linux/x86_64/debug/tests/unknown_backend_errors.cc.o", "tests/unknown_backend_errors.cc"],
+  "file": "tests/unknown_backend_errors.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_test/linux/x86_64/debug/tests/parse_errors.cc.o", "tests/parse_errors.cc"],
+  "file": "tests/parse_errors.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_test/linux/x86_64/debug/tests/compile.cc.o", "tests/compile.cc"],
+  "file": "tests/compile.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc/linux/x86_64/debug/src/main/main.cc.o", "src/main/main.cc"],
+  "file": "src/main/main.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/gens/rules/yacc_yacc/parser.tab.cpp.o", "build/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc/parser.tab.cpp"],
+  "file": "build/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc/parser.tab.cpp"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/util.cc.o", "src/util.cc"],
+  "file": "src/util.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/hcc.cc.o", "src/hcc.cc"],
+  "file": "src/hcc.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_binary_op.cc.o", "src/ast/ast_binary_op.cc"],
+  "file": "src/ast/ast_binary_op.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_return.cc.o", "src/ast/ast_return.cc"],
+  "file": "src/ast/ast_return.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_addrof.cc.o", "src/ast/ast_addrof.cc"],
+  "file": "src/ast/ast_addrof.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_var_declare.cc.o", "src/ast/ast_var_declare.cc"],
+  "file": "src/ast/ast_var_declare.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_number.cc.o", "src/ast/ast_number.cc"],
+  "file": "src/ast/ast_number.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_root_node.cc.o", "src/ast/ast_root_node.cc"],
+  "file": "src/ast/ast_root_node.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_func_def.cc.o", "src/ast/ast_func_def.cc"],
+  "file": "src/ast/ast_func_def.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_var_assign.cc.o", "src/ast/ast_var_assign.cc"],
+  "file": "src/ast/ast_var_assign.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast.cc.o", "src/ast/ast.cc"],
+  "file": "src/ast/ast.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_var_ref.cc.o", "src/ast/ast_var_ref.cc"],
+  "file": "src/ast/ast_var_ref.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_asm.cc.o", "src/ast/ast_asm.cc"],
+  "file": "src/ast/ast_asm.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ast/ast_func_call.cc.o", "src/ast/ast_func_call.cc"],
+  "file": "src/ast/ast_func_call.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/backend/qproc/qproc_backend.cc.o", "src/backend/qproc/qproc_backend.cc"],
+  "file": "src/backend/qproc/qproc_backend.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/backend/hypercpu/hypercpu_backend.cc.o", "src/backend/hypercpu/hypercpu_backend.cc"],
+  "file": "src/backend/hypercpu/hypercpu_backend.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/backend/backend.cc.o", "src/backend/backend.cc"],
+  "file": "src/backend/backend.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/value/value.cc.o", "src/value/value.cc"],
+  "file": "src/value/value.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/driver/driver.cc.o", "src/driver/driver.cc"],
+  "file": "src/driver/driver.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ir/ir.cc.o", "src/ir/ir.cc"],
+  "file": "src/ir/ir.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ir/optimizations/stack_reserve.cc.o", "src/ir/optimizations/stack_reserve.cc"],
+  "file": "src/ir/optimizations/stack_reserve.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ir/optimizations/stack_setup.cc.o", "src/ir/optimizations/stack_setup.cc"],
+  "file": "src/ir/optimizations/stack_setup.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ir/optimizations/constant_propagation.cc.o", "src/ir/optimizations/constant_propagation.cc"],
+  "file": "src/ir/optimizations/constant_propagation.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/ir/optimizations/dce.cc.o", "src/ir/optimizations/dce.cc"],
+  "file": "src/ir/optimizations/dce.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/lexer/lexer.cc.o", "src/lexer/lexer.cc"],
+  "file": "src/lexer/lexer.cc"
+},
+{
+  "directory": "/home/aceinet/hcc",
+  "arguments": ["/usr/bin/g++", "-c", "-m64", "-g", "-Wall", "-O0", "-std=c++20", "-Isrc", "-Ibuild/.gens/hcc_core/linux/x86_64/debug/rules/yacc_yacc", "-I", "/home/aceinet/.xmake/packages/m/mapbox_eternal/v1.0.1/5db2f6fa6daa49e8b79af41372d31fe2/include", "-I", "/home/aceinet/.xmake/packages/t/tl_expected/v1.1.0/57774aec28a24eb8b84e9c45d2905d73/include", "-o", "build/.objs/hcc_core/linux/x86_64/debug/src/lexer/token.cc.o", "src/lexer/token.cc"],
+  "file": "src/lexer/token.cc"
+}]

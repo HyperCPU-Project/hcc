@@ -17,6 +17,7 @@ namespace hcc {
 
     bool IsRegister();
     bool IsCompileTime();
+    bool IsStackVar();
 
     static Value* CreateAsRegister(HCC* hcc, uint64_t value, std::string reg_name = "");
     static Value* CreateAsCompileTimeValue(HCC* hcc, uint64_t value);

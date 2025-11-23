@@ -1,3 +1,4 @@
+#include "value/value_stack_var.hpp"
 #include <hcc.hpp>
 #include <value/value.hpp>
 
@@ -16,6 +17,10 @@ bool Value::IsRegister() {
 
 bool Value::IsCompileTime() {
   return (std::holds_alternative<uint64_t>(value));
+}
+
+bool Value::IsStackVar() {
+  return (std::holds_alternative<ValueStackVar>(value));
 }
 
 Value* Value::CreateAsRegister(HCC* hcc, uint64_t _value, std::string regName) {
@@ -70,11 +75,9 @@ Value* Value::DoCondLod(HCC* hcc, std::string load_reg) {
 
 void Value::Add(HCC* hcc, Value* other) {
   if (IsCompileTime() && other->IsCompileTime()) {
-    std::get<uint64_t>(value) += other->IsCompileTime();
+    std::get<uint64_t>(value) += std::get<uint64_t>(other->value);
     return;
   }
-
-  ValueStackVar var = std::get<ValueStackVar>(this->value);
 
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
@@ -83,7 +86,8 @@ void Value::Add(HCC* hcc, Value* other) {
 
   hcc->backend->EmitAdd(LHS_reg, LHS_reg, RHS_reg);
 
-  if (!IsRegister()) {
+  if (IsStackVar()) {
+    ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
@@ -99,8 +103,6 @@ void Value::Sub(HCC* hcc, Value* other) {
     return;
   }
 
-  ValueStackVar var = std::get<ValueStackVar>(this->value);
-
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
   std::string LHS_reg = std::get<std::string>(LHS->value);
@@ -108,7 +110,8 @@ void Value::Sub(HCC* hcc, Value* other) {
 
   hcc->backend->EmitSub(LHS_reg, LHS_reg, RHS_reg);
 
-  if (!IsRegister()) {
+  if (IsStackVar()) {
+    ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
@@ -124,8 +127,6 @@ void Value::Mul(HCC* hcc, Value* other) {
     return;
   }
 
-  ValueStackVar var = std::get<ValueStackVar>(this->value);
-
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
   std::string LHS_reg = std::get<std::string>(LHS->value);
@@ -133,7 +134,8 @@ void Value::Mul(HCC* hcc, Value* other) {
 
   hcc->backend->EmitMul(LHS_reg, LHS_reg, RHS_reg);
 
-  if (!IsRegister()) {
+  if (IsStackVar()) {
+    ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 
@@ -149,8 +151,6 @@ void Value::Div(HCC* hcc, Value* other) {
     return;
   }
 
-  ValueStackVar var = std::get<ValueStackVar>(this->value);
-
   Value* LHS = DoCondLod(hcc);
   Value* RHS = other->DoCondLod(hcc);
   std::string LHS_reg = std::get<std::string>(LHS->value);
@@ -158,7 +158,8 @@ void Value::Div(HCC* hcc, Value* other) {
 
   hcc->backend->EmitDiv(LHS_reg, LHS_reg, RHS_reg);
 
-  if (!IsRegister()) {
+  if (IsStackVar()) {
+    ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
   }
 

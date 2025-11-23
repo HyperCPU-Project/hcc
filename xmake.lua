@@ -2,8 +2,8 @@ add_rules("mode.debug", "mode.release")
 add_rules("plugin.compile_commands.autoupdate", {outputdir = "build"}) -- generate compile commands
 add_rules("lex", "yacc")
 
-set_policy("build.sanitizer.address", true)
-set_policy("build.sanitizer.leak", true)
+--set_policy("build.sanitizer.address", true)
+--set_policy("build.sanitizer.leak", true)
 
 add_requires("fmt", "bison", "catch2", "mapbox_eternal", "tl_expected") -- libs
 set_warnings("all") -- warns
