@@ -6,12 +6,22 @@ namespace hcc {
 
   class RegisterAllocator {
   protected:
+    struct Register {
+      std::string name;
+      std::size_t count;
+
+      Register(std::string name);
+      void Retain();
+      void Release();
+    };
+
+  protected:
     ABIMetadata abi;
 
-    std::map<std::string, size_t> registers;
+    std::vector<Register> registers;
 
   public:
-    RegisterAllocator(ABIMetadata abi);
+    RegisterAllocator(ABIMetadata abi, std::vector<std::string> blacklisted_registers = {});
     ~RegisterAllocator();
 
     std::string AllocateRegister();

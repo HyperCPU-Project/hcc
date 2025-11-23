@@ -12,12 +12,12 @@ QprocBackend::QprocBackend(HCC* hcc) : Backend(hcc) {
   types["long"] = TypeMetadata{"long", 4}; // size of 4 is intentional here
   abi.return_register = "r0";
   for (int i = 0; i <= 12; i++) {
-    abi.args_registers.push_back(fmt::format("r{}", i));
+    abi.registers.push_back(fmt::format("r{}", i));
   }
   for (int i = 2; i <= 12; i++) {
     abi.args_registers.push_back(fmt::format("r{}", i));
   }
-  register_allocator = RegisterAllocator(abi);
+  register_allocator = RegisterAllocator(abi, {"r0", "r1"});
 }
 
 void QprocBackend::EmitFunctionPrologue(std::string name) {
