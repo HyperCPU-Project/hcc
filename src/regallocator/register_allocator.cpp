@@ -2,8 +2,10 @@
 #include "util.hpp"
 #include <cassert>
 #include <fmt/base.h>
+#include <locale>
 
-hcc::RegisterAllocator::Register::Register(std::string _name) : name(_name), count(0) {
+hcc::RegisterAllocator::Register::Register(std::string _name)
+    : name(_name), count(0) {
 }
 
 void hcc::RegisterAllocator::Register::Retain() {
@@ -18,7 +20,8 @@ void hcc::RegisterAllocator::Register::Release() {
   fmt::println("release {} now {}", name, count);
 }
 
-hcc::RegisterAllocator::RegisterAllocator(hcc::ABIMetadata _abi, std::vector<std::string> blacklisted_registers) : abi(_abi) {
+hcc::RegisterAllocator::RegisterAllocator(hcc::ABIMetadata _abi, std::vector<std::string> blacklisted_registers)
+    : abi(_abi) {
   for (std::string reg : abi.registers) {
     if (VectorContains(blacklisted_registers, reg))
       continue;
