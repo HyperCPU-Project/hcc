@@ -5,24 +5,19 @@ using namespace hcc;
 
 HyperCPUBackend::HyperCPUBackend(HCC* hcc)
     : Backend(hcc) {
-  reg_index = 0;
   types["void"] = TypeMetadata{"void", 0};
   types["char"] = TypeMetadata{"char", 1};
   types["short"] = TypeMetadata{"short", 2};
   types["int"] = TypeMetadata{"int", 4};
   types["long"] = TypeMetadata{"long", 8};
   abi.return_register = "x0";
+  for (int i = 0; i <= 7; i++) {
+    abi.registers.push_back(fmt::format("x{}", i));
+  }
   for (int i = 2; i <= 7; i++) {
     abi.args_registers.push_back(fmt::format("x{}", i));
   }
-}
-
-uint64_t HyperCPUBackend::IncrementRegIndex() {
-  uint64_t res = reg_index++;
-  if (reg_index > 7) {
-    reg_index = 0;
-  }
-  return res;
+  register_allocator = RegisterAllocator(abi);
 }
 
 void HyperCPUBackend::EmitFunctionPrologue(std::string name) {
@@ -41,9 +36,6 @@ void HyperCPUBackend::EmitFunctionEpilogue() {
 std::string HyperCPUBackend::EmitMovConst(uint64_t value, std::string reg_name) {
   if (codegen_comments)
     output += "// emit_mov_const\n";
-  if (reg_name == "") {
-    reg_name = fmt::format("x{}", IncrementRegIndex());
-  }
 
   output += fmt::sprintf("mov %s, 0u%ld;\n", reg_name, value);
 
@@ -112,9 +104,6 @@ void HyperCPUBackend::EmitReserveStackSpace(uint64_t size) {
 std::string HyperCPUBackend::EmitLoadFromStack(uint64_t align, uint64_t size, std::string reg) {
   if (codegen_comments)
     output += "// emit_load_from_stack\n";
-  if (reg.empty()) {
-    reg = "x" + std::to_string(IncrementRegIndex());
-  }
   output += fmt::sprintf("mov %s, b%d ptr [xbp+0u%d];\n", reg, size * 8, (0xff - align + 1));
   return reg;
 }
@@ -128,11 +117,6 @@ void HyperCPUBackend::EmitStoreToStack(uint64_t align, uint64_t size, std::strin
 std::string HyperCPUBackend::EmitLoadaddrFromStack(uint64_t align, std::string reg) {
   if (codegen_comments)
     output += "// emit_loadaddr_from_stack\n";
-  if (reg.empty())
-    reg = std::to_string(IncrementRegIndex());
-  if (reg == "r0")
-    reg = std::to_string(IncrementRegIndex());
-  reg = "r" + reg;
 
   output += fmt::sprintf("mov %s, xbp;\n", reg);
   output += fmt::sprintf("sub %s, %d;\n", reg, align);

@@ -101,8 +101,17 @@ bool IR::Compile(HCC* hcc) {
         Next();
       } else {
         if (op.funcdef.need_stack) {
-          hcc->backend->ResetRegIndex();
           hcc->backend->EmitFunctionPrologue(op.funcdef.name);
+
+          for (int i = 0; i < op.funcdef.arg_names.size(); i++) {
+            const auto& name = op.funcdef.arg_names[i];
+            const auto& type = op.funcdef.arg_types[i];
+
+            auto value = Value::CreateAsStackVar(hcc, type, false);
+            auto var = std::get<ValueStackVar>(value->value);
+            hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, hcc->backend->abi.args_registers[i]);
+            hcc->current_function.variables[name] = value;
+          }
         } else {
           hcc->backend->EmitLabel(op.funcdef.name);
         }
@@ -110,7 +119,7 @@ bool IR::Compile(HCC* hcc) {
       }
       break;
     case IrOpcode::IR_CREG: {
-      auto value = Value::CreateAsRegister(hcc, op.creg.value, op.creg.reg_name);
+      auto value = Value::CreateAsRegister(hcc, op.creg.value);
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_CCTV: {
@@ -128,6 +137,7 @@ bool IR::Compile(HCC* hcc) {
 
         std::string reg = std::get<std::string>(value->value);
         hcc->backend->EmitMove(hcc->backend->abi.return_register, reg);
+        hcc->backend->ReleaseRegister(reg);
       }
 
       if (current_funcdef_op.funcdef.need_stack)
@@ -135,8 +145,7 @@ bool IR::Compile(HCC* hcc) {
       else
         hcc->backend->EmitSingleRet();
 
-      while (!hcc->values.empty())
-        hcc->values.pop();
+      assert(hcc->values.empty());
     } break;
     case IrOpcode::IR_ALLOCA: {
       auto value = Value::CreateAsStackVar(hcc, op.alloca.md, false);
@@ -147,6 +156,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Add(hcc, RHS);
 
@@ -157,6 +169,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Sub(hcc, RHS);
 
@@ -167,6 +182,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Mul(hcc, RHS);
 
@@ -177,6 +195,9 @@ bool IR::Compile(HCC* hcc) {
       hcc->values.pop();
       auto LHS = std::move(hcc->values.top());
       hcc->values.pop();
+      if (op.stack_pop_mode == StackPopMode::LHS_FIRST) {
+        std::swap(RHS, LHS);
+      }
 
       LHS->Div(hcc, RHS);
 
@@ -212,7 +233,7 @@ bool IR::Compile(HCC* hcc) {
         return false;
       }
 
-      auto out = std::unique_ptr<Value>(new Value());
+      auto out = std::make_unique<Value>();
       auto var = std::get<ValueStackVar>(hcc->current_function.variables[op.addrof.name]->value);
       out->value = hcc->backend->EmitLoadaddrFromStack(var.stack_align);
 
@@ -220,15 +241,15 @@ bool IR::Compile(HCC* hcc) {
     } break;
     case IrOpcode::IR_CALL: {
       hcc->backend->EmitCall(op.call.name);
-      auto value = std::make_unique<Value>();
-      value->value = hcc->backend->abi.return_register;
+
+      auto value = Value::CreateAsRegister(hcc);
+      hcc->backend->EmitMove(std::get<std::string>(value->value), hcc->backend->abi.return_register);
 
       hcc->values.push(std::move(value));
     } break;
     case IrOpcode::IR_LINE:
       break;
     case IrOpcode::IR_RESET:
-      hcc->backend->ResetRegIndex();
       break;
     case IrOpcode::IR_RESERVE:
       if (op.reserve.bytes > 0)

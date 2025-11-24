@@ -1,3 +1,4 @@
+#include "abi_metadata.hpp"
 #include "value/value_stack_var.hpp"
 #include <hcc.hpp>
 #include <memory>
@@ -24,9 +25,16 @@ bool Value::IsStackVar() {
   return (std::holds_alternative<ValueStackVar>(value));
 }
 
-std::shared_ptr<Value> Value::CreateAsRegister(HCC* hcc, uint64_t _value, std::string regName) {
+std::shared_ptr<Value> Value::CreateAsRegister(HCC* hcc, uint64_t _value) {
   auto value = std::make_shared<Value>();
-  value->value = hcc->backend->EmitMovConst(_value, regName);
+  std::string reg = hcc->backend->AllocateRegister();
+  value->value = hcc->backend->EmitMovConst(_value, reg);
+  return value;
+}
+
+std::shared_ptr<Value> Value::CreateAsRegister(HCC* hcc) {
+  auto value = std::make_shared<Value>();
+  value->value = hcc->backend->AllocateRegister();
   return value;
 }
 
@@ -60,17 +68,17 @@ std::shared_ptr<Value> Value::Use(HCC* hcc) {
   return value;
 }
 
-std::shared_ptr<Value> Value::DoCondLod(HCC* hcc, std::string load_reg) {
+std::shared_ptr<Value> Value::DoCondLod(HCC* hcc) {
   if (IsStackVar()) {
     auto var = std::get<ValueStackVar>(this->value);
 
     auto value = std::make_shared<Value>();
-    value->value = hcc->backend->EmitLoadFromStack(var.stack_align, var.type.size, load_reg);
+    value->value = hcc->backend->EmitLoadFromStack(var.stack_align, var.type.size, hcc->backend->AllocateRegister());
     return value;
   } else if (IsCompileTime()) {
     return std::make_shared<Value>(*this);
   } else if (IsRegister()) {
-    return Use(hcc);
+    return std::make_shared<Value>(*this);
   }
   std::abort();
 }
@@ -87,10 +95,12 @@ void Value::Add(HCC* hcc, std::shared_ptr<Value> other) {
   std::string RHS_reg = std::get<std::string>(RHS->value);
 
   hcc->backend->EmitAdd(LHS_reg, LHS_reg, RHS_reg);
+  hcc->backend->ReleaseRegister(RHS_reg);
 
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -106,10 +116,12 @@ void Value::Sub(HCC* hcc, std::shared_ptr<Value> other) {
   std::string RHS_reg = std::get<std::string>(RHS->value);
 
   hcc->backend->EmitSub(LHS_reg, LHS_reg, RHS_reg);
+  hcc->backend->ReleaseRegister(RHS_reg);
 
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -125,10 +137,12 @@ void Value::Mul(HCC* hcc, std::shared_ptr<Value> other) {
   std::string RHS_reg = std::get<std::string>(RHS->value);
 
   hcc->backend->EmitMul(LHS_reg, LHS_reg, RHS_reg);
+  hcc->backend->ReleaseRegister(RHS_reg);
 
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -144,10 +158,12 @@ void Value::Div(HCC* hcc, std::shared_ptr<Value> other) {
   std::string RHS_reg = std::get<std::string>(RHS->value);
 
   hcc->backend->EmitDiv(LHS_reg, LHS_reg, RHS_reg);
+  hcc->backend->ReleaseRegister(RHS_reg);
 
   if (IsStackVar()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
     hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, LHS_reg);
+    hcc->backend->ReleaseRegister(LHS_reg);
   }
 }
 
@@ -160,25 +176,43 @@ void Value::SetTo(HCC* hcc, std::shared_ptr<Value> other) {
   if (!IsCompileTime() && other->IsCompileTime()) {
     auto v = other->Use(hcc);
     if (IsRegister()) {
-      hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(v->value));
+      std::string reg = std::get<std::string>(v->value);
+      hcc->backend->EmitMove(std::get<std::string>(this->value), reg);
+
+      hcc->backend->ReleaseRegister(reg);
     } else {
       ValueStackVar var = std::get<ValueStackVar>(this->value);
-      hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(v->value));
+      std::string reg = std::get<std::string>(v->value);
+      hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, reg);
+
+      hcc->backend->ReleaseRegister(reg);
     }
   } else if (!IsRegister() && other->IsRegister()) {
     ValueStackVar var = std::get<ValueStackVar>(this->value);
-    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(other->value));
+    std::string reg = std::get<std::string>(other->value);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, reg);
+
+    hcc->backend->ReleaseRegister(reg);
   } else if (IsRegister() && other->IsRegister()) {
-    hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(other->value));
+    std::string reg = std::get<std::string>(other->value);
+    hcc->backend->EmitMove(std::get<std::string>(this->value), reg);
+
+    hcc->backend->ReleaseRegister(reg);
   } else if (!IsRegister() && !other->IsRegister()) {
     auto LHS = DoCondLod(hcc);
     auto RHS = other->DoCondLod(hcc);
 
     ValueStackVar var = std::get<ValueStackVar>(this->value);
-    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, std::get<std::string>(LHS->value));
+    std::string reg = std::get<std::string>(LHS->value);
+    hcc->backend->EmitStoreToStack(var.stack_align, var.type.size, reg);
+
+    hcc->backend->ReleaseRegister(reg);
   } else if (IsRegister() && !other->IsRegister()) {
     auto RHS = other->DoCondLod(hcc);
 
-    hcc->backend->EmitMove(std::get<std::string>(this->value), std::get<std::string>(RHS->value));
+    std::string reg = std::get<std::string>(RHS->value);
+    hcc->backend->EmitMove(std::get<std::string>(this->value), reg);
+
+    hcc->backend->ReleaseRegister(reg);
   }
 }

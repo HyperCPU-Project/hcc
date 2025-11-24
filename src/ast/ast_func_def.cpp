@@ -27,6 +27,7 @@ bool AstFuncDef::Compile(HCC* hcc) {
   op.funcdef.name = name;
 
   for (auto& [arg_name, arg_type] : args) {
+    fmt::println("arg {}", arg_name);
     op.funcdef.arg_names.push_back(arg_name);
 
     TypeMetadata* md = hcc->backend->GetTypeFromName(arg_type);

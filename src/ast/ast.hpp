@@ -1,5 +1,6 @@
 #pragma once
 #include "cstd_pch.hpp"
+#include <memory>
 
 namespace hcc {
   class HCC;

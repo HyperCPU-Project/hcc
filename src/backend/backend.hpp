@@ -2,6 +2,7 @@
 
 #include <abi_metadata.hpp>
 #include <cstd_pch.hpp>
+#include <regallocator/register_allocator.hpp>
 #include <type_metadata.hpp>
 
 namespace hcc {
@@ -10,7 +11,7 @@ namespace hcc {
   class Backend {
   protected:
     HCC* hcc;
-    uint64_t reg_index;
+    RegisterAllocator register_allocator;
 
   public:
     std::string output;
@@ -23,13 +24,14 @@ namespace hcc {
     Backend(HCC* hcc);
     virtual ~Backend() = 0;
 
-    virtual uint64_t IncrementRegIndex();
-    virtual void ResetRegIndex();
+    std::string AllocateRegister();
+    void RetainRegister(std::string reg);
+    void ReleaseRegister(std::string reg);
 
     virtual void EmitFunctionPrologue(std::string name);
     virtual void EmitFunctionEpilogue();
 
-    virtual std::string EmitMovConst(uint64_t value, std::string reg_name = "");
+    virtual std::string EmitMovConst(uint64_t value, std::string reg_name);
 
     virtual void EmitAdd(std::string ROUT, std::string RLHS, std::string RRHS);
     virtual void EmitSub(std::string ROUT, std::string RLHS, std::string RRHS);

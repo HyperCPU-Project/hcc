@@ -7,12 +7,10 @@ namespace hcc {
   public:
     HyperCPUBackend(HCC* hcc);
 
-    uint64_t IncrementRegIndex() override;
-
     void EmitFunctionPrologue(std::string name) override;
     void EmitFunctionEpilogue() override;
 
-    std::string EmitMovConst(uint64_t value, std::string reg_name = "") override;
+    std::string EmitMovConst(uint64_t value, std::string reg_name) override;
 
     void EmitAdd(std::string ROUT, std::string RLHS, std::string RRHS) override;
     void EmitSub(std::string ROUT, std::string RLHS, std::string RRHS) override;
@@ -24,8 +22,8 @@ namespace hcc {
     void EmitReserveStackSpace(uint64_t size) override;
     void EmitStoreToStack(uint64_t align, uint64_t size, std::string rsrc) override;
 
-    std::string EmitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg = "") override;
-    std::string EmitLoadaddrFromStack(uint64_t align, std::string load_reg = "") override;
+    std::string EmitLoadFromStack(uint64_t align, uint64_t size, std::string load_reg) override;
+    std::string EmitLoadaddrFromStack(uint64_t align, std::string load_reg) override;
 
     void EmitCall(std::string name) override;
 

@@ -6,6 +6,11 @@ namespace hcc {
   class Backend;
   class HCC;
 
+  enum class StackPopMode {
+    RHS_FIRST,
+    LHS_FIRST,
+  };
+
   struct IrOpcode {
     enum {
       IR_NULL,
@@ -30,18 +35,19 @@ namespace hcc {
       IR_RESERVE,
     } type;
 
+    StackPopMode stack_pop_mode = StackPopMode::RHS_FIRST;
+
     struct {
       std::string name;
 
       std::vector<TypeMetadata> arg_types;
       std::vector<std::string> arg_names;
 
-      bool need_stack = false;
+      bool need_stack = true;
     } funcdef;
 
     struct {
       uint64_t value;
-      std::string reg_name = "";
     } creg;
 
     struct {
