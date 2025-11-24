@@ -19,6 +19,7 @@ namespace hcc {
     bool IsStackVar();
 
     static std::shared_ptr<Value> CreateAsRegister(HCC* hcc, uint64_t value);
+    static std::shared_ptr<Value> CreateAsRegister(HCC* hcc);
     static std::shared_ptr<Value> CreateAsCompileTimeValue(HCC* hcc, uint64_t value);
     static std::shared_ptr<Value> CreateAsStackVar(HCC* hcc, TypeMetadata type, bool reserve = true);
 

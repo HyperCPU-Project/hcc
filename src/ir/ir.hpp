@@ -43,7 +43,7 @@ namespace hcc {
       std::vector<TypeMetadata> arg_types;
       std::vector<std::string> arg_names;
 
-      bool need_stack = false;
+      bool need_stack = true;
     } funcdef;
 
     struct {

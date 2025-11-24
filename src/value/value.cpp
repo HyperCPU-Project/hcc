@@ -32,6 +32,12 @@ std::shared_ptr<Value> Value::CreateAsRegister(HCC* hcc, uint64_t _value) {
   return value;
 }
 
+std::shared_ptr<Value> Value::CreateAsRegister(HCC* hcc) {
+  auto value = std::make_shared<Value>();
+  value->value = hcc->backend->AllocateRegister();
+  return value;
+}
+
 std::shared_ptr<Value> Value::CreateAsCompileTimeValue([[maybe_unused]] HCC* hcc, uint64_t _value) {
   auto value = std::make_shared<Value>();
   value->value = _value;

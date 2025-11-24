@@ -98,7 +98,7 @@ arg_list:
 		$$.clear();
 		$$[$1.name] = $1.type;
 	} | arg_list arg {
-		$$[$2.name] = $2.type;
+		$1[$2.name] = $2.type;
 		$$ = $1;
 	} | RPAREN {
 		$$.clear();
@@ -110,8 +110,7 @@ arg:
 		$$ = hcc::ParserArgData();
 		$$.name = $2;
 		$$.type = $1;
-	}
-	| IDENTIFIER IDENTIFIER RPAREN {
+	} | IDENTIFIER IDENTIFIER RPAREN {
 		$$ = hcc::ParserArgData();
 		$$.name = $2;
 		$$.type = $1;
@@ -120,11 +119,11 @@ arg:
 
 call_arg_list:
   expression {
-	$$.clear();
+		$$.clear();
     $$.push_back(std::move($1));
   } | call_arg_list COMMA expression {
     $1.push_back(std::move($3));
-	$$ = std::move($1);
+		$$ = std::move($1);
   }
 
 fncall:
@@ -132,6 +131,9 @@ fncall:
     $$ = std::make_unique<hcc::AstFuncCall>();
     $$->name = $1;
     $$->args = std::move($3);
+  } | IDENTIFIER LPAREN RPAREN {
+    $$ = std::make_unique<hcc::AstFuncCall>();
+    $$->name = $1;
   }
 
 declaration_names:
