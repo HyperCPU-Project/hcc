@@ -233,7 +233,13 @@ bool IR::Compile(HCC* hcc) {
         return false;
       }
 
-      auto out = hcc->current_function.variables[op.varref.name]->DoCondLod(hcc);
+      auto value = hcc->current_function.variables[op.varref.name];
+      if (value->IsRegister()) {
+        // increment the reference count, otherwise the value will be freed, we dont want this
+        std::string reg = std::get<std::string>(value->value);
+        hcc->backend->RetainRegister(reg);
+      }
+      auto out = value->DoCondLod(hcc);
 
       hcc->values.push(std::move(out));
     } break;
