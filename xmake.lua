@@ -5,7 +5,8 @@ add_rules("lex", "yacc")
 set_policy("build.sanitizer.address", true)
 set_policy("build.sanitizer.leak", true)
 
-add_requires("fmt", "bison", "catch2", "mapbox_eternal", "tl_expected") -- libs
+add_requires("fmt", {external=false})
+add_requires("bison", "catch2", "mapbox_eternal", "tl_expected") -- libs
 set_warnings("all") -- warns
 set_languages("c++20")
 
