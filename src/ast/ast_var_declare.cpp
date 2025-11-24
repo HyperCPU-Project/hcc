@@ -19,7 +19,7 @@ void AstVarDeclare::Print(int indent) const {
 }
 
 bool AstVarDeclare::Compile(HCC* hcc) {
-  TypeMetadata* var_type = hcc->backend->GetTypeFromName(type);
+  auto var_type = hcc->backend->GetType(type);
   if (!var_type)
     return false;
 
@@ -27,7 +27,7 @@ bool AstVarDeclare::Compile(HCC* hcc) {
     IrOpcode op;
     op.type = IrOpcode::IR_ALLOCA;
     op.alloca.name = name;
-    op.alloca.md = *var_type;
+    op.alloca.md = var_type.value();
 
     hcc->ir.Add(op);
   }

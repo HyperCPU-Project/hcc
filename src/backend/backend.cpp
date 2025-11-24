@@ -1,5 +1,7 @@
 #include "abi_metadata.hpp"
+#include "ast/type.hpp"
 #include "regallocator/register_allocator.hpp"
+#include "type_metadata.hpp"
 #include <backend/backend.hpp>
 #include <fmt/printf.h>
 #include <hcc.hpp>
@@ -81,13 +83,15 @@ void Backend::EmitSingleRet() {
 void Backend::EmitLabel(std::string name) {
 }
 
-TypeMetadata* Backend::GetTypeFromName(std::string name) {
-  if (!types.contains(name)) {
-    CompileError(fmt::sprintf("unknown type %s", name));
-    return nullptr;
+std::optional<TypeMetadata> Backend::GetType(ParserVarType type) {
+  if (!types.contains(type.name)) {
+    CompileError(fmt::sprintf("unknown type %s", type.name));
+    return {};
   }
 
-  return &types[name];
+  TypeMetadata md = types[type.name];
+  md.register_ = type.register_;
+  return md;
 }
 
 void Backend::CompileError(std::string error) {

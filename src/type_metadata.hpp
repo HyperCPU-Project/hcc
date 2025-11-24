@@ -6,5 +6,6 @@ namespace hcc {
   typedef struct TypeMetadata {
     std::string name;
     uint8_t size; // in bytes
+    bool register_ = false;
   } TypeMetadata;
 } // namespace hcc

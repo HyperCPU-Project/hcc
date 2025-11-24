@@ -1,6 +1,7 @@
 #include <backend/backend.hpp>
 #include <hcc.hpp>
 #include <ir/ir.hpp>
+#include <memory>
 #include <value/value.hpp>
 
 using namespace hcc;
@@ -50,7 +51,9 @@ IrOpcode IR::Peek(unsigned long count) {
 bool IR::OpcodeAffectsStack(IrOpcode op) {
   switch (op.type) {
   case IrOpcode::IR_ALLOCA:
-    return true;
+    if (!op.alloca.md.register_) // doesnt have register keyword, then affects
+      return true;
+    return false;
   case IrOpcode::IR_CSV:
     return true;
   default:
@@ -148,7 +151,14 @@ bool IR::Compile(HCC* hcc) {
       assert(hcc->values.empty());
     } break;
     case IrOpcode::IR_ALLOCA: {
-      auto value = Value::CreateAsStackVar(hcc, op.alloca.md, false);
+      std::shared_ptr<Value> value;
+      if (op.alloca.md.register_) {
+        // register keyword
+        value = Value::CreateAsRegister(hcc);
+      } else {
+        // on stack
+        value = Value::CreateAsStackVar(hcc, op.alloca.md, false);
+      }
       hcc->current_function.variables[op.alloca.name] = value;
     } break;
     case IrOpcode::IR_ADD: {

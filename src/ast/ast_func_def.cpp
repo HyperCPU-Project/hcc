@@ -30,10 +30,10 @@ bool AstFuncDef::Compile(HCC* hcc) {
     fmt::println("arg {}", arg_name);
     op.funcdef.arg_names.push_back(arg_name);
 
-    TypeMetadata* md = hcc->backend->GetTypeFromName(arg_type);
+    auto md = hcc->backend->GetType(arg_type);
     if (!md)
       return false;
-    op.funcdef.arg_types.push_back(*md);
+    op.funcdef.arg_types.push_back(md.value());
   }
 
   hcc->ir.Add(op);

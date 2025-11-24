@@ -19,7 +19,8 @@ void IR::OptimizeStackReserve([[maybe_unused]] HCC* hcc) {
       if (op.type == IrOpcode::IR_END)
         break;
     } else if (op.type == IrOpcode::IR_ALLOCA && i != 0) {
-      bytes += op.alloca.md.size;
+      if (!op.alloca.md.register_)
+        bytes += op.alloca.md.size;
     }
   }
 

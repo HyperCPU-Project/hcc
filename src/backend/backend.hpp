@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ast/type.hpp"
 #include <abi_metadata.hpp>
 #include <cstd_pch.hpp>
 #include <regallocator/register_allocator.hpp>
@@ -54,7 +55,7 @@ namespace hcc {
     virtual void EmitSingleRet();
     virtual void EmitLabel(std::string name);
 
-    virtual TypeMetadata* GetTypeFromName(std::string name);
+    virtual std::optional<TypeMetadata> GetType(ParserVarType type);
 
   protected:
     void CompileError(std::string error);

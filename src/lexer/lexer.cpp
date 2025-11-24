@@ -15,6 +15,7 @@ tl::expected<std::vector<hcc::Token>, std::string> hcc::Lexer::Tokenize() {
       std::map<std::string, TokenType>({
           {"return", TokenType::Return},
           {"asm", TokenType::Asm},
+          {"register", TokenType::Register},
       });
   auto charMapping = std::map<char, TokenType>({{';', TokenType::Semicolon},
                                                 {',', TokenType::Comma},

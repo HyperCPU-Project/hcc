@@ -24,6 +24,7 @@ namespace hcc {
     /* keywords */
     Return,
     Asm,
+    Register,
   };
   struct Token {
     TokenType type;

@@ -1,4 +1,5 @@
 #pragma once
+#include "ast/type.hpp"
 #include "cstd_pch.hpp"
 #include <memory>
 
@@ -24,7 +25,7 @@ namespace hcc {
   class AstFuncDef : public AstNode {
   public:
     std::string name;
-    std::map<std::string, std::string> args;
+    std::map<std::string, ParserVarType> args;
 
     void Print(int indent = 0) const override;
     bool Compile(HCC* hcc) override;
@@ -33,7 +34,7 @@ namespace hcc {
   class AstVarDeclare : public AstNode {
   public:
     std::vector<std::string> names;
-    std::string type;
+    ParserVarType type;
     void Print(int indent = 0) const override;
     bool Compile(HCC* hcc) override;
   };

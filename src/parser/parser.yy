@@ -10,6 +10,7 @@
 %code requires {
 #include <memory>
 #include "ast/ast.hpp"
+#include "ast/type.hpp"
 #include "driver/driver.hpp"
 #include <dep_pch.hpp>
 namespace hcc { class Driver; }
@@ -27,7 +28,7 @@ namespace hcc { class Driver; }
 	namespace hcc {
 		struct ParserArgData {
 			std::string name;
-			std::string type;
+			ParserVarType type;
 		};
 	}
 }
@@ -37,7 +38,7 @@ namespace hcc { class Driver; }
 %token <std::string> IDENTIFIER
 %token <std::string> STRING_LITERAL
 %token LPAREN RPAREN LSQUIRLY RSQUIRLY SEMICOLON COMMA PLUS MINUS MULTIPLY DIVIDE AMPERSAND ASSIGN
-%token RETURN ASM
+%token RETURN ASM REGISTER
 
 %type <std::unique_ptr<hcc::AstNode>> topstatement statement expression term factor
 %type <std::unique_ptr<hcc::AstVarDeclare>> declaration
@@ -48,8 +49,9 @@ namespace hcc { class Driver; }
 %type <std::unique_ptr<hcc::AstAsm>> asm_statement 
 %type <std::vector<std::unique_ptr<hcc::AstNode>>> topstatements block statements call_arg_list
 %type <std::vector<std::string>> declaration_names
-%type <std::map<std::string, std::string>> arg_list
+%type <std::map<std::string, hcc::ParserVarType>> arg_list
 %type <hcc::ParserArgData> arg
+%type <hcc::ParserVarType> type
 
 %%
 
@@ -80,13 +82,22 @@ topstatement:
 	}
 	;
 
+type:
+	IDENTIFIER {
+		$$.name = $1;
+	} | REGISTER IDENTIFIER {
+		$$.name = $2;
+		$$.register_ = true;
+	}
+	;
+
 function_definition:
-	IDENTIFIER IDENTIFIER LPAREN arg_list block {
+	type IDENTIFIER LPAREN arg_list block {
 		$$ = std::make_unique<hcc::AstFuncDef>();
 		$$->name = $2;
 		$$->args = $4;
 		$$->children = std::move($5);
-	} | IDENTIFIER IDENTIFIER LPAREN RPAREN block {
+	} | type IDENTIFIER LPAREN RPAREN block {
 		$$ = std::make_unique<hcc::AstFuncDef>();
 		$$->name = $2;
 		$$->children = std::move($5);
@@ -106,11 +117,11 @@ arg_list:
 	;
 
 arg:
-	IDENTIFIER IDENTIFIER COMMA {
+	type IDENTIFIER COMMA {
 		$$ = hcc::ParserArgData();
 		$$.name = $2;
 		$$.type = $1;
-	} | IDENTIFIER IDENTIFIER RPAREN {
+	} | type IDENTIFIER RPAREN {
 		$$ = hcc::ParserArgData();
 		$$.name = $2;
 		$$.type = $1;
@@ -148,7 +159,7 @@ declaration_names:
 	;
 
 declaration:
-	IDENTIFIER declaration_names SEMICOLON {
+	type declaration_names SEMICOLON {
 		$$ = std::make_unique<hcc::AstVarDeclare>();
 		$$->names = $2;
 		$$->type = $1;
@@ -312,6 +323,8 @@ namespace hcc {
 				return Parser::make_RETURN(loc);
 			case TokenType::Asm:
 				return Parser::make_ASM(loc);
+			case TokenType::Register:
+				return Parser::make_REGISTER(loc);
 			default:
 				std::abort();
 		}
