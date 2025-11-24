@@ -3,7 +3,7 @@
 
 TEST_CASE("ParseErrorTest1") {
   auto result = compileQuick("int main({ return 0; }", "hypercpu");
-  REQUIRE(result.error() == "parse error: syntax error, unexpected LSQUIRLY, expecting IDENTIFIER or RPAREN");
+  REQUIRE(result.error() == "parse error: syntax error, unexpected LSQUIRLY, expecting IDENTIFIER or RPAREN or REGISTER");
 }
 
 TEST_CASE("ParseErrorTest2") {
@@ -18,5 +18,5 @@ TEST_CASE("ParseErrorTest3") {
 
 TEST_CASE("ParseErrorTest4") {
   auto result = compileQuick("int main(){ int 1; }", "hypercpu");
-  REQUIRE(result.error() == "parse error: syntax error, unexpected NUMBER, expecting IDENTIFIER or LPAREN or ASSIGN");
+  REQUIRE(result.error() == "parse error: syntax error, unexpected NUMBER, expecting IDENTIFIER");
 }
