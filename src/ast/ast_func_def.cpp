@@ -41,5 +41,11 @@ bool AstFuncDef::Compile(HCC* hcc) {
   if (!AstNode::Compile(hcc))
     return false;
 
+  {
+    IrOpcode op;
+    op.type = IrOpcode::IR_FUNCEND;
+    hcc->ir.Add(op);
+  }
+
   return true;
 }

@@ -33,6 +33,7 @@ namespace hcc {
       IR_LINE,  // just marker that does nothing, needed for static optimizations
       IR_RESET, // resets register counter
       IR_RESERVE,
+      IR_FUNCEND,
     } type;
 
     StackPopMode stack_pop_mode = StackPopMode::RHS_FIRST;

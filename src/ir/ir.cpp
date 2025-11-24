@@ -265,6 +265,13 @@ bool IR::Compile(HCC* hcc) {
       if (op.reserve.bytes > 0)
         hcc->backend->EmitReserveStackSpace(op.reserve.bytes);
       break;
+    case IrOpcode::IR_FUNCEND:
+      for (const auto& [name, value] : hcc->current_function.variables) {
+        if (value->IsRegister()) {
+          hcc->backend->ReleaseRegister(std::get<std::string>(value->value));
+        }
+      }
+      hcc->current_function.variables.clear();
     default:
       break;
     }
