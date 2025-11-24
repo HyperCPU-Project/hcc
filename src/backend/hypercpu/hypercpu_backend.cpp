@@ -17,7 +17,7 @@ HyperCPUBackend::HyperCPUBackend(HCC* hcc)
   for (int i = 2; i <= 7; i++) {
     abi.args_registers.push_back(fmt::format("x{}", i));
   }
-  register_allocator = RegisterAllocator(abi, {"x0"});
+  register_allocator = RegisterAllocator(abi);
 }
 
 void HyperCPUBackend::EmitFunctionPrologue(std::string name) {
