@@ -76,7 +76,7 @@ std::shared_ptr<Value> Value::DoCondLod(HCC* hcc) {
     value->value = hcc->backend->EmitLoadFromStack(var.stack_align, var.type.size, hcc->backend->AllocateRegister());
     return value;
   } else if (IsCompileTime()) {
-    return std::make_shared<Value>(*this);
+    return Value::CreateAsRegister(hcc, std::get<uint64_t>(value));
   } else if (IsRegister()) {
     return std::make_shared<Value>(*this);
   }

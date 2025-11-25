@@ -237,7 +237,10 @@ bool IR::Compile(HCC* hcc) {
       if (value->IsRegister()) {
         // increment the reference count, otherwise the value will be freed, we dont want this
         std::string reg = std::get<std::string>(value->value);
-        hcc->backend->RetainRegister(reg);
+        auto v = Value::CreateAsRegister(hcc);
+        hcc->backend->EmitMove(std::get<std::string>(v->value), reg);
+        value = v;
+        // hcc->backend->RetainRegister(reg);
       }
       auto out = value->DoCondLod(hcc);
 
